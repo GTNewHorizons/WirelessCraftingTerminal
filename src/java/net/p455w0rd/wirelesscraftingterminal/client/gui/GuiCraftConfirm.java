@@ -311,6 +311,7 @@ public class GuiCraftConfirm extends WCTBaseGui {
 					dspToolTip = Platform.getItemDisplayName(is);
 
 					if (lineList.size() > 0) {
+                        addItemTooltip(is, lineList);
 						dspToolTip = dspToolTip + '\n' + Joiner.on("\n").join(lineList);
 					}
 

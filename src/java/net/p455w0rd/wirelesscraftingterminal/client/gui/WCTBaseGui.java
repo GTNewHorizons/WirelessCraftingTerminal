@@ -21,6 +21,7 @@ import com.google.common.base.Stopwatch;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.gui.widgets.ITooltip;
 import appeng.container.slot.SlotRestrictedInput;
+import appeng.core.localization.GuiText;
 import appeng.helpers.InventoryAction;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
@@ -771,4 +772,19 @@ public abstract class WCTBaseGui extends GuiContainer {
 	public static final synchronized void setSwitchingGuis(final boolean switchingGuis) {
 		WCTBaseGui.switchingGuis = switchingGuis;
 	}
+    protected void addItemTooltip(ItemStack is, List<String> lineList)
+    {
+        if (isShiftKeyDown())
+        {
+            List l = is.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
+            if (!l.isEmpty())
+                l.remove(0);
+            lineList.addAll(l);
+        }
+        else
+        {
+            // TODO: update AE2 on maven and dependency in build gradle
+            // lineList.add(GuiText.HoldShiftForTooltip.getLocal());
+        }
+    }
 }

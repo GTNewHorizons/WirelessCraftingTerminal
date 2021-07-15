@@ -293,6 +293,7 @@ public class GuiCraftingCPU extends WCTBaseGui implements ISortSource
 
 					if( lineList.size() > 0 )
 					{
+                        addItemTooltip(is, lineList);
 						dspToolTip = dspToolTip + '\n' + Joiner.on( "\n" ).join( lineList );
 					}
 
