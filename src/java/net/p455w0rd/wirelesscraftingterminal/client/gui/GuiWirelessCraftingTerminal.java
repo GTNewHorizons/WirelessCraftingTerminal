@@ -94,7 +94,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 
 	private float xSize_lo;
 	private float ySize_lo;
-	public static int tick = 0, GUI_HEIGHT = 240, GUI_WIDTH = 198, AE_ROW_HEIGHT = 18, AE_NUM_ROWS = 0,
+	public static int tick = 0, GUI_HEIGHT = 240, GUI_WIDTH = 230, AE_ROW_HEIGHT = 18, AE_NUM_ROWS = 0,
 			GUI_UPPER_HEIGHT = 35, GUI_SEARCH_ROW = 35, SEARCH_X = 81, SEARCH_Y = 5, SEARCH_WIDTH = 88,
 			SEARCH_HEIGHT = 12, SEARCH_MAXCHARS = 15, GUI_LOWER_HEIGHT, AE_TOTAL_ROWS_HEIGHT,
 			BUTTON_SEARCH_MODE_POS_X = -18, BUTTON_SEARCH_MODE_POS_Y = 68, BUTTON_SIZE = 16, NEI_EXTRA_SPACE = 30,
@@ -102,7 +102,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 	protected static final int BUTTON_SEARCH_MODE_ID = 5;
 	protected static final long TOOLTIP_UPDATE_INTERVAL = 3000L;
 	private int currScreenWidth, currScreenHeight;
-	private static final String bgTexturePath = "gui/crafting.png";
+	private static final String bgTexturePath = "gui/crafting_viewcell.png";
 	private final ContainerWirelessCraftingTerminal containerWCT;
 	private boolean isFullScreen, init = true, reInit, wasResized = false;
 	public static GuiWirelessCraftingTerminal INSTANCE;
@@ -142,6 +142,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 	private int standardSize;
 	private final int lowerTextureOffset = 0;
 	private int rows = 0;
+	private final ItemStack[] myCurrentViewCells = new ItemStack[5];
 
 	public GuiWirelessCraftingTerminal(Container container) {
 		super(container);
@@ -674,19 +675,36 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 		this.bindTexture(bgTexturePath);
 		final int x_width = 199;
 
+		//draw "over inventory area"
 		this.drawTexturedModalRect( offsetX, offsetY, 0, 0, x_width, 18 );
 		
 		for( int x = 0; x < this.rows; x++ )
 		{
 			this.drawTexturedModalRect( offsetX, offsetY + 18 + x * 18, 0, 18, x_width, 18 );
 		}
-		
+
+		//draw player inv
 		this.drawTexturedModalRect( offsetX, offsetY + 16 + this.rows * 18 + this.lowerTextureOffset, 0, 106 - 18 - 18, x_width, 99 + this.reservedSpace - this.lowerTextureOffset );
+
+		//draw view cells
+		this.drawTexturedModalRect(offsetX + x_width, offsetY, x_width, 0, 32, 104);
 
 		if (Reference.WCT_BOOSTER_ENABLED) {
 			this.drawTexturedModalRect(this.guiLeft + 132, (this.guiTop + this.rows * 18) + 83, 237, 237, 19, 19);
 		}
 		GuiInventory.func_147046_a(this.guiLeft + 51, (this.guiTop + this.rows * 18) + 94, 32, (float) (this.guiLeft + 51) - this.xSize_lo, (float) ((this.guiTop + this.rows * 18) + 50) - this.ySize_lo, this.mc.thePlayer);
+
+		boolean update = false;
+		for (int i = 0; i < 5; i++) {
+			if (myCurrentViewCells[i] != containerWCT.getCellViewSlot(i).getStack()) {
+				update = true;
+				myCurrentViewCells[i] = containerWCT.getCellViewSlot(i).getStack();
+			}
+		}
+
+		if (update) {
+			repo.setViewCell(myCurrentViewCells);
+		}
 		
 	}
 

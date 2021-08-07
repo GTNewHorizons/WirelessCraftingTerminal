@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import appeng.api.implementations.tiles.IViewCellStorage;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
@@ -96,10 +97,12 @@ import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotMagnet;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotPlayerHotBar;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotPlayerInv;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotTrash;
+import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotViewCell;
 import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryBooster;
 import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryCrafting;
 import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryMagnet;
 import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryTrash;
+import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryViewCell;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
@@ -111,10 +114,12 @@ import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
 
 
-public class ContainerWirelessCraftingTerminal extends Container implements IConfigManagerHost, IConfigurableObject, IMEMonitorHandlerReceiver<IAEItemStack>, IAEAppEngInventory, IContainerCraftingPacket {
+public class ContainerWirelessCraftingTerminal extends Container implements IConfigManagerHost, IConfigurableObject,
+		IMEMonitorHandlerReceiver<IAEItemStack>, IAEAppEngInventory, IContainerCraftingPacket, IViewCellStorage {
 
 	private final ItemStack containerstack;
-	public WCTInventoryCrafting craftingGrid;
+	public final WCTInventoryCrafting craftingGrid;
+	public final WCTInventoryViewCell viewCellInventory;
 	public final WCTInventoryBooster boosterInventory;
 	public final WCTInventoryMagnet magnetInventory;
 	public final WCTInventoryTrash trashInventory;
@@ -126,7 +131,8 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 	private static final int HOTBAR_START = 1, HOTBAR_END = HOTBAR_START + 8, INV_START = HOTBAR_END + 1,
 			INV_END = INV_START + 26, ARMOR_START = INV_END + 1, ARMOR_END = ARMOR_START + 3,
 			CRAFT_GRID_START = ARMOR_END + 1, CRAFT_GRID_END = CRAFT_GRID_START + 8, CRAFT_RESULT = CRAFT_GRID_END + 1,
-			BOOSTER_INDEX = 0, MAGNET_INDEX = CRAFT_RESULT + 1;
+			VIEW_CELL_START = CRAFT_RESULT + 1, VIEW_CELL_END = VIEW_CELL_START + 4,
+			BOOSTER_INDEX = 0, MAGNET_INDEX = VIEW_CELL_END + 1;
 	public static int CRAFTING_SLOT_X_POS = 80, CRAFTING_SLOT_Y_POS = 83;
 	private SlotBooster boosterSlot;
 	private SlotMagnet magnetSlot;
@@ -136,6 +142,7 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 	private SlotArmor[] armorSlot;
 	private SlotCraftingMatrix[] craftMatrixSlot;
 	private SlotCraftingTerm craftingSlot;
+	private SlotViewCell[] viewCellSlot;
 	public SlotTrash trashSlot;
 	private int firstCraftingSlotNumber = -1, lastCraftingSlotNumber = -1;
 
@@ -188,6 +195,7 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 		this.thisItem = (IWirelessCraftingTerminalItem) this.containerstack.getItem();
 		this.worldObj = player.worldObj;
 		this.craftingGrid = new WCTInventoryCrafting(this, 3, 3, containerstack);
+		this.viewCellInventory = new WCTInventoryViewCell(RandomUtils.getWirelessTerm(inventoryPlayer));
 		this.inventoryPlayer = inventoryPlayer;
 		this.player = player;
 		craftMatrixInventory = new ItemStack[9];
@@ -195,6 +203,7 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 		inventorySlot = new Slot[27];
 		armorSlot = new SlotArmor[4];
 		craftMatrixSlot = new SlotCraftingMatrix[9];
+		viewCellSlot = new SlotViewCell[5];
 
 		this.obj = getGuiObject(containerstack, player, worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
 		this.civ = (IPortableCell) this.obj;
@@ -269,6 +278,12 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 		craftingSlot = new SlotCraftingTerm(this.getPlayerInv().player, this.mySrc, this.getPowerSource(), this.obj, this.craftingGrid, this.craftingGrid, this.output, 174, -58, this);
 		// Add crafting result slot
 		this.addSlotToContainer(craftingSlot);
+
+		// Add view cell slots
+		for (int i = 0; i < 5; i++) {
+			viewCellSlot[i] = new SlotViewCell(getViewCellStorage(), i, 207, (i * 18) + 8);
+			addSlotToContainer(viewCellSlot[i]);
+		}
 
 		magnetSlot = new SlotMagnet(this.magnetInventory, 152, -20);
 		this.addSlotToContainer(magnetSlot);
@@ -696,8 +711,23 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 	}
 
 	@Override
+	public IInventory getViewCellStorage() {
+		return viewCellInventory;
+	}
+
+	@Override
 	public ItemStack[] getViewCells() {
-		return null;
+		final ItemStack[] list = new ItemStack[viewCellSlot.length];
+
+		for (int x = 0; x < viewCellSlot.length; x++) {
+			list[x] = viewCellSlot[x].getStack();
+		}
+
+		return list;
+	}
+
+	public SlotViewCell getCellViewSlot(final int index) {
+		return viewCellSlot[index];
 	}
 
 	private WirelessTerminalGuiObject getGuiObject(final ItemStack it, final EntityPlayer player, final World w, final int x, final int y, final int z) {
@@ -1289,6 +1319,9 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 		case "crafting":
 			((WCTInventoryCrafting) craftingGrid).writeNBT(this.containerstack.getTagCompound());
 			break;
+		case "viewCell":
+			((WCTInventoryViewCell) viewCellInventory).writeNBT(this.containerstack.getTagCompound());
+			break;
 		case "magnet":
 			((WCTInventoryMagnet) magnetInventory).writeNBT(this.containerstack.getTagCompound());
 			break;
@@ -1299,6 +1332,7 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 		default:
 			((WCTInventoryBooster) boosterInventory).writeNBT(this.containerstack.getTagCompound());
 			((WCTInventoryCrafting) craftingGrid).writeNBT(this.containerstack.getTagCompound());
+			((WCTInventoryViewCell) viewCellInventory).writeNBT(this.containerstack.getTagCompound());
 			((WCTInventoryMagnet) magnetInventory).writeNBT(this.containerstack.getTagCompound());
 			((WCTInventoryTrash) trashInventory).writeNBT(this.containerstack.getTagCompound());
 			break;
@@ -1312,7 +1346,7 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 		if (tis == null) {
 			return null;
 		}
-		// Try to place armor in armor slot/booster in booster lost first
+		// Try to place armor in armor slot/booster in booster slot first
 		if (isInInventory(idx) || isInHotbar(idx)) {
 			if (tis.getItem() instanceof ItemArmor) {
 				int type = ((ItemArmor) tis.getItem()).armorType;
@@ -1327,12 +1361,21 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 					return null;
 				}
 			}
-			else {
-				if (tis.getItem() instanceof ItemMagnet) {
-					if (this.mergeItemStack(tis, MAGNET_INDEX, MAGNET_INDEX + 1, false)) {
-						clickSlot.clearStack();
-						return null;
+			else if (tis.getItem() instanceof ItemMagnet) {
+				if (this.mergeItemStack(tis, MAGNET_INDEX, MAGNET_INDEX + 1, false)) {
+					clickSlot.clearStack();
+					return null;
+				}
+			}
+			else if (AEApi.instance().definitions().items().viewCell().isSameAs( tis )) {
+				if (mergeItemStack(tis.copy(), VIEW_CELL_START, VIEW_CELL_END + 1, false)) {
+					if (tis.stackSize > 1) {
+						tis.stackSize--;
 					}
+					else {
+						clickSlot.clearStack();
+					}
+					return null;
 				}
 			}
 		}
