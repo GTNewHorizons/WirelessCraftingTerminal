@@ -76,6 +76,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemInfinityBooster;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemMagnet;
+import net.p455w0rd.wirelesscraftingterminal.items.ItemWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTermHandler;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
@@ -1343,7 +1344,7 @@ public class ContainerWirelessCraftingTerminal extends Container implements ICon
 	public ItemStack transferStackInSlot(final EntityPlayer p, final int idx) {
 		final AppEngSlot clickSlot = (AppEngSlot) this.inventorySlots.get(idx); // require AE SLots!
 		ItemStack tis = clickSlot.getStack();
-		if (tis == null) {
+		if (tis == null || tis == containerstack) {
 			return null;
 		}
 		// Try to place armor in armor slot/booster in booster slot first
