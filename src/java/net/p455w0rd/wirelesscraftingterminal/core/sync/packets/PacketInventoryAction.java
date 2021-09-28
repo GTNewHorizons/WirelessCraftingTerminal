@@ -17,6 +17,7 @@ import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftAmou
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerOpenContext;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.container.WCTBaseContainer;
+import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
@@ -155,7 +156,10 @@ public class PacketInventoryAction extends WCTPacket
 			else
 			{
 				if (baseContainer instanceof ContainerWirelessCraftingTerminal) {
-					((ContainerWirelessCraftingTerminal) baseContainer).doAction( sender, this.action, this.slot, this.id );
+                    if (RandomUtils.getWirelessTerm(player.inventory) == null)
+                        ((ContainerWirelessCraftingTerminal) baseContainer).setValidContainer(false);
+                    else
+    					((ContainerWirelessCraftingTerminal) baseContainer).doAction( sender, this.action, this.slot, this.id );
 				}
 				if (baseContainer instanceof WCTBaseContainer) {
 					((WCTBaseContainer) baseContainer).doAction( sender, this.action, this.slot, this.id );
