@@ -75,7 +75,7 @@ repositories {
 }
 
 dependencies {
-	compile("appeng:appliedenergistics2:rv3-beta-31:dev") {
+	compile("appeng:appliedenergistics2:rv3-beta-59-GTNH:dev") {
 		transitive = false
     }
 	compile("com.enderio:EnderIO:1.7.10-2.3.0.417_beta:dev") {
