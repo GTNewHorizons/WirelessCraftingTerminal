@@ -21,10 +21,7 @@ import org.lwjgl.opengl.GL12;
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
 
-import appeng.api.config.ActionItems;
-import appeng.api.config.SearchBoxMode;
-import appeng.api.config.Settings;
-import appeng.api.config.TerminalStyle;
+import appeng.api.config.*;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
@@ -84,6 +81,7 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketInventoryAc
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwapSlots;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwitchGuis;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketValueConfig;
+import net.p455w0rd.wirelesscraftingterminal.handlers.ConfigHandler;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.integration.IntegrationRegistry;
 import net.p455w0rd.wirelesscraftingterminal.integration.IntegrationType;
@@ -133,6 +131,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 	private GuiImgButton clearBtn;
 	private GuiTrashButton trashBtn;
 	private GuiImgButton terminalStyleBox;
+    private GuiImgButton searchStringSave;
 	public boolean devicePowered = false;
 	private boolean isNEIEnabled;
 	private boolean wasTextboxFocused = false;
@@ -201,6 +200,10 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 				if (btn == this.searchBoxSettings) {
 					AEConfig.instance.settings.putSetting(iBtn.getSetting(), next);
 				}
+                else if( btn == this.searchStringSave )
+                {
+                    ConfigHandler.saveSearchString = next == YesNo.YES;
+                }
 				else {
 					try {
 						NetworkHandler.instance.sendToServer(new PacketValueConfig(iBtn.getSetting().name(), next.name()));
@@ -371,7 +374,10 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 
 		this.buttonList.add(this.searchBoxSettings = new GuiImgButton(this.guiLeft - 18, offset, Settings.SEARCH_MODE, AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE)));
 		offset += 20;
-		
+
+        this.buttonList.add( this.searchStringSave = new GuiImgButton( this.guiLeft - 18, offset, Settings.SAVE_SEARCH, ConfigHandler.saveSearchString ? YesNo.YES : YesNo.NO ) );
+        offset += 20;
+
 		this.buttonList.add( this.terminalStyleBox = new GuiImgButton( this.guiLeft - 18, offset, Settings.TERMINAL_STYLE, AEConfig.instance.settings.getSetting( Settings.TERMINAL_STYLE ) ) );
 
 		this.searchField = new MEGuiTextField(this.fontRendererObj, SEARCH_X, SEARCH_Y, SEARCH_WIDTH, SEARCH_HEIGHT);
@@ -388,11 +394,11 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 		final Enum setting = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
 		this.searchField.setFocused(SearchBoxMode.AUTOSEARCH == setting || SearchBoxMode.NEI_AUTOSEARCH == setting);
 
+        if (ConfigHandler.saveSearchString || this.isSubGui()) {
+            this.searchField.setText(memoryText);
+            this.repo.setSearchString(memoryText);
+        }
 		if (this.isSubGui()) {
-			if (this.isSubGui()) {
-				this.searchField.setText(memoryText);
-				this.repo.setSearchString(memoryText);
-			}
 			this.repo.updateView();
 			this.setScrollBar();
 		}
