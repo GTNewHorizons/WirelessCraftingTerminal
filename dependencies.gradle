@@ -9,4 +9,5 @@ dependencies {
     compile "com.github.GTNewHorizons:EnderCore:master-SNAPSHOT:dev"
     compile "com.github.GTNewHorizons:Baubles:master-SNAPSHOT:dev"
     compile files("dependencies/p455w0rdslib-1.7.10-1.0.4.jar")
+    compile files("dependencies/CoFHCore-[1.7.10]3.1.4-329-dev.jar")
 }
