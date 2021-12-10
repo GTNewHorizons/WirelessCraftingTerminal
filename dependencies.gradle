@@ -1,7 +1,7 @@
 // Add your dependencies here
 
 dependencies {
-    implementation "com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev"
+    compile "com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev"
     implementation("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:master-SNAPSHOT:dev") {
         transitive = false
     }
