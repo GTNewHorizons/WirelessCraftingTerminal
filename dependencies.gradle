@@ -2,16 +2,11 @@
 
 dependencies {
     compile "com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev"
-    implementation("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:master-SNAPSHOT:dev") {
+    compile "com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:master-SNAPSHOT:dev"
+    compileOnly("com.github.GTNewHorizons:EnderIO:master-SNAPSHOT:dev") {
         transitive = false
     }
-    implementation("com.github.GTNewHorizons:EnderIO:master-SNAPSHOT:dev") {
-        transitive = false
-    }
-    implementation("com.github.GTNewHorizons:EnderCore:master-SNAPSHOT:dev") {
-        transitive = false
-    }
-    implementation("com.github.GTNewHorizons:Baubles:master-SNAPSHOT:dev") {
-        transitive = false
-    }
+    compile "com.github.GTNewHorizons:EnderCore:master-SNAPSHOT:dev"
+    compile "com.github.GTNewHorizons:Baubles:master-SNAPSHOT:dev"
+    compile files("dependencies/p455w0rdslib-1.7.10-1.0.4.jar")
 }

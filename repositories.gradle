@@ -2,12 +2,6 @@
 
 repositories {
     maven {
-        url = "https://gregtech.overminddl1.com/"
-    }
-    maven {
-        url = "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/"
-    }
-    maven {
         url = "https://jitpack.io"
     }
 }
