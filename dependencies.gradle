@@ -1,0 +1,17 @@
+// Add your dependencies here
+
+dependencies {
+    implementation "com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev"
+    implementation("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:master-SNAPSHOT:dev") {
+        transitive = false
+    }
+    implementation("com.github.GTNewHorizons:EnderIO:master-SNAPSHOT:dev") {
+        transitive = false
+    }
+    implementation("com.github.GTNewHorizons:EnderCore:master-SNAPSHOT:dev") {
+        transitive = false
+    }
+    implementation("com.github.GTNewHorizons:Baubles:master-SNAPSHOT:dev") {
+        transitive = false
+    }
+}
