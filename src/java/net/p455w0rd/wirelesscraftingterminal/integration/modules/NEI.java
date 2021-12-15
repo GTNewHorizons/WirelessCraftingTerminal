@@ -34,6 +34,7 @@ import net.p455w0rd.wirelesscraftingterminal.integration.IIntegrationModule;
 import net.p455w0rd.wirelesscraftingterminal.integration.IntegrationHelper;
 import net.p455w0rd.wirelesscraftingterminal.integration.abstraction.INEI;
 import net.p455w0rd.wirelesscraftingterminal.integration.modules.NEIHelpers.NEIAEShapedRecipeHandler;
+import net.p455w0rd.wirelesscraftingterminal.integration.modules.NEIHelpers.NEIGUIHandler;
 
 public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
 	@Reflected
@@ -62,25 +63,8 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
 		API.registerGuiOverlay(net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal.class, "crafting", new WCTSlotPositioner());
 		API.registerGuiOverlayHandler(net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal.class, new WCTOverlayHandler(), "crafting");
 		API.registerRecipeHandler(new NEIAEShapedRecipeHandler());
-		API.registerRecipeHandler( new NEIAEShapelessRecipeHandler() );
-		
-		/*
-		final Method registerGuiOverlay = this.apiClass.getDeclaredMethod("registerGuiOverlay", Class.class, String.class, IStackPositioner.class);
-		registerGuiOverlay.invoke(this.apiClass, net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal.class, "crafting",
-				new WCTSlotPositioner());
-		
-		final Class overlayHandler = Class.forName("codechicken.nei.api.IOverlayHandler");
-		WCTOverlayHandler craftingOverlayHandler = new WCTOverlayHandler();
-		final Method registrar = this.apiClass.getDeclaredMethod("registerGuiOverlayHandler", Class.class, overlayHandler, String.class);
-		registrar.invoke(this.apiClass, net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal.class,
-				craftingOverlayHandler, "crafting");
-		*/
-		
-
-		// final Class<NEICraftingHandler> defaultHandler =
-		// NEICraftingHandler.class;
-		// final Constructor defaultConstructor = defaultHandler.getConstructor(
-		// int.class, int.class );
+		API.registerRecipeHandler(new NEIAEShapelessRecipeHandler());
+		API.registerNEIGuiHandler(new NEIGUIHandler());
 		
 	}
 

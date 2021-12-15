@@ -1375,4 +1375,15 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 		return this.configSrc.getSetting(Settings.VIEW_MODE);
 	}
 
+    public boolean isOverSearchField(int x, int y)
+    {
+        return searchField.isMouseIn(x - guiLeft, y - guiTop);
+    }
+    public void setSearchString(String memoryText)
+    {
+        this.searchField.setText(memoryText);
+        this.repo.setSearchString(memoryText);
+        this.repo.updateView();
+        this.setScrollBar();
+    }
 }
