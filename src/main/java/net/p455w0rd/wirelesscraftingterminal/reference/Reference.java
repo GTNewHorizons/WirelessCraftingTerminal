@@ -2,7 +2,7 @@ package net.p455w0rd.wirelesscraftingterminal.reference;
 
 public class Reference {
 	public static final String MODID = "ae2wct";
-	public static final String VERSION = "@version@";
+	public static final String VERSION = "GRADLETOKEN_VERSION";
 	public static final String NAME = "AE2 Wireless Crafting Terminal";
 	public static final String SERVER_PROXY_CLASS = "net.p455w0rd.wirelesscraftingterminal.proxy.CommonProxy";
 	public static final String CLIENT_PROXY_CLASS = "net.p455w0rd.wirelesscraftingterminal.proxy.ClientProxy";
