@@ -163,6 +163,9 @@ public class WCTInventoryCrafting extends AppEngInternalInventory {
 		if (this.getTileEntity() != null && this.eventsEnabled()) {
 			this.getTileEntity().onChangeInventory(this, slotIndex, InvOperation.markDirty, null, null);
 		}
+        if (getStackInSlot(slotIndex) != null && getStackInSlot(slotIndex).stackSize == 0)
+           stackList[slotIndex] = null;
+        writeNBT(invItem.getTagCompound());
 	}
 
 	public void markDirty() {
