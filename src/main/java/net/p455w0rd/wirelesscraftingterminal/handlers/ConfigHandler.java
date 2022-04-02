@@ -29,7 +29,6 @@ public class ConfigHandler {
 	public static boolean firstLoad = true;
 	private static int pwrInCfgFile, boosterDropInCfgFile;
 	private static boolean mtChanged = false;
-	public static boolean saveSearchString = false;
 
 	public static void init(File configFile) {
 		if (config == null) {
@@ -60,7 +59,6 @@ public class ConfigHandler {
 		boosterDropsEnabled = config.getBoolean("boosterDropsEnabled", Configuration.CATEGORY_GENERAL, true, boosterDropEnabledDesc);
 		mineTweakerOverride = config.getBoolean("mineTweakerOverride", Configuration.CATEGORY_GENERAL, false, mineTweakerOverrideDesc);
 		doVersionCheck = config.getBoolean("doVersionCheck", Configuration.CATEGORY_GENERAL, true, doVersionCheckDesc);
-        saveSearchString = config.getBoolean("saveSearchString", Configuration.CATEGORY_GENERAL, false, saveSearchStringDesc);
 		/*
 		 * I did the max power cfg loading like this because while using
 		 * Configuration#getInt did enforce the min/max values in-game, it

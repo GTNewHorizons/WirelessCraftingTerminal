@@ -202,7 +202,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 				}
                 else if( btn == this.searchStringSave )
                 {
-                    ConfigHandler.saveSearchString = next == YesNo.YES;
+                    AEConfig.instance.preserveSearchBar = next == YesNo.YES;
                 }
 				else {
 					try {
@@ -375,7 +375,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 		this.buttonList.add(this.searchBoxSettings = new GuiImgButton(this.guiLeft - 18, offset, Settings.SEARCH_MODE, AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE)));
 		offset += 20;
 
-        this.buttonList.add( this.searchStringSave = new GuiImgButton( this.guiLeft - 18, offset, Settings.SAVE_SEARCH, ConfigHandler.saveSearchString ? YesNo.YES : YesNo.NO ) );
+        this.buttonList.add( this.searchStringSave = new GuiImgButton( this.guiLeft - 18, offset, Settings.SAVE_SEARCH, AEConfig.instance.preserveSearchBar ? YesNo.YES : YesNo.NO ) );
         offset += 20;
 
 		this.buttonList.add( this.terminalStyleBox = new GuiImgButton( this.guiLeft - 18, offset, Settings.TERMINAL_STYLE, AEConfig.instance.settings.getSetting( Settings.TERMINAL_STYLE ) ) );
@@ -394,7 +394,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 		final Enum setting = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
 		this.searchField.setFocused(SearchBoxMode.AUTOSEARCH == setting || SearchBoxMode.NEI_AUTOSEARCH == setting);
 
-        if (ConfigHandler.saveSearchString || this.isSubGui()) {
+        if (AEConfig.instance.preserveSearchBar || this.isSubGui()) {
             this.searchField.setText(memoryText);
             this.repo.setSearchString(memoryText);
         }
