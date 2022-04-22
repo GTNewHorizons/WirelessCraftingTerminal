@@ -1,6 +1,7 @@
 package net.p455w0rd.wirelesscraftingterminal.client.gui;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -13,6 +14,10 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import appeng.client.ActionKey;
+import appeng.core.CommonHelper;
+import codechicken.nei.TextField;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -81,7 +86,6 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketInventoryAc
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwapSlots;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwitchGuis;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketValueConfig;
-import net.p455w0rd.wirelesscraftingterminal.handlers.ConfigHandler;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.integration.IntegrationRegistry;
 import net.p455w0rd.wirelesscraftingterminal.integration.IntegrationType;
@@ -132,6 +136,9 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 	private GuiTrashButton trashBtn;
 	private GuiImgButton terminalStyleBox;
     private GuiImgButton searchStringSave;
+    private boolean isAutoFocus = false;
+    private int currentMouseX = 0;
+    private int currentMouseY = 0;
 	public boolean devicePowered = false;
 	private boolean isNEIEnabled;
 	private boolean wasTextboxFocused = false;
@@ -173,7 +180,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 		this.getScrollBar().setTop( 18 ).setLeft( 174 ).setHeight( this.rows * 18 - 2 );
 		this.getScrollBar().setRange( 0, ( this.repo.size() + this.perRow - 1 ) / this.perRow - this.rows, Math.max( 1, this.rows / 6 ) );
 	}
-	
+
 	protected void setScrollBar(final GuiScrollbar myScrollBar) {
 		this.scrollBar = myScrollBar;
 	}
@@ -286,7 +293,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 	void setReservedSpace(final int reservedSpace) {
 		this.reservedSpace = reservedSpace;
 	}
-	
+
 	public int getStandardSize()
 	{
 		return this.standardSize;
@@ -391,8 +398,10 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 		this.buttonList.add(this.craftingStatusBtn = new GuiTabButton(this.guiLeft + 169, this.guiTop - 4, 2 + 11 * 16, GuiText.CraftingStatus.getLocal(), itemRender));
 		this.craftingStatusBtn.setHideEdge(13);
 
-		final Enum setting = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
-		this.searchField.setFocused(SearchBoxMode.AUTOSEARCH == setting || SearchBoxMode.NEI_AUTOSEARCH == setting);
+		final Enum searchMode = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
+        this.isAutoFocus = SearchBoxMode.AUTOSEARCH == searchMode || SearchBoxMode.NEI_AUTOSEARCH == searchMode;
+
+        this.searchField.setFocused(this.isAutoFocus);
 
         if (AEConfig.instance.preserveSearchBar || this.isSubGui()) {
             this.searchField.setText(memoryText);
@@ -439,10 +448,10 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 	/**
 	 * Called every tick. It is used in this instance to detect screen size
 	 * changes to automatically update the gui height.
-	 * 
+	 *
 	 * reInit variable is used to call initGui() on the next tick. It has to be
 	 * called this way to update correctly.
-	 * 
+	 *
 	 * @author p455w0rd
 	 */
 	@Override
@@ -491,7 +500,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 
 	/**
 	 * Detects if the window has been resized
-	 * 
+	 *
 	 * @return True if window has been resized
 	 * @author p455w0rd
 	 */
@@ -644,6 +653,9 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 		if (this.searchField != null) {
 			this.searchField.drawTextBox();
 		}
+
+        this.currentMouseX = mouseX;
+        this.currentMouseY = mouseY;
 	}
 
 	/**
@@ -683,7 +695,7 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 
 		//draw "over inventory area"
 		this.drawTexturedModalRect( offsetX, offsetY, 0, 0, x_width, 18 );
-		
+
 		for( int x = 0; x < this.rows; x++ )
 		{
 			this.drawTexturedModalRect( offsetX, offsetY + 18 + x * 18, 0, 18, x_width, 18 );
@@ -711,16 +723,14 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 		if (update) {
 			repo.setViewCell(myCurrentViewCells);
 		}
-		
+
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected void mouseClicked(final int xCoord, final int yCoord, final int btn) {
 
-		final Enum searchMode = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
-
-		if (searchMode != SearchBoxMode.AUTOSEARCH && searchMode != SearchBoxMode.NEI_AUTOSEARCH) {
+        if(!this.isAutoFocus) {
 			this.searchField.mouseClicked(xCoord - this.guiLeft, yCoord - this.guiTop, btn);
 		}
 
@@ -1195,11 +1205,31 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
 	@Override
 	protected void keyTyped(final char character, final int key) {
 		if (!this.checkHotbarKeys(key)) {
-			if (character == ' ' && this.searchField.getText().isEmpty()) {
-				return;
-			}
+            if (isNEIFocused()) {
+                return;
+            }
 
-			if (this.searchField.textboxKeyTyped(character, key)) {
+            if (CommonHelper.proxy.isActionKey(ActionKey.TOGGLE_FOCUS, key)) {
+                this.searchField.setFocused(!this.searchField.isFocused());
+                return;
+            }
+
+            if (this.searchField.isFocused() && key == Keyboard.KEY_RETURN) {
+                this.searchField.setFocused( false );
+                return;
+            }
+
+            if (character == ' ' && this.searchField.getText().isEmpty()) {
+                return;
+            }
+
+            final boolean mouseInGui = this.isPointInRegion( 0, 0, this.xSize, this.ySize, this.currentMouseX, this.currentMouseY );
+            if (this.isAutoFocus && !this.searchField.isFocused() && mouseInGui) {
+                this.searchField.setFocused(true);
+            }
+
+
+            if (this.searchField.textboxKeyTyped(character, key)) {
 				this.repo.setSearchString(this.searchField.getText());
 				this.repo.updateView();
 				this.setScrollBar();
@@ -1385,5 +1415,29 @@ public class GuiWirelessCraftingTerminal extends GuiContainer implements ISortSo
         this.repo.setSearchString(memoryText);
         this.repo.updateView();
         this.setScrollBar();
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    protected boolean isPointInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
+        int i = this.guiLeft;
+        int j = this.guiTop;
+        pointX -= i;
+        pointY -= j;
+        return pointX >= rectX - 1 && pointX < rectX + rectWidth + 1 && pointY >= rectY - 1 && pointY < rectY + rectHeight + 1;
+    }
+
+    private boolean isNEIFocused() {
+        if (!Loader.isModLoaded("NotEnoughItems")) {
+            return false;
+        }
+        try {
+            final Class<? super Object> c = ReflectionHelper.getClass( this.getClass().getClassLoader(), "codechicken.nei.LayoutManager" );
+            final Field fldSearchField = c.getField( "searchField" );
+            final TextField searchField = (TextField) fldSearchField.get( c );
+            return searchField.focused();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

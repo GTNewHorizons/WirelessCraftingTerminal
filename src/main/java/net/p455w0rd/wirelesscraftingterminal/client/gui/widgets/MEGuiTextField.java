@@ -21,7 +21,7 @@ public class MEGuiTextField extends GuiTextField
 	private final int _width;
 	private final int _height;
 
-	/**
+    /**
 	 * Uses the values to instantiate a padded version of a text field.
 	 * Pays attention to the '_' caret.
 	 *
@@ -39,7 +39,7 @@ public class MEGuiTextField extends GuiTextField
 		this._yPos = yPos;
 		this._width = width;
 		this._height = height;
-	}
+    }
 
 	@Override
 	public void mouseClicked( final int xPos, final int yPos, final int button )
@@ -66,4 +66,19 @@ public class MEGuiTextField extends GuiTextField
 
 		return withinXRange && withinYRange;
 	}
+
+    @Override
+    public void drawTextBox() {
+        if (this.getVisible()) {
+            if (this.isFocused()) {
+                drawRect(this.xPosition - 1, this.yPosition, this.xPosition + this.width - 1, this.yPosition + this.height + 2,
+                    0xFF606060 );
+            }
+            else {
+                drawRect(this.xPosition - 1, this.yPosition, this.xPosition + this.width - 1, this.yPosition + this.height + 2,
+                    0xFFA8A8A8 );
+            }
+            super.drawTextBox();
+        }
+    }
 }
