@@ -11,7 +11,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
@@ -40,45 +39,45 @@ public class KeybindHandler {
 
 	@SubscribeEvent
 	public void onKeyInput(KeyInputEvent event) {
-		EntityClientPlayerMP p = (EntityClientPlayerMP) Minecraft.getMinecraft().thePlayer;
+		EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
 		if (p.openContainer == null) {
 			return;
 		}
-		if (p.openContainer != null && p.openContainer instanceof ContainerPlayer) {
-			if (openTerminal.isPressed()) {
-				ItemStack is = RandomUtils.getWirelessTerm(p.inventory);
-				if (is == null) {
-					return;
-				}
-				IWirelessCraftingTerminalItem wirelessTerm = (IWirelessCraftingTerminalItem) is.getItem();
-				if (wirelessTerm != null && wirelessTerm.isWirelessCraftingEnabled(is)) {
-					if (!FMLClientHandler.instance().isGUIOpen(GuiWirelessCraftingTerminal.class)) {
-						NetworkHandler.instance.sendToServer(new PacketOpenGui(Reference.GUI_WCT));
-					}
-				}
-			}
-			else if (openMagnetFilter.isPressed()) {
-				ItemStack magnetItem = RandomUtils.getMagnet(p.inventory);
-				//ensure player has a Wireless Crafting Terminal (with Magnet Card Installed) or Magnet Card in their inventory
-				//and that they have manually right=clicked it to initialize it
-				if (RandomUtils.isMagnetInitialized(magnetItem)) {
-					NetworkHandler.instance.sendToServer(new PacketOpenGui(Reference.GUI_MAGNET));
-				}
-				else {
-					p.addChatMessage(new ChatComponentText(LocaleHandler.InitializeMagnet.getLocal()));
-				}
 
-			}
+        if (openTerminal.isPressed()) {
+            ItemStack is = RandomUtils.getWirelessTerm(p.inventory);
+            if (is == null) {
+                return;
+            }
+            IWirelessCraftingTerminalItem wirelessTerm = (IWirelessCraftingTerminalItem) is.getItem();
+            if (wirelessTerm != null && wirelessTerm.isWirelessCraftingEnabled(is)) {
+                if (!FMLClientHandler.instance().isGUIOpen(GuiWirelessCraftingTerminal.class)) {
+                    NetworkHandler.instance.sendToServer(new PacketOpenGui(Reference.GUI_WCT));
+                }
+            }
+        }
 
-			else if (changeMagnetMode.isPressed()) {
-				ItemStack magnetItem = RandomUtils.getMagnet(p.inventory);
-				if (magnetItem != null) {
-					NetworkHandler.instance.sendToServer(new PacketSetMagnet(magnetItem.getItemDamage()));
-				}
-			}
-			else {
-				return;
-			}
-		}
+        else if (openMagnetFilter.isPressed()) {
+            ItemStack magnetItem = RandomUtils.getMagnet(p.inventory);
+            //ensure player has a Wireless Crafting Terminal (with Magnet Card Installed) or Magnet Card in their inventory
+            //and that they have manually right=clicked it to initialize it
+            if (RandomUtils.isMagnetInitialized(magnetItem)) {
+                NetworkHandler.instance.sendToServer(new PacketOpenGui(Reference.GUI_MAGNET));
+            }
+            else {
+                p.addChatMessage(new ChatComponentText(LocaleHandler.InitializeMagnet.getLocal()));
+            }
+
+        }
+
+        else if (changeMagnetMode.isPressed()) {
+            ItemStack magnetItem = RandomUtils.getMagnet(p.inventory);
+            if (magnetItem != null) {
+                NetworkHandler.instance.sendToServer(new PacketSetMagnet(magnetItem.getItemDamage()));
+            }
+        }
+        else {
+            return;
+        }
 	}
 }
