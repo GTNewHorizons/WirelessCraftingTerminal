@@ -12,15 +12,10 @@ import appeng.api.util.IConfigurableObject;
 import appeng.helpers.IMouseWheelItem;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiCraftingCPU;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftConfirm;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftingCPU;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftingStatus;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.container.WCTBaseContainer;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
@@ -65,10 +60,6 @@ public class PacketValueConfig extends WCTPacket {
 			final IMouseWheelItem si = (IMouseWheelItem) is.getItem();
 			si.onWheel(is, this.Value.equals("WheelUp"));
 		}
-		else if (this.Name.equals("Terminal.Cpu") && c instanceof ContainerCraftingStatus) {
-			final ContainerCraftingStatus qk = (ContainerCraftingStatus) c;
-			qk.cycleCpu(this.Value.equals("Next"));
-		}
 		else if (this.Name.equals("Terminal.Cpu") && c instanceof ContainerCraftConfirm) {
 			final ContainerCraftConfirm qk = (ContainerCraftConfirm) c;
 			qk.cycleCpu(this.Value.equals("Next"));
@@ -76,10 +67,6 @@ public class PacketValueConfig extends WCTPacket {
 		else if (this.Name.equals("Terminal.Start") && c instanceof ContainerCraftConfirm) {
 			final ContainerCraftConfirm qk = (ContainerCraftConfirm) c;
 			qk.startJob();
-		}
-		else if (this.Name.equals("TileCrafting.Cancel") && c instanceof ContainerCraftingCPU) {
-			final ContainerCraftingCPU qk = (ContainerCraftingCPU) c;
-			qk.cancelCrafting();
 		}
 		else if (c instanceof IConfigurableObject) {
 			final IConfigManager cm = ((IConfigurableObject) c).getConfigManager();
@@ -120,12 +107,6 @@ public class PacketValueConfig extends WCTPacket {
 			}
 			if (c instanceof WCTBaseContainer) {
 				((WCTBaseContainer) c).stringSync(Integer.parseInt(this.Name.substring(8)), this.Value);
-			}
-		}
-		else if (this.Name.equals("CraftingStatus") && this.Value.equals("Clear")) {
-			final GuiScreen gs = Minecraft.getMinecraft().currentScreen;
-			if (gs instanceof GuiCraftingCPU) {
-				((GuiCraftingCPU) gs).clearItems();
 			}
 		}
 		else if (c instanceof IConfigurableObject) {
