@@ -2,6 +2,7 @@ package net.p455w0rd.wirelesscraftingterminal.common;
 
 import appeng.api.AEApi;
 import appeng.api.implementations.guiobjects.IPortableCell;
+import appeng.container.implementations.ContainerCraftingStatus;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -13,7 +14,6 @@ import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiMagnet;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftAmount;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftConfirm;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftingStatus;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerMagnet;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;

@@ -22,7 +22,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiCraftConfirm;
-import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiCraftingCPU;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
@@ -129,11 +128,6 @@ public class PacketMEInventoryUpdate extends WCTPacket
 			( (GuiCraftConfirm) gs ).postUpdate( this.list, this.ref );
 		}
 
-		if( gs instanceof GuiCraftingCPU )
-		{
-			( (GuiCraftingCPU) gs ).postUpdate( this.list, this.ref );
-		}
-		
 		if( gs instanceof GuiWirelessCraftingTerminal )
 		{
 			( (GuiWirelessCraftingTerminal) gs ).postUpdate( this.list );
