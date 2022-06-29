@@ -30,6 +30,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
 import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTIActionHost;
 
 public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, IInventorySlotAware, WCTIActionHost {
@@ -79,6 +80,17 @@ public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, II
                 }
             }
         }
+    }
+
+    /**
+     * @return Whether an infinity booster card is installed on the WCT.
+     */
+    private boolean checkForBooster() {
+        if (effectiveItem != null && effectiveItem.getItem() instanceof IWirelessCraftingTerminalItem) {
+            IWirelessCraftingTerminalItem wct = (IWirelessCraftingTerminalItem) effectiveItem.getItem();
+            return wct.checkForBooster(effectiveItem);
+        }
+        return false;
     }
 
     public IGrid getTargetGrid() {
@@ -241,7 +253,7 @@ public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, II
 
     @Override
     public IGridNode getActionableNode() {
-        return getActionableNode(false);
+        return getActionableNode(checkForBooster());
     }
 
     public IGridNode getActionableNode(boolean ignoreRange) {
@@ -258,7 +270,7 @@ public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, II
     }
 
     public boolean rangeCheck() {
-        return rangeCheck(false);
+        return rangeCheck(checkForBooster());
     }
 
     public boolean rangeCheck(boolean ignoreRange) {
@@ -291,7 +303,7 @@ public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, II
     }
 
     private boolean testWap(final IWirelessAccessPoint wap) {
-        return testWap(wap, false);
+        return testWap(wap, checkForBooster());
     }
 
     private boolean testWap(final IWirelessAccessPoint wap, boolean ignoreRange) {
