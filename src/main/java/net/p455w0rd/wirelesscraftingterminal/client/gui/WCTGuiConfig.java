@@ -9,15 +9,14 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 public class WCTGuiConfig extends GuiConfig {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public WCTGuiConfig(GuiScreen guiScreen)
-	{
-		super(guiScreen,
-				new ConfigElement(ConfigHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
-				Reference.MODID,
-				false,
-				false,
-				GuiConfig.getAbridgedConfigPath(ConfigHandler.config.toString()));
-	}
-	
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public WCTGuiConfig(GuiScreen guiScreen) {
+        super(
+                guiScreen,
+                new ConfigElement(ConfigHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
+                Reference.MODID,
+                false,
+                false,
+                GuiConfig.getAbridgedConfigPath(ConfigHandler.config.toString()));
+    }
 }

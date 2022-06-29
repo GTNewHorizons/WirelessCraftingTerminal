@@ -1,14 +1,5 @@
 package net.p455w0rd.wirelesscraftingterminal.common.container;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.Future;
-
-import javax.annotation.Nonnull;
-
-import com.google.common.collect.ImmutableSet;
-
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
@@ -24,6 +15,12 @@ import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
+import com.google.common.collect.ImmutableSet;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.concurrent.Future;
+import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -43,431 +40,378 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketUpdateCPUIn
 import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
+public class ContainerCraftConfirm extends WCTBaseContainer {
 
-public class ContainerCraftConfirm extends WCTBaseContainer
-{
+    public final ArrayList<CraftingCPURecord> cpus = new ArrayList<CraftingCPURecord>();
+    private Future<ICraftingJob> job;
+    private ICraftingJob result;
 
-	public final ArrayList<CraftingCPURecord> cpus = new ArrayList<CraftingCPURecord>();
-	private Future<ICraftingJob> job;
-	private ICraftingJob result;
-	@GuiSync( 0 )
-	public long bytesUsed;
-	@GuiSync( 1 )
-	public long cpuBytesAvail;
-	@GuiSync( 2 )
-	public int cpuCoProcessors;
-	@GuiSync( 3 )
-	public boolean autoStart = false;
-	@GuiSync( 4 )
-	public boolean simulation = true;
-	@GuiSync( 5 )
-	public int selectedCpu = -1;
-	@GuiSync( 6 )
-	public boolean noCPU = true;
-	@GuiSync( 7 )
-	public String myName = "";
-	InventoryPlayer inventoryPlayer;
+    @GuiSync(0)
+    public long bytesUsed;
 
-	public ContainerCraftConfirm( final InventoryPlayer ip, final ITerminalHost te )
-	{
-		super( ip, te );
-		inventoryPlayer = ip;
-	}
+    @GuiSync(1)
+    public long cpuBytesAvail;
 
-	public void cycleCpu( final boolean next )
-	{
-		if( next )
-		{
-			this.setSelectedCpu( this.getSelectedCpu() + 1 );
-		}
-		else
-		{
-			this.setSelectedCpu( this.getSelectedCpu() - 1 );
-		}
+    @GuiSync(2)
+    public int cpuCoProcessors;
 
-		if( this.getSelectedCpu() < -1 )
-		{
-			this.setSelectedCpu( this.cpus.size() - 1 );
-		}
-		else if( this.getSelectedCpu() >= this.cpus.size() )
-		{
-			this.setSelectedCpu( -1 );
-		}
+    @GuiSync(3)
+    public boolean autoStart = false;
 
-		if( this.getSelectedCpu() == -1 )
-		{
-			this.setCpuAvailableBytes( 0 );
-			this.setCpuCoProcessors( 0 );
-			this.setName( "" );
-			try {
-				NetworkHandler.instance.sendTo(new PacketUpdateCPUInfo(0, 0), (EntityPlayerMP) this.getPlayerInv().player);
-			}
-			catch (IOException e) {
-				// 
-			}
-		}
-		else {
-			this.setName( this.cpus.get( this.getSelectedCpu() ).getName() );
-			this.setCpuAvailableBytes( this.cpus.get( this.getSelectedCpu() ).getSize() );
-			this.setCpuCoProcessors( this.cpus.get( this.getSelectedCpu() ).getProcessors() );
-			
-			try {
-				NetworkHandler.instance.sendTo(new PacketUpdateCPUInfo((int)this.getCpuAvailableBytes(), (int)this.getCpuCoProcessors()), (EntityPlayerMP) this.getPlayerInv().player);
-			}
-			catch (IOException e) {
-				// 
-			}
-		}
-	}
+    @GuiSync(4)
+    public boolean simulation = true;
 
-	@Override
-	public void detectAndSendChanges()
-	{
-		if( Platform.isClient() )
-		{
-			return;
-		}
+    @GuiSync(5)
+    public int selectedCpu = -1;
 
-		final ICraftingGrid cc = this.getGrid().getCache( ICraftingGrid.class );
-		final ImmutableSet<ICraftingCPU> cpuSet = cc.getCpus();
+    @GuiSync(6)
+    public boolean noCPU = true;
 
-		int matches = 0;
-		boolean changed = false;
-		for( final ICraftingCPU c : cpuSet )
-		{
-			boolean found = false;
-			for( final CraftingCPURecord ccr : this.cpus )
-			{
-				if( ccr.getCpu() == c )
-				{
-					found = true;
-				}
-			}
+    @GuiSync(7)
+    public String myName = "";
 
-			final boolean matched = this.cpuMatches( c );
+    InventoryPlayer inventoryPlayer;
 
-			if( matched )
-			{
-				matches++;
-			}
+    public ContainerCraftConfirm(final InventoryPlayer ip, final ITerminalHost te) {
+        super(ip, te);
+        inventoryPlayer = ip;
+    }
 
-			if( found == !matched )
-			{
-				changed = true;
-			}
-		}
+    public void cycleCpu(final boolean next) {
+        if (next) {
+            this.setSelectedCpu(this.getSelectedCpu() + 1);
+        } else {
+            this.setSelectedCpu(this.getSelectedCpu() - 1);
+        }
 
-		if( changed || this.cpus.size() != matches )
-		{
-			this.cpus.clear();
-			for( final ICraftingCPU c : cpuSet )
-			{
-				if( this.cpuMatches( c ) )
-				{
-					this.cpus.add( new CraftingCPURecord( c.getAvailableStorage(), c.getCoProcessors(), c ) );
-				}
-			}
+        if (this.getSelectedCpu() < -1) {
+            this.setSelectedCpu(this.cpus.size() - 1);
+        } else if (this.getSelectedCpu() >= this.cpus.size()) {
+            this.setSelectedCpu(-1);
+        }
 
-			this.sendCPUs();
-		}
+        if (this.getSelectedCpu() == -1) {
+            this.setCpuAvailableBytes(0);
+            this.setCpuCoProcessors(0);
+            this.setName("");
+            try {
+                NetworkHandler.instance.sendTo(
+                        new PacketUpdateCPUInfo(0, 0), (EntityPlayerMP) this.getPlayerInv().player);
+            } catch (IOException e) {
+                //
+            }
+        } else {
+            this.setName(this.cpus.get(this.getSelectedCpu()).getName());
+            this.setCpuAvailableBytes(this.cpus.get(this.getSelectedCpu()).getSize());
+            this.setCpuCoProcessors(this.cpus.get(this.getSelectedCpu()).getProcessors());
 
-		this.setNoCPU( this.cpus.isEmpty() );
+            try {
+                NetworkHandler.instance.sendTo(
+                        new PacketUpdateCPUInfo((int) this.getCpuAvailableBytes(), (int) this.getCpuCoProcessors()),
+                        (EntityPlayerMP) this.getPlayerInv().player);
+            } catch (IOException e) {
+                //
+            }
+        }
+    }
 
-		super.detectAndSendChanges();
+    @Override
+    public void detectAndSendChanges() {
+        if (Platform.isClient()) {
+            return;
+        }
 
-		if( this.getJob() != null && this.getJob().isDone() )
-		{
-			try
-			{
-				this.result = this.getJob().get();
+        final ICraftingGrid cc = this.getGrid().getCache(ICraftingGrid.class);
+        final ImmutableSet<ICraftingCPU> cpuSet = cc.getCpus();
 
-				if( !this.result.isSimulation() )
-				{
-					this.setSimulation( false );
-					if( this.isAutoStart() )
-					{
-						this.startJob();
-						return;
-					}
-				}
-				else
-				{
-					this.setSimulation( true );
-				}
+        int matches = 0;
+        boolean changed = false;
+        for (final ICraftingCPU c : cpuSet) {
+            boolean found = false;
+            for (final CraftingCPURecord ccr : this.cpus) {
+                if (ccr.getCpu() == c) {
+                    found = true;
+                }
+            }
 
-				try
-				{
-					final PacketMEInventoryUpdate a = new PacketMEInventoryUpdate( (byte) 0 );
-					final PacketMEInventoryUpdate b = new PacketMEInventoryUpdate( (byte) 1 );
-					final PacketMEInventoryUpdate c = this.result.isSimulation() ? new PacketMEInventoryUpdate( (byte) 2 ) : null;
+            final boolean matched = this.cpuMatches(c);
 
-					final IItemList<IAEItemStack> plan = AEApi.instance().storage().createItemList();
-					this.result.populatePlan( plan );
-					
-					try {
-						NetworkHandler.instance.sendTo(new PacketSetJobBytes((int)this.result.getByteTotal()), (EntityPlayerMP) this.getPlayerInv().player);
-					}
-					catch (IOException e) {
-						// 
-					}
+            if (matched) {
+                matches++;
+            }
 
-					this.setUsedBytes( this.result.getByteTotal() );
+            if (found == !matched) {
+                changed = true;
+            }
+        }
 
-					for( final IAEItemStack out : plan )
-					{
+        if (changed || this.cpus.size() != matches) {
+            this.cpus.clear();
+            for (final ICraftingCPU c : cpuSet) {
+                if (this.cpuMatches(c)) {
+                    this.cpus.add(new CraftingCPURecord(c.getAvailableStorage(), c.getCoProcessors(), c));
+                }
+            }
 
-						IAEItemStack o = out.copy();
-						o.reset();
-						o.setStackSize( out.getStackSize() );
+            this.sendCPUs();
+        }
 
-						final IAEItemStack p = out.copy();
-						p.reset();
-						p.setStackSize( out.getCountRequestable() );
+        this.setNoCPU(this.cpus.isEmpty());
 
-						final IStorageGrid sg = this.getGrid().getCache( IStorageGrid.class );
-						final IMEInventory<IAEItemStack> items = sg.getItemInventory();
+        super.detectAndSendChanges();
 
-						IAEItemStack m = null;
-						if( c != null && this.result.isSimulation() )
-						{
-							m = o.copy();
-							o = items.extractItems( o, Actionable.SIMULATE, this.getActionSource() );
+        if (this.getJob() != null && this.getJob().isDone()) {
+            try {
+                this.result = this.getJob().get();
 
-							if( o == null )
-							{
-								o = m.copy();
-								o.setStackSize( 0 );
-							}
+                if (!this.result.isSimulation()) {
+                    this.setSimulation(false);
+                    if (this.isAutoStart()) {
+                        this.startJob();
+                        return;
+                    }
+                } else {
+                    this.setSimulation(true);
+                }
 
-							m.setStackSize( m.getStackSize() - o.getStackSize() );
-						}
+                try {
+                    final PacketMEInventoryUpdate a = new PacketMEInventoryUpdate((byte) 0);
+                    final PacketMEInventoryUpdate b = new PacketMEInventoryUpdate((byte) 1);
+                    final PacketMEInventoryUpdate c =
+                            this.result.isSimulation() ? new PacketMEInventoryUpdate((byte) 2) : null;
 
-						if( o.getStackSize() > 0 )
-						{
-							a.appendItem( o );
-						}
+                    final IItemList<IAEItemStack> plan =
+                            AEApi.instance().storage().createItemList();
+                    this.result.populatePlan(plan);
 
-						if( p.getStackSize() > 0 )
-						{
-							b.appendItem( p );
-						}
+                    try {
+                        NetworkHandler.instance.sendTo(
+                                new PacketSetJobBytes((int) this.result.getByteTotal()),
+                                (EntityPlayerMP) this.getPlayerInv().player);
+                    } catch (IOException e) {
+                        //
+                    }
 
-						if( c != null && m != null && m.getStackSize() > 0 )
-						{
-							c.appendItem( m );
-						}
-					}
+                    this.setUsedBytes(this.result.getByteTotal());
 
-					for( final Object g : this.crafters )
-					{
-						if( g instanceof EntityPlayer )
-						{
-							NetworkHandler.instance.sendTo( a, (EntityPlayerMP) g );
-							NetworkHandler.instance.sendTo( b, (EntityPlayerMP) g );
-							if( c != null )
-							{
-								NetworkHandler.instance.sendTo( c, (EntityPlayerMP) g );
-							}
-						}
-					}
-				}
-				catch( final IOException e )
-				{
-					// :P
-				}
-			}
-			catch( final Throwable e )
-			{
-				this.getPlayerInv().player.addChatMessage( new ChatComponentText( "Error: " + e.toString() ) );
-				WCTLog.debug( e.getMessage() );
-				this.setValidContainer( false );
-				this.result = null;
-			}
+                    for (final IAEItemStack out : plan) {
 
-			this.setJob( null );
-		}
-		this.verifyPermissions( SecurityPermissions.CRAFT, false );
-	}
+                        IAEItemStack o = out.copy();
+                        o.reset();
+                        o.setStackSize(out.getStackSize());
 
-	private IGrid getGrid()
-	{
-		return this.obj2.getTargetGrid();
-	}
+                        final IAEItemStack p = out.copy();
+                        p.reset();
+                        p.setStackSize(out.getCountRequestable());
 
-	private boolean cpuMatches( final ICraftingCPU c )
-	{
-		return c.getAvailableStorage() >= this.getUsedBytes() && !c.isBusy();
-	}
+                        final IStorageGrid sg = this.getGrid().getCache(IStorageGrid.class);
+                        final IMEInventory<IAEItemStack> items = sg.getItemInventory();
 
-	private void sendCPUs()
-	{
-		Collections.sort( this.cpus );
+                        IAEItemStack m = null;
+                        if (c != null && this.result.isSimulation()) {
+                            m = o.copy();
+                            o = items.extractItems(o, Actionable.SIMULATE, this.getActionSource());
 
-		if( this.getSelectedCpu() >= this.cpus.size() )
-		{
-			this.setSelectedCpu( -1 );
-			this.setCpuAvailableBytes( 0 );
-			this.setCpuCoProcessors( 0 );
-			this.setName( "" );
-		}
-		else if( this.getSelectedCpu() != -1 )
-		{
-			this.setName( this.cpus.get( this.getSelectedCpu() ).getName() );
-			this.setCpuAvailableBytes( this.cpus.get( this.getSelectedCpu() ).getSize() );
-			this.setCpuCoProcessors( this.cpus.get( this.getSelectedCpu() ).getProcessors() );
-		}
-	}
+                            if (o == null) {
+                                o = m.copy();
+                                o.setStackSize(0);
+                            }
 
-	public void startJob()
-	{
-		int originalGui=0;
+                            m.setStackSize(m.getStackSize() - o.getStackSize());
+                        }
 
-		final WCTIActionHost ah = this.getActionHost();
-		if( ah instanceof WirelessTerminalGuiObject )
-		{
-			originalGui = Reference.GUI_WCT;
-		}
+                        if (o.getStackSize() > 0) {
+                            a.appendItem(o);
+                        }
 
-		if( this.result != null && !this.isSimulation() )
-		{
-			final ICraftingGrid cc = this.getGrid().getCache( ICraftingGrid.class );
-			final ICraftingLink g = cc.submitJob( this.result, null, this.getSelectedCpu() == -1 ? null : this.cpus.get( this.getSelectedCpu() ).getCpu(), true, this.getActionSrc() );
-			this.setAutoStart( false );
-			if( g != null && originalGui > 0)// && this.getOpenContext() != null )
-			{
-				NetworkHandler.instance.sendTo( new PacketSwitchGuis( originalGui ), (EntityPlayerMP) this.getInventoryPlayer().player );
+                        if (p.getStackSize() > 0) {
+                            b.appendItem(p);
+                        }
 
-				//final TileEntity te = this.getOpenContext().getTile();
-				//Platform.openGUI( this.getInventoryPlayer().player, te, this.getOpenContext().getSide(), originalGui );
-				EntityPlayerMP player = (EntityPlayerMP) this.getInventoryPlayer().player;
-				World world = player.worldObj;
-				int x = (int)player.posX;
-				int y = (int)player.posY;
-				int z = (int)player.posZ;
-				WCTGuiHandler.launchGui(originalGui, player, world, x, y, z);
-			}
-		}
-	}
+                        if (c != null && m != null && m.getStackSize() > 0) {
+                            c.appendItem(m);
+                        }
+                    }
 
-	private BaseActionSource getActionSrc()
-	{
-		return new WCTPlayerSource( this.getPlayerInv().player, (WCTIActionHost) this.getTarget() );
-	}
+                    for (final Object g : this.crafters) {
+                        if (g instanceof EntityPlayer) {
+                            NetworkHandler.instance.sendTo(a, (EntityPlayerMP) g);
+                            NetworkHandler.instance.sendTo(b, (EntityPlayerMP) g);
+                            if (c != null) {
+                                NetworkHandler.instance.sendTo(c, (EntityPlayerMP) g);
+                            }
+                        }
+                    }
+                } catch (final IOException e) {
+                    // :P
+                }
+            } catch (final Throwable e) {
+                this.getPlayerInv().player.addChatMessage(new ChatComponentText("Error: " + e.toString()));
+                WCTLog.debug(e.getMessage());
+                this.setValidContainer(false);
+                this.result = null;
+            }
 
-	@Override
-	public void removeCraftingFromCrafters( final ICrafting c )
-	{
-		super.removeCraftingFromCrafters( c );
-		if( this.getJob() != null )
-		{
-			this.getJob().cancel( true );
-			this.setJob( null );
-		}
-	}
+            this.setJob(null);
+        }
+        this.verifyPermissions(SecurityPermissions.CRAFT, false);
+    }
 
-	@Override
-	public void onContainerClosed( final EntityPlayer par1EntityPlayer )
-	{
-		super.onContainerClosed( par1EntityPlayer );
-		if( this.getJob() != null )
-		{
-			this.getJob().cancel( true );
-			this.setJob( null );
-		}
-	}
+    private IGrid getGrid() {
+        return this.obj2.getTargetGrid();
+    }
 
-	public World getWorld()
-	{
-		return this.getPlayerInv().player.worldObj;
-	}
+    private boolean cpuMatches(final ICraftingCPU c) {
+        return c.getAvailableStorage() >= this.getUsedBytes() && !c.isBusy();
+    }
 
-	public boolean isAutoStart()
-	{
-		return this.autoStart;
-	}
+    private void sendCPUs() {
+        Collections.sort(this.cpus);
 
-	public void setAutoStart( final boolean autoStart )
-	{
-		this.autoStart = autoStart;
-	}
+        if (this.getSelectedCpu() >= this.cpus.size()) {
+            this.setSelectedCpu(-1);
+            this.setCpuAvailableBytes(0);
+            this.setCpuCoProcessors(0);
+            this.setName("");
+        } else if (this.getSelectedCpu() != -1) {
+            this.setName(this.cpus.get(this.getSelectedCpu()).getName());
+            this.setCpuAvailableBytes(this.cpus.get(this.getSelectedCpu()).getSize());
+            this.setCpuCoProcessors(this.cpus.get(this.getSelectedCpu()).getProcessors());
+        }
+    }
 
-	public long getUsedBytes()
-	{
-		return this.bytesUsed;
-	}
+    public void startJob() {
+        int originalGui = 0;
 
-	private void setUsedBytes( final long bytesUsed )
-	{
-		this.bytesUsed = bytesUsed;
-	}
+        final WCTIActionHost ah = this.getActionHost();
+        if (ah instanceof WirelessTerminalGuiObject) {
+            originalGui = Reference.GUI_WCT;
+        }
 
-	public long getCpuAvailableBytes()
-	{
-		return this.cpuBytesAvail;
-	}
+        if (this.result != null && !this.isSimulation()) {
+            final ICraftingGrid cc = this.getGrid().getCache(ICraftingGrid.class);
+            final ICraftingLink g = cc.submitJob(
+                    this.result,
+                    null,
+                    this.getSelectedCpu() == -1
+                            ? null
+                            : this.cpus.get(this.getSelectedCpu()).getCpu(),
+                    true,
+                    this.getActionSrc());
+            this.setAutoStart(false);
+            if (g != null && originalGui > 0) // && this.getOpenContext() != null )
+            {
+                NetworkHandler.instance.sendTo(
+                        new PacketSwitchGuis(originalGui), (EntityPlayerMP) this.getInventoryPlayer().player);
 
-	private void setCpuAvailableBytes( final long cpuBytesAvail )
-	{
-		this.cpuBytesAvail = cpuBytesAvail;
-	}
+                // final TileEntity te = this.getOpenContext().getTile();
+                // Platform.openGUI( this.getInventoryPlayer().player, te, this.getOpenContext().getSide(), originalGui
+                // );
+                EntityPlayerMP player = (EntityPlayerMP) this.getInventoryPlayer().player;
+                World world = player.worldObj;
+                int x = (int) player.posX;
+                int y = (int) player.posY;
+                int z = (int) player.posZ;
+                WCTGuiHandler.launchGui(originalGui, player, world, x, y, z);
+            }
+        }
+    }
 
-	public int getCpuCoProcessors()
-	{
-		return this.cpuCoProcessors;
-	}
+    private BaseActionSource getActionSrc() {
+        return new WCTPlayerSource(this.getPlayerInv().player, (WCTIActionHost) this.getTarget());
+    }
 
-	private void setCpuCoProcessors( final int cpuCoProcessors )
-	{
-		this.cpuCoProcessors = cpuCoProcessors;
-	}
+    @Override
+    public void removeCraftingFromCrafters(final ICrafting c) {
+        super.removeCraftingFromCrafters(c);
+        if (this.getJob() != null) {
+            this.getJob().cancel(true);
+            this.setJob(null);
+        }
+    }
 
-	public int getSelectedCpu()
-	{
-		return this.selectedCpu;
-	}
+    @Override
+    public void onContainerClosed(final EntityPlayer par1EntityPlayer) {
+        super.onContainerClosed(par1EntityPlayer);
+        if (this.getJob() != null) {
+            this.getJob().cancel(true);
+            this.setJob(null);
+        }
+    }
 
-	private void setSelectedCpu( final int selectedCpu )
-	{
-		this.selectedCpu = selectedCpu;
-	}
+    public World getWorld() {
+        return this.getPlayerInv().player.worldObj;
+    }
 
-	public String getName()
-	{
-		return this.myName;
-	}
+    public boolean isAutoStart() {
+        return this.autoStart;
+    }
 
-	private void setName( @Nonnull final String myName )
-	{
-		this.myName = myName;
-	}
+    public void setAutoStart(final boolean autoStart) {
+        this.autoStart = autoStart;
+    }
 
-	public boolean hasNoCPU()
-	{
-		return this.noCPU;
-	}
+    public long getUsedBytes() {
+        return this.bytesUsed;
+    }
 
-	private void setNoCPU( final boolean noCPU )
-	{
-		this.noCPU = noCPU;
-	}
+    private void setUsedBytes(final long bytesUsed) {
+        this.bytesUsed = bytesUsed;
+    }
 
-	public boolean isSimulation()
-	{
-		return this.simulation;
-	}
+    public long getCpuAvailableBytes() {
+        return this.cpuBytesAvail;
+    }
 
-	private void setSimulation( final boolean simulation )
-	{
-		this.simulation = simulation;
-	}
+    private void setCpuAvailableBytes(final long cpuBytesAvail) {
+        this.cpuBytesAvail = cpuBytesAvail;
+    }
 
-	public Future<ICraftingJob> getJob()
-	{
-		return this.job;
-	}
+    public int getCpuCoProcessors() {
+        return this.cpuCoProcessors;
+    }
 
-	public void setJob( final Future<ICraftingJob> job )
-	{
-		this.job = job;
-	}
+    private void setCpuCoProcessors(final int cpuCoProcessors) {
+        this.cpuCoProcessors = cpuCoProcessors;
+    }
+
+    public int getSelectedCpu() {
+        return this.selectedCpu;
+    }
+
+    private void setSelectedCpu(final int selectedCpu) {
+        this.selectedCpu = selectedCpu;
+    }
+
+    public String getName() {
+        return this.myName;
+    }
+
+    private void setName(@Nonnull final String myName) {
+        this.myName = myName;
+    }
+
+    public boolean hasNoCPU() {
+        return this.noCPU;
+    }
+
+    private void setNoCPU(final boolean noCPU) {
+        this.noCPU = noCPU;
+    }
+
+    public boolean isSimulation() {
+        return this.simulation;
+    }
+
+    private void setSimulation(final boolean simulation) {
+        this.simulation = simulation;
+    }
+
+    public Future<ICraftingJob> getJob() {
+        return this.job;
+    }
+
+    public void setJob(final Future<ICraftingJob> job) {
+        this.job = job;
+    }
 }

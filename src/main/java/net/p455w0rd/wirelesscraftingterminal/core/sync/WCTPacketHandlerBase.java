@@ -1,12 +1,11 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.DecoderException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.DecoderException;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketConfigSync;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketCraftRequest;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketEmptyTrash;
@@ -24,74 +23,75 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketUpdateCPUIn
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketValueConfig;
 
 public class WCTPacketHandlerBase {
-	private static final Map<Class<? extends WCTPacket>, PacketTypes> REVERSE_LOOKUP = new HashMap<Class<? extends WCTPacket>, WCTPacketHandlerBase.PacketTypes>();
+    private static final Map<Class<? extends WCTPacket>, PacketTypes> REVERSE_LOOKUP =
+            new HashMap<Class<? extends WCTPacket>, WCTPacketHandlerBase.PacketTypes>();
 
-	public enum PacketTypes {
-		PACKET_INVENTORY_ACTION(PacketInventoryAction.class),
+    public enum PacketTypes {
+        PACKET_INVENTORY_ACTION(PacketInventoryAction.class),
 
-		PACKET_ME_INVENTORY_UPDATE(PacketMEInventoryUpdate.class),
+        PACKET_ME_INVENTORY_UPDATE(PacketMEInventoryUpdate.class),
 
-		PACKET_VALUE_CONFIG(PacketValueConfig.class),
+        PACKET_VALUE_CONFIG(PacketValueConfig.class),
 
-		PACKET_SWITCH_GUIS(PacketSwitchGuis.class),
+        PACKET_SWITCH_GUIS(PacketSwitchGuis.class),
 
-		PACKET_SWAP_SLOTS(PacketSwapSlots.class),
+        PACKET_SWAP_SLOTS(PacketSwapSlots.class),
 
-		PACKET_RECIPE_NEI(PacketNEIRecipe.class),
+        PACKET_RECIPE_NEI(PacketNEIRecipe.class),
 
-		PACKET_PARTIAL_ITEM(PacketPartialItem.class),
+        PACKET_PARTIAL_ITEM(PacketPartialItem.class),
 
-		PACKET_CRAFTING_REQUEST(PacketCraftRequest.class),
+        PACKET_CRAFTING_REQUEST(PacketCraftRequest.class),
 
-		PACKET_MAGNETFILTER_MODE(PacketMagnetFilter.class),
+        PACKET_MAGNETFILTER_MODE(PacketMagnetFilter.class),
 
-		PACKET_OPENWIRELESSTERM(PacketOpenGui.class),
-		
-		PACKET_SWITCHMAGNETMODE(PacketSetMagnet.class),
-		
-		PACKET_EMPTY_TRASH(PacketEmptyTrash.class),
-		
-		PACKET_SYNC_CONFIGS(PacketConfigSync.class),
-		
-		PACKET_SET_JOB(PacketSetJobBytes.class),
-		
-		PACKET_UPDATECPUINFO(PacketUpdateCPUInfo.class);
+        PACKET_OPENWIRELESSTERM(PacketOpenGui.class),
 
-		private final Class<? extends WCTPacket> packetClass;
-		private final Constructor<? extends WCTPacket> packetConstructor;
+        PACKET_SWITCHMAGNETMODE(PacketSetMagnet.class),
 
-		PacketTypes(final Class<? extends WCTPacket> c) {
-			this.packetClass = c;
+        PACKET_EMPTY_TRASH(PacketEmptyTrash.class),
 
-			Constructor<? extends WCTPacket> x = null;
-			try {
-				x = this.packetClass.getConstructor(ByteBuf.class);
-			}
-			catch (final NoSuchMethodException ignored) {
-			}
-			catch (final SecurityException ignored) {
-			}
-			catch (final DecoderException ignored) {
-			}
+        PACKET_SYNC_CONFIGS(PacketConfigSync.class),
 
-			this.packetConstructor = x;
-			REVERSE_LOOKUP.put(this.packetClass, this);
+        PACKET_SET_JOB(PacketSetJobBytes.class),
 
-			if (this.packetConstructor == null) {
-				throw new IllegalStateException("Invalid Packet Class " + c + ", must be constructable on DataInputStream");
-			}
-		}
+        PACKET_UPDATECPUINFO(PacketUpdateCPUInfo.class);
 
-		public static PacketTypes getPacket(final int id) {
-			return (values())[id];
-		}
+        private final Class<? extends WCTPacket> packetClass;
+        private final Constructor<? extends WCTPacket> packetConstructor;
 
-		static PacketTypes getID(final Class<? extends WCTPacket> c) {
-			return REVERSE_LOOKUP.get(c);
-		}
+        PacketTypes(final Class<? extends WCTPacket> c) {
+            this.packetClass = c;
 
-		public WCTPacket parsePacket(final ByteBuf in) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-			return this.packetConstructor.newInstance(in);
-		}
-	}
+            Constructor<? extends WCTPacket> x = null;
+            try {
+                x = this.packetClass.getConstructor(ByteBuf.class);
+            } catch (final NoSuchMethodException ignored) {
+            } catch (final SecurityException ignored) {
+            } catch (final DecoderException ignored) {
+            }
+
+            this.packetConstructor = x;
+            REVERSE_LOOKUP.put(this.packetClass, this);
+
+            if (this.packetConstructor == null) {
+                throw new IllegalStateException(
+                        "Invalid Packet Class " + c + ", must be constructable on DataInputStream");
+            }
+        }
+
+        public static PacketTypes getPacket(final int id) {
+            return (values())[id];
+        }
+
+        static PacketTypes getID(final Class<? extends WCTPacket> c) {
+            return REVERSE_LOOKUP.get(c);
+        }
+
+        public WCTPacket parsePacket(final ByteBuf in)
+                throws InstantiationException, IllegalAccessException, IllegalArgumentException,
+                        InvocationTargetException {
+            return this.packetConstructor.newInstance(in);
+        }
+    }
 }
