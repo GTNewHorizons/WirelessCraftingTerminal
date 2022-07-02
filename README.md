@@ -53,10 +53,10 @@ Providing as many details as possible does help us to find and resolve the issue
 
 ## Building
 
-1. Clone this repository via 
-  - SSH `git clone git@github.com:p455w0rd/WirelessCraftingTerminal.git` or 
+1. Clone this repository via
+  - SSH `git clone git@github.com:p455w0rd/WirelessCraftingTerminal.git` or
   - HTTPS `git clone https://github.com/p455w0rd/WirelessCraftingTerminal.git`
-2. Setup workspace 
+2. Setup workspace
   - Decompiled source `gradlew setupDecompWorkspace`
   - Obfuscated source `gradlew setupDevWorkspace`
   - CI server `gradlew setupCIWorkspace`
@@ -102,7 +102,7 @@ I would love for someone to do translations for me =]
 ## Credits
 
 Thanks to the following people for support, code, et al
- 
+
 * Code/tutorials/general help: Notch, brandon3055, Techjar, AlgorythmX2, thatsIch, Nividica, squeek502, M3gaFr3ak, DrummerMC, cpw, LexManos, Pahimar, diesieben07, Wuppy, Jabelar, blay09, SirSengir, mezz
 
 * Contributors: condensedapple, TKH+

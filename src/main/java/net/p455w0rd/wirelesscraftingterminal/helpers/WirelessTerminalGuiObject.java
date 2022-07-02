@@ -30,300 +30,313 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
 import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTIActionHost;
 
 public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, IInventorySlotAware, WCTIActionHost {
 
-	private final ItemStack effectiveItem;
-	private final IWirelessTermHandler wth;
-	private final String encryptionKey;
-	private final EntityPlayer myPlayer;
-	private IGrid targetGrid;
-	private IStorageGrid sg;
-	private IMEMonitor<IAEItemStack> itemStorage;
-	private IWirelessAccessPoint myWap;
-	private double sqRange = Double.MAX_VALUE;
-	private double myRange = Double.MAX_VALUE;
-	private final int inventorySlot;
+    private final ItemStack effectiveItem;
+    private final IWirelessTermHandler wth;
+    private final String encryptionKey;
+    private final EntityPlayer myPlayer;
+    private IGrid targetGrid;
+    private IStorageGrid sg;
+    private IMEMonitor<IAEItemStack> itemStorage;
+    private IWirelessAccessPoint myWap;
+    private double sqRange = Double.MAX_VALUE;
+    private double myRange = Double.MAX_VALUE;
+    private final int inventorySlot;
 
-	public WirelessTerminalGuiObject(final IWirelessTermHandler wh, final ItemStack is, final EntityPlayer ep, final World w, final int x, final int y, final int z) {
-		this.encryptionKey = wh.getEncryptionKey(is);
-		this.effectiveItem = is;
-		this.myPlayer = ep;
-		this.wth = wh;
-		this.inventorySlot = x;
-		ILocatable obj = null;
-		try {
-			final long encKey = Long.parseLong(this.encryptionKey);
-			obj = AEApi.instance().registries().locatable().getLocatableBy(encKey);
-		}
-		catch (final NumberFormatException err) {
-			// :P
-		}
+    public WirelessTerminalGuiObject(
+            final IWirelessTermHandler wh,
+            final ItemStack is,
+            final EntityPlayer ep,
+            final World w,
+            final int x,
+            final int y,
+            final int z) {
+        this.encryptionKey = wh.getEncryptionKey(is);
+        this.effectiveItem = is;
+        this.myPlayer = ep;
+        this.wth = wh;
+        this.inventorySlot = x;
+        ILocatable obj = null;
+        try {
+            final long encKey = Long.parseLong(this.encryptionKey);
+            obj = AEApi.instance().registries().locatable().getLocatableBy(encKey);
+        } catch (final NumberFormatException err) {
+            // :P
+        }
 
-		if (obj instanceof IGridHost) {
-			final IGridNode n = ((IGridHost) obj).getGridNode(ForgeDirection.UNKNOWN);
-			if (n != null) {
-				this.targetGrid = n.getGrid();
-				if (this.targetGrid != null) {
-					this.sg = this.targetGrid.getCache(IStorageGrid.class);
-					if (this.sg != null) {
-						this.itemStorage = this.sg.getItemInventory();
-					}
-				}
-			}
-		}
-	}
-	
-	public IGrid getTargetGrid() {
-		return this.targetGrid;
-	}
+        if (obj instanceof IGridHost) {
+            final IGridNode n = ((IGridHost) obj).getGridNode(ForgeDirection.UNKNOWN);
+            if (n != null) {
+                this.targetGrid = n.getGrid();
+                if (this.targetGrid != null) {
+                    this.sg = this.targetGrid.getCache(IStorageGrid.class);
+                    if (this.sg != null) {
+                        this.itemStorage = this.sg.getItemInventory();
+                    }
+                }
+            }
+        }
+    }
 
-	public double getRange() {
-		return this.myRange;
-	}
+    /**
+     * @return Whether an infinity booster card is installed on the WCT.
+     */
+    private boolean checkForBooster() {
+        if (effectiveItem != null && effectiveItem.getItem() instanceof IWirelessCraftingTerminalItem) {
+            IWirelessCraftingTerminalItem wct = (IWirelessCraftingTerminalItem) effectiveItem.getItem();
+            return wct.checkForBooster(effectiveItem);
+        }
+        return false;
+    }
 
-	@Override
-	public IMEMonitor<IAEItemStack> getItemInventory() {
-		if (this.sg == null) {
-			return null;
-		}
-		return this.sg.getItemInventory();
-	}
+    public IGrid getTargetGrid() {
+        return this.targetGrid;
+    }
 
-	@Override
-	public IMEMonitor<IAEFluidStack> getFluidInventory() {
-		if (this.sg == null) {
-			return null;
-		}
-		return this.sg.getFluidInventory();
-	}
+    public double getRange() {
+        return this.myRange;
+    }
 
-	@Override
-	public void addListener(final IMEMonitorHandlerReceiver<IAEItemStack> l, final Object verificationToken) {
-		if (this.itemStorage != null) {
-			this.itemStorage.addListener(l, verificationToken);
-		}
-	}
+    @Override
+    public IMEMonitor<IAEItemStack> getItemInventory() {
+        if (this.sg == null) {
+            return null;
+        }
+        return this.sg.getItemInventory();
+    }
 
-	@Override
-	public void removeListener(final IMEMonitorHandlerReceiver<IAEItemStack> l) {
-		if (this.itemStorage != null) {
-			this.itemStorage.removeListener(l);
-		}
-	}
+    @Override
+    public IMEMonitor<IAEFluidStack> getFluidInventory() {
+        if (this.sg == null) {
+            return null;
+        }
+        return this.sg.getFluidInventory();
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public IItemList<IAEItemStack> getAvailableItems(final IItemList out) {
-		if (this.itemStorage != null) {
-			return this.itemStorage.getAvailableItems(out);
-		}
-		return out;
-	}
+    @Override
+    public void addListener(final IMEMonitorHandlerReceiver<IAEItemStack> l, final Object verificationToken) {
+        if (this.itemStorage != null) {
+            this.itemStorage.addListener(l, verificationToken);
+        }
+    }
 
-	@Override
-	public IItemList<IAEItemStack> getStorageList() {
-		if (this.itemStorage != null) {
-			return this.itemStorage.getStorageList();
-		}
-		return null;
-	}
+    @Override
+    public void removeListener(final IMEMonitorHandlerReceiver<IAEItemStack> l) {
+        if (this.itemStorage != null) {
+            this.itemStorage.removeListener(l);
+        }
+    }
 
-	@Override
-	public AccessRestriction getAccess() {
-		if (this.itemStorage != null) {
-			return this.itemStorage.getAccess();
-		}
-		return AccessRestriction.NO_ACCESS;
-	}
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public IItemList<IAEItemStack> getAvailableItems(final IItemList out) {
+        if (this.itemStorage != null) {
+            return this.itemStorage.getAvailableItems(out);
+        }
+        return out;
+    }
 
-	@Override
-	public boolean isPrioritized(final IAEItemStack input) {
-		if (this.itemStorage != null) {
-			return this.itemStorage.isPrioritized(input);
-		}
-		return false;
-	}
+    @Override
+    public IItemList<IAEItemStack> getStorageList() {
+        if (this.itemStorage != null) {
+            return this.itemStorage.getStorageList();
+        }
+        return null;
+    }
 
-	@Override
-	public boolean canAccept(final IAEItemStack input) {
-		if (this.itemStorage != null) {
-			return this.itemStorage.canAccept(input);
-		}
-		return false;
-	}
+    @Override
+    public AccessRestriction getAccess() {
+        if (this.itemStorage != null) {
+            return this.itemStorage.getAccess();
+        }
+        return AccessRestriction.NO_ACCESS;
+    }
 
-	@Override
-	public int getPriority() {
-		if (this.itemStorage != null) {
-			return this.itemStorage.getPriority();
-		}
-		return 0;
-	}
+    @Override
+    public boolean isPrioritized(final IAEItemStack input) {
+        if (this.itemStorage != null) {
+            return this.itemStorage.isPrioritized(input);
+        }
+        return false;
+    }
 
-	@Override
-	public int getSlot() {
-		if (this.itemStorage != null) {
-			return this.itemStorage.getSlot();
-		}
-		return 0;
-	}
+    @Override
+    public boolean canAccept(final IAEItemStack input) {
+        if (this.itemStorage != null) {
+            return this.itemStorage.canAccept(input);
+        }
+        return false;
+    }
 
-	@Override
-	public boolean validForPass(final int i) {
-		return this.itemStorage.validForPass(i);
-	}
+    @Override
+    public int getPriority() {
+        if (this.itemStorage != null) {
+            return this.itemStorage.getPriority();
+        }
+        return 0;
+    }
 
-	@Override
-	public IAEItemStack injectItems(final IAEItemStack input, final Actionable type, final BaseActionSource src) {
-		if (this.itemStorage != null) {
-			return this.itemStorage.injectItems(input, type, src);
-		}
-		return input;
-	}
+    @Override
+    public int getSlot() {
+        if (this.itemStorage != null) {
+            return this.itemStorage.getSlot();
+        }
+        return 0;
+    }
 
-	@Override
-	public IAEItemStack extractItems(final IAEItemStack request, final Actionable mode, final BaseActionSource src) {
-		if (this.itemStorage != null) {
-			return this.itemStorage.extractItems(request, mode, src);
-		}
-		return null;
-	}
+    @Override
+    public boolean validForPass(final int i) {
+        return this.itemStorage.validForPass(i);
+    }
 
-	@Override
-	public StorageChannel getChannel() {
-		if (this.itemStorage != null) {
-			return this.itemStorage.getChannel();
-		}
-		return StorageChannel.ITEMS;
-	}
+    @Override
+    public IAEItemStack injectItems(final IAEItemStack input, final Actionable type, final BaseActionSource src) {
+        if (this.itemStorage != null) {
+            return this.itemStorage.injectItems(input, type, src);
+        }
+        return input;
+    }
 
-	@Override
-	public double extractAEPower(final double amt, final Actionable mode, final PowerMultiplier usePowerMultiplier) {
-		if (this.wth != null && this.effectiveItem != null) {
-			if (mode == Actionable.SIMULATE) {
-				return this.wth.hasPower(this.myPlayer, amt, this.effectiveItem) ? amt : 0;
-			}
-			return this.wth.usePower(this.myPlayer, amt, this.effectiveItem) ? amt : 0;
-		}
-		return 0.0;
-	}
+    @Override
+    public IAEItemStack extractItems(final IAEItemStack request, final Actionable mode, final BaseActionSource src) {
+        if (this.itemStorage != null) {
+            return this.itemStorage.extractItems(request, mode, src);
+        }
+        return null;
+    }
 
-	@Override
-	public ItemStack getItemStack() {
-		return this.effectiveItem;
-	}
+    @Override
+    public StorageChannel getChannel() {
+        if (this.itemStorage != null) {
+            return this.itemStorage.getChannel();
+        }
+        return StorageChannel.ITEMS;
+    }
 
-	@Override
-	public IConfigManager getConfigManager() {
-		return this.wth.getConfigManager(this.effectiveItem);
-	}
+    @Override
+    public double extractAEPower(final double amt, final Actionable mode, final PowerMultiplier usePowerMultiplier) {
+        if (this.wth != null && this.effectiveItem != null) {
+            if (mode == Actionable.SIMULATE) {
+                return this.wth.hasPower(this.myPlayer, amt, this.effectiveItem) ? amt : 0;
+            }
+            return this.wth.usePower(this.myPlayer, amt, this.effectiveItem) ? amt : 0;
+        }
+        return 0.0;
+    }
 
-	@Override
-	public IGridNode getGridNode(final ForgeDirection dir) {
-		return this.getActionableNode();
-	}
+    @Override
+    public ItemStack getItemStack() {
+        return this.effectiveItem;
+    }
 
-	@Override
-	public AECableType getCableConnectionType(final ForgeDirection dir) {
-		return AECableType.NONE;
-	}
+    @Override
+    public IConfigManager getConfigManager() {
+        return this.wth.getConfigManager(this.effectiveItem);
+    }
 
-	@Override
-	public void securityBreak() {
+    @Override
+    public IGridNode getGridNode(final ForgeDirection dir) {
+        return this.getActionableNode();
+    }
 
-	}
+    @Override
+    public AECableType getCableConnectionType(final ForgeDirection dir) {
+        return AECableType.NONE;
+    }
 
-	@Override
-	public IGridNode getActionableNode() {
-		return getActionableNode(false);
-	}
+    @Override
+    public void securityBreak() {}
 
-	public IGridNode getActionableNode(boolean ignoreRange) {
-		this.rangeCheck(ignoreRange);
-		if (this.myWap != null) {
-			//return this.getTargetGrid().getPivot();
-			return this.myWap.getActionableNode();
-		}
-		else {
-			if (ignoreRange) {
-				return this.getTargetGrid().getPivot();
-			}
-		}
-		return null;
-	}
+    @Override
+    public IGridNode getActionableNode() {
+        return getActionableNode(checkForBooster());
+    }
 
-	public boolean rangeCheck() {
-		return rangeCheck(false);
-	}
+    public IGridNode getActionableNode(boolean ignoreRange) {
+        this.rangeCheck(ignoreRange);
+        if (this.myWap != null) {
+            // return this.getTargetGrid().getPivot();
+            return this.myWap.getActionableNode();
+        } else {
+            if (ignoreRange) {
+                return this.getTargetGrid().getPivot();
+            }
+        }
+        return null;
+    }
 
-	public boolean rangeCheck(boolean ignoreRange) {
-		this.sqRange = this.myRange = Double.MAX_VALUE;
+    public boolean rangeCheck() {
+        return rangeCheck(checkForBooster());
+    }
 
-		if (this.targetGrid != null && this.itemStorage != null) {
-			if (this.myWap != null) {
-				if (this.myWap.getGrid() == this.targetGrid) {
-					if (this.testWap(this.myWap)) {
-						return true;
-					}
-				}
-				return false;
-			}
+    public boolean rangeCheck(boolean ignoreRange) {
+        this.sqRange = this.myRange = Double.MAX_VALUE;
 
-			final IMachineSet tw = this.targetGrid.getMachines(TileWireless.class);
+        if (this.targetGrid != null && this.itemStorage != null) {
+            if (this.myWap != null) {
+                if (this.myWap.getGrid() == this.targetGrid) {
+                    if (this.testWap(this.myWap)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
 
-			this.myWap = null;
+            final IMachineSet tw = this.targetGrid.getMachines(TileWireless.class);
 
-			for (final IGridNode n : tw) {
-				final IWirelessAccessPoint wap = (IWirelessAccessPoint) n.getMachine();
-				if (this.testWap(wap, ignoreRange)) {
-					this.myWap = wap;
-				}
-			}
+            this.myWap = null;
 
-			return this.myWap != null;
-		}
-		return false;
-	}
+            for (final IGridNode n : tw) {
+                final IWirelessAccessPoint wap = (IWirelessAccessPoint) n.getMachine();
+                if (this.testWap(wap, ignoreRange)) {
+                    this.myWap = wap;
+                }
+            }
 
-	private boolean testWap(final IWirelessAccessPoint wap) {
-		return testWap(wap, false);
-	}
+            return this.myWap != null;
+        }
+        return false;
+    }
 
-	private boolean testWap(final IWirelessAccessPoint wap, boolean ignoreRange) {
-		double rangeLimit = wap.getRange();
-		rangeLimit *= rangeLimit;
+    private boolean testWap(final IWirelessAccessPoint wap) {
+        return testWap(wap, checkForBooster());
+    }
 
-		final DimensionalCoord dc = wap.getLocation();
+    private boolean testWap(final IWirelessAccessPoint wap, boolean ignoreRange) {
+        double rangeLimit = wap.getRange();
+        rangeLimit *= rangeLimit;
 
-		if (dc.getWorld() == this.myPlayer.worldObj) {
-			final double offX = dc.x - this.myPlayer.posX;
-			final double offY = dc.y - this.myPlayer.posY;
-			final double offZ = dc.z - this.myPlayer.posZ;
+        final DimensionalCoord dc = wap.getLocation();
 
-			final double r = offX * offX + offY * offY + offZ * offZ;
-			if (r < rangeLimit && this.sqRange > r && !ignoreRange) {
-				if (wap.isActive()) {
-					this.sqRange = r;
-					this.myRange = Math.sqrt(r);
-					return true;
-				}
-			}
-			else {
-				if (wap.isActive() && ignoreRange) {
-					this.sqRange = r;
-					this.myRange = Math.sqrt(r);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+        if (dc.getWorld() == this.myPlayer.worldObj) {
+            final double offX = dc.x - this.myPlayer.posX;
+            final double offY = dc.y - this.myPlayer.posY;
+            final double offZ = dc.z - this.myPlayer.posZ;
 
-	@Override
-	public int getInventorySlot() {
-		return this.inventorySlot;
-	}
+            final double r = offX * offX + offY * offY + offZ * offZ;
+            if (r < rangeLimit && this.sqRange > r && !ignoreRange) {
+                if (wap.isActive()) {
+                    this.sqRange = r;
+                    this.myRange = Math.sqrt(r);
+                    return true;
+                }
+            } else {
+                if (wap.isActive() && ignoreRange) {
+                    this.sqRange = r;
+                    this.myRange = Math.sqrt(r);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    @Override
+    public int getInventorySlot() {
+        return this.inventorySlot;
+    }
 }

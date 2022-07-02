@@ -16,33 +16,35 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 public class WCTInteractionHelper implements IWCTInteractionHelper {
 
-	@Override
-	public void openWirelessCraftingTerminalGui(final EntityPlayer player) {
-		if ((player == null) || (player instanceof FakePlayer) || (player instanceof EntityPlayerMP) || FMLCommonHandler.instance().getSide() == Side.SERVER) {
-			return;
-		}
+    @Override
+    public void openWirelessCraftingTerminalGui(final EntityPlayer player) {
+        if ((player == null)
+                || (player instanceof FakePlayer)
+                || (player instanceof EntityPlayerMP)
+                || FMLCommonHandler.instance().getSide() == Side.SERVER) {
+            return;
+        }
 
-		// Get the first wireless terminal
-		// If one is held, it takes precedence
-		ItemStack is = RandomUtils.getWirelessTerm(player.inventory);
-		if (is == null) {
-			return;
-		}
-		if (is.hasTagCompound()) {
-			// Get the security terminal source key
-			String sourceKey = is.getTagCompound().getString(ItemWirelessCraftingTerminal.LINK_KEY_STRING);
+        // Get the first wireless terminal
+        // If one is held, it takes precedence
+        ItemStack is = RandomUtils.getWirelessTerm(player.inventory);
+        if (is == null) {
+            return;
+        }
+        if (is.hasTagCompound()) {
+            // Get the security terminal source key
+            String sourceKey = is.getTagCompound().getString(ItemWirelessCraftingTerminal.LINK_KEY_STRING);
 
-			// Ensure the source is not empty nor null
-			if ((sourceKey != null) && (!sourceKey.isEmpty())) {
-				// The terminal is linked.
-				NetworkHandler.instance.sendToServer(new PacketOpenGui(Reference.GUI_WCT));
-			}
-		}
-		
-	}
+            // Ensure the source is not empty nor null
+            if ((sourceKey != null) && (!sourceKey.isEmpty())) {
+                // The terminal is linked.
+                NetworkHandler.instance.sendToServer(new PacketOpenGui(Reference.GUI_WCT));
+            }
+        }
+    }
 
-	public static boolean isTerminalLinked(final IWirelessCraftingTermHandler wirelessTerminal, final ItemStack wirelessTerminalItemstack) {
-		return (!wirelessTerminal.getEncryptionKey(wirelessTerminalItemstack).isEmpty());
-	}
-
+    public static boolean isTerminalLinked(
+            final IWirelessCraftingTermHandler wirelessTerminal, final ItemStack wirelessTerminalItemstack) {
+        return (!wirelessTerminal.getEncryptionKey(wirelessTerminalItemstack).isEmpty());
+    }
 }

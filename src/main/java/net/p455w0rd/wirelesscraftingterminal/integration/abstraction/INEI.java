@@ -5,7 +5,7 @@ import net.minecraft.inventory.Slot;
 
 public interface INEI {
 
-	void drawSlot(Slot s);
+    void drawSlot(Slot s);
 
-	RenderItem setItemRender(RenderItem renderItem);
+    RenderItem setItemRender(RenderItem renderItem);
 }

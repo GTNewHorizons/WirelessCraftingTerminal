@@ -12,40 +12,40 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
 
 public class PacketSwitchGuis extends WCTPacket {
 
-	private final int newGui;
+    private final int newGui;
 
-	// automatic.
-	public PacketSwitchGuis(final ByteBuf stream) {
-		this.newGui = stream.readInt();
-	}
+    // automatic.
+    public PacketSwitchGuis(final ByteBuf stream) {
+        this.newGui = stream.readInt();
+    }
 
-	// api
-	public PacketSwitchGuis(final int newGui) {
-		this.newGui = newGui;
+    // api
+    public PacketSwitchGuis(final int newGui) {
+        this.newGui = newGui;
 
-		if (Platform.isClient()) {
-			GuiWirelessCraftingTerminal.setSwitchingGuis(true);
-		}
+        if (Platform.isClient()) {
+            GuiWirelessCraftingTerminal.setSwitchingGuis(true);
+        }
 
-		final ByteBuf data = Unpooled.buffer();
+        final ByteBuf data = Unpooled.buffer();
 
-		data.writeInt(this.getPacketID());
-		data.writeInt(newGui);
+        data.writeInt(this.getPacketID());
+        data.writeInt(newGui);
 
-		this.configureWrite(data);
-	}
+        this.configureWrite(data);
+    }
 
-	@Override
-	public void serverPacketData(final INetworkInfo manager, final WCTPacket packet, final EntityPlayer player) {
-		World world = player.worldObj;
-		int x = (int) player.posX;
-		int y = (int) player.posY;
-		int z = (int) player.posZ;
-		WCTGuiHandler.launchGui(newGui, player, world, x, y, z);
-	}
+    @Override
+    public void serverPacketData(final INetworkInfo manager, final WCTPacket packet, final EntityPlayer player) {
+        World world = player.worldObj;
+        int x = (int) player.posX;
+        int y = (int) player.posY;
+        int z = (int) player.posZ;
+        WCTGuiHandler.launchGui(newGui, player, world, x, y, z);
+    }
 
-	@Override
-	public void clientPacketData(final INetworkInfo network, final WCTPacket packet, final EntityPlayer player) {
-		GuiWirelessCraftingTerminal.setSwitchingGuis(true);
-	}
+    @Override
+    public void clientPacketData(final INetworkInfo network, final WCTPacket packet, final EntityPlayer player) {
+        GuiWirelessCraftingTerminal.setSwitchingGuis(true);
+    }
 }

@@ -12,37 +12,33 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
 
 public class PacketEmptyTrash extends WCTPacket {
 
-	public PacketEmptyTrash(final ByteBuf stream) {
-	}
+    public PacketEmptyTrash(final ByteBuf stream) {}
 
-	// api
-	public PacketEmptyTrash() {
-		final ByteBuf data = Unpooled.buffer();
+    // api
+    public PacketEmptyTrash() {
+        final ByteBuf data = Unpooled.buffer();
 
-		data.writeInt(this.getPacketID());
-		this.configureWrite(data);
-	}
+        data.writeInt(this.getPacketID());
+        this.configureWrite(data);
+    }
 
-	@Override
-	public void serverPacketData(final INetworkInfo manager, final WCTPacket packet, final EntityPlayer player) {
-		ItemStack wirelessTerm = RandomUtils.getWirelessTerm(player.inventory);
-		if (wirelessTerm.getTagCompound() != null) {
-			NBTTagCompound nbtTC = wirelessTerm.getTagCompound();
-			if (nbtTC.hasKey("TrashSlot")) {
-				NBTTagList trashSlot = nbtTC.getTagList("TrashSlot", 10);
-				if (trashSlot != null) {
-					ItemStack trashItem = ItemStack.loadItemStackFromNBT(trashSlot.getCompoundTagAt(0));
-					if (trashItem != null) {
-						trashSlot.removeTag(0);
-					}
-				}
-			}
-		}
-	}
+    @Override
+    public void serverPacketData(final INetworkInfo manager, final WCTPacket packet, final EntityPlayer player) {
+        ItemStack wirelessTerm = RandomUtils.getWirelessTerm(player.inventory);
+        if (wirelessTerm.getTagCompound() != null) {
+            NBTTagCompound nbtTC = wirelessTerm.getTagCompound();
+            if (nbtTC.hasKey("TrashSlot")) {
+                NBTTagList trashSlot = nbtTC.getTagList("TrashSlot", 10);
+                if (trashSlot != null) {
+                    ItemStack trashItem = ItemStack.loadItemStackFromNBT(trashSlot.getCompoundTagAt(0));
+                    if (trashItem != null) {
+                        trashSlot.removeTag(0);
+                    }
+                }
+            }
+        }
+    }
 
-	@Override
-	public void clientPacketData(final INetworkInfo network, final WCTPacket packet, final EntityPlayer player) {
-
-	}
-
+    @Override
+    public void clientPacketData(final INetworkInfo network, final WCTPacket packet, final EntityPlayer player) {}
 }
