@@ -1,12 +1,6 @@
 package net.p455w0rd.wirelesscraftingterminal.items;
 
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.PowerMultiplier;
-import appeng.api.config.PowerUnits;
-import appeng.api.config.Settings;
-import appeng.api.config.SortDir;
-import appeng.api.config.SortOrder;
-import appeng.api.config.ViewItems;
+import appeng.api.config.*;
 import appeng.api.util.IConfigManager;
 import appeng.items.tools.powered.powersink.AERootPoweredItem;
 import appeng.util.ConfigManager;
@@ -220,7 +214,7 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem implements I
 
     @Override
     public boolean canHandle(final ItemStack is) {
-        return true;
+        return is.getItem() instanceof IWirelessCraftingTerminalItem;
     }
 
     @Override
