@@ -262,7 +262,7 @@ public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, II
             // return this.getTargetGrid().getPivot();
             return this.myWap.getActionableNode();
         } else {
-            if (ignoreRange) {
+            if (ignoreRange && this.getTargetGrid() != null) {
                 return this.getTargetGrid().getPivot();
             }
         }
