@@ -115,11 +115,7 @@ public class GuiCraftAmount extends WCTBaseGui {
             double resultD = Calculator.conversion(out);
             int resultI;
 
-            if (resultD <= 0 || Double.isNaN(resultD)) {
-                resultI = 0;
-            } else {
-                resultI = (int) ArithHelper.round(resultD, 0);
-            }
+            resultI = roundDouble(resultD);
 
             this.next.enabled = resultI > 0;
         } catch (final NumberFormatException e) {
@@ -154,11 +150,7 @@ public class GuiCraftAmount extends WCTBaseGui {
                 double resultD = Calculator.conversion(this.amountToCraft.getText());
                 int resultI;
 
-                if (resultD <= 0 || Double.isNaN(resultD)) {
-                    resultI = 1;
-                } else {
-                    resultI = (int) ArithHelper.round(resultD, 0);
-                }
+                resultI = roundDouble(resultD);
 
                 NetworkHandler.instance.sendToServer(new PacketCraftRequest(resultI, isShiftKeyDown()));
             }
@@ -183,11 +175,7 @@ public class GuiCraftAmount extends WCTBaseGui {
             double resultD = Calculator.conversion(out);
             int resultI;
 
-            if (resultD <= 0 || Double.isNaN(resultD)) {
-                resultI = 0;
-            } else {
-                resultI = (int) ArithHelper.round(resultD, 0);
-            }
+            resultI = roundDouble(resultD);
 
             if (resultI == 1 && i > 1) {
                 resultI = 0;
@@ -207,5 +195,14 @@ public class GuiCraftAmount extends WCTBaseGui {
 
     protected String getBackground() {
         return "guis/craftAmt.png";
+    }
+
+    private int roundDouble(double num) {
+        if (num <= 0 || Double.isNaN(num)) {
+            return 0;
+        }
+        else {
+            return (int) ArithHelper.round(num, 0);
+        }
     }
 }
