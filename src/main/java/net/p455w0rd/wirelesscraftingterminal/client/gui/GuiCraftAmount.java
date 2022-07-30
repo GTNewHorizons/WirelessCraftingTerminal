@@ -200,8 +200,7 @@ public class GuiCraftAmount extends WCTBaseGui {
     private int roundDouble(double num) {
         if (num <= 0 || Double.isNaN(num)) {
             return 0;
-        }
-        else {
+        } else {
             return (int) ArithHelper.round(num, 0);
         }
     }
