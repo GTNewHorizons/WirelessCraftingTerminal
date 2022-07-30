@@ -113,9 +113,8 @@ public class GuiCraftAmount extends WCTBaseGui {
             String out = this.amountToCraft.getText();
 
             double resultD = Calculator.conversion(out);
-            int resultI;
 
-            resultI = roundDouble(resultD);
+            int resultI = roundDouble(resultD);
 
             this.next.enabled = resultI > 0;
         } catch (final NumberFormatException e) {
@@ -148,9 +147,8 @@ public class GuiCraftAmount extends WCTBaseGui {
 
             if (btn == this.next && btn.enabled) {
                 double resultD = Calculator.conversion(this.amountToCraft.getText());
-                int resultI;
 
-                resultI = roundDouble(resultD);
+                int resultI = roundDouble(resultD);
 
                 NetworkHandler.instance.sendToServer(new PacketCraftRequest(resultI, isShiftKeyDown()));
             }
@@ -173,9 +171,8 @@ public class GuiCraftAmount extends WCTBaseGui {
             String out = this.amountToCraft.getText();
 
             double resultD = Calculator.conversion(out);
-            int resultI;
 
-            resultI = roundDouble(resultD);
+            int resultI = roundDouble(resultD);
 
             if (resultI == 1 && i > 1) {
                 resultI = 0;
