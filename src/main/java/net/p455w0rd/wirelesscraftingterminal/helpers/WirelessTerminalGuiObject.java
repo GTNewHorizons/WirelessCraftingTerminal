@@ -6,6 +6,7 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.features.ILocatable;
 import appeng.api.features.IWirelessTermHandler;
+import appeng.api.implementations.guiobjects.IGuiItemObject;
 import appeng.api.implementations.guiobjects.IPortableCell;
 import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
@@ -33,7 +34,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
 import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTIActionHost;
 
-public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, IInventorySlotAware, WCTIActionHost {
+public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, IInventorySlotAware, WCTIActionHost, IGuiItemObject {
 
     private final ItemStack effectiveItem;
     private final IWirelessTermHandler wth;

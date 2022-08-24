@@ -31,6 +31,7 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
 import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTPlayerSource;
+import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
@@ -225,7 +226,7 @@ public class CommonProxy {
                     if (magnetStack.getItem() instanceof ItemMagnet) {
                         ItemMagnet magnet = (ItemMagnet) magnetStack.getItem();
 
-                        magnet.obj = magnet.getGuiObject(
+                        magnet.obj = ContainerWirelessCraftingTerminal.getGuiObject(
                                 WCTStack, player, world, (int) player.posX, (int) player.posY, (int) player.posZ);
                         magnet.civ = magnet.obj;
                         magnet.powerSrc = magnet.civ;

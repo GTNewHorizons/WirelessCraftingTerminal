@@ -1,6 +1,7 @@
 package net.p455w0rd.wirelesscraftingterminal.items;
 
 import appeng.api.config.*;
+import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
 import appeng.items.tools.powered.powersink.AERootPoweredItem;
 import appeng.util.ConfigManager;
@@ -32,7 +33,7 @@ import net.p455w0rd.wirelesscraftingterminal.integration.EnderIO;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 import org.lwjgl.input.Keyboard;
 
-public class ItemWirelessCraftingTerminal extends AERootPoweredItem implements IWirelessCraftingTerminalItem, IBauble {
+public class ItemWirelessCraftingTerminal extends AERootPoweredItem implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBauble {
 
     public static final String LINK_KEY_STRING = "key";
     public static double GLOBAL_POWER_MULTIPLIER = PowerMultiplier.CONFIG.multiplier;

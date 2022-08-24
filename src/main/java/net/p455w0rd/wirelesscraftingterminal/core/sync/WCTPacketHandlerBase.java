@@ -14,9 +14,7 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketMEInventory
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketMagnetFilter;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketNEIRecipe;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketOpenGui;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketPartialItem;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSetMagnet;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwapSlots;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwitchGuis;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketValueConfig;
 
@@ -33,11 +31,7 @@ public class WCTPacketHandlerBase {
 
         PACKET_SWITCH_GUIS(PacketSwitchGuis.class),
 
-        PACKET_SWAP_SLOTS(PacketSwapSlots.class),
-
         PACKET_RECIPE_NEI(PacketNEIRecipe.class),
-
-        PACKET_PARTIAL_ITEM(PacketPartialItem.class),
 
         PACKET_CRAFTING_REQUEST(PacketCraftRequest.class),
 

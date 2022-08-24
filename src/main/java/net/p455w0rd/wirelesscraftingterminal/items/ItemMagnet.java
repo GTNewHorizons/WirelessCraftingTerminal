@@ -477,19 +477,6 @@ public class ItemMagnet extends Item {
         return true;
     }
 
-    public WirelessTerminalGuiObject getGuiObject(
-            final ItemStack it, final EntityPlayer player, final World w, final int x, final int y, final int z) {
-        if (it != null) {
-            final IWirelessCraftingTermHandler wh = (IWirelessCraftingTermHandler)
-                    AEApi.instance().registries().wireless().getWirelessTerminalHandler(it);
-            if (wh != null) {
-                return new WirelessTerminalGuiObject(wh, it, player, w, x, y, z);
-            }
-        }
-
-        return null;
-    }
-
     public static List<? extends Entity> getEntitiesInRange(
             Class<?> entityType, World world, int x, int y, int z, int distance) {
         return world.getEntitiesWithinAABB(

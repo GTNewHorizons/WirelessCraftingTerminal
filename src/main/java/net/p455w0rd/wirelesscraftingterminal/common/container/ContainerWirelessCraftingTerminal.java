@@ -14,11 +14,9 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
-import appeng.api.networking.energy.IEnergySource;
 import appeng.api.networking.security.BaseActionSource;
-import appeng.api.networking.security.ISecurityGrid;
+import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.storage.IBaseMonitor;
-import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEItemStack;
@@ -27,11 +25,12 @@ import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.SlotME;
+import appeng.container.AEBaseContainer;
 import appeng.container.ContainerNull;
+import appeng.container.slot.AppEngSlot;
 import appeng.core.AEConfig;
 import appeng.core.localization.PlayerMessages;
 import appeng.helpers.IContainerCraftingPacket;
-import appeng.helpers.ICustomNameObject;
 import appeng.helpers.InventoryAction;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.IAEAppEngInventory;
@@ -41,22 +40,9 @@ import appeng.util.IConfigManagerHost;
 import appeng.util.InventoryAdaptor;
 import appeng.util.Platform;
 import appeng.util.inv.AdaptorPlayerHand;
-import appeng.util.item.AEItemStack;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.BufferOverflowException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
@@ -66,7 +52,6 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
@@ -74,12 +59,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTermHandler;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
-import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTIActionHost;
-import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTPlayerSource;
-import net.p455w0rd.wirelesscraftingterminal.common.container.guisync.GuiSync;
-import net.p455w0rd.wirelesscraftingterminal.common.container.guisync.SyncData;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.AppEngCraftingSlot;
-import net.p455w0rd.wirelesscraftingterminal.common.container.slot.AppEngSlot;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.NullSlot;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotArmor;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotBooster;
@@ -101,9 +81,7 @@ import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryViewCe
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketInventoryAction;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketMEInventoryUpdate;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketPartialItem;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketValueConfig;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
@@ -111,13 +89,20 @@ import net.p455w0rd.wirelesscraftingterminal.items.ItemInfinityBooster;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemMagnet;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
-public class ContainerWirelessCraftingTerminal extends Container
-        implements IConfigManagerHost,
-                IConfigurableObject,
-                IMEMonitorHandlerReceiver<IAEItemStack>,
-                IAEAppEngInventory,
-                IContainerCraftingPacket,
-                IViewCellStorage {
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.nio.BufferOverflowException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+public class ContainerWirelessCraftingTerminal extends AEBaseContainer
+    implements IConfigManagerHost,
+    IConfigurableObject,
+    IMEMonitorHandlerReceiver<IAEItemStack>,
+    IAEAppEngInventory,
+    IContainerCraftingPacket,
+    IViewCellStorage {
 
     private final ItemStack containerstack;
     public final WCTInventoryCrafting craftingGrid;
@@ -127,37 +112,35 @@ public class ContainerWirelessCraftingTerminal extends Container
     public final WCTInventoryTrash trashInventory;
     public final InventoryPlayer inventoryPlayer;
     public ItemStack[] craftMatrixInventory;
-    public ItemStack craftItem;
-    private World worldObj;
-    private EntityPlayer player;
+    private final World worldObj;
+    private final EntityPlayer player;
     private static final int HOTBAR_START = 1,
-            HOTBAR_END = HOTBAR_START + 8,
-            INV_START = HOTBAR_END + 1,
-            INV_END = INV_START + 26,
-            ARMOR_START = INV_END + 1,
-            ARMOR_END = ARMOR_START + 3,
-            CRAFT_GRID_START = ARMOR_END + 1,
-            CRAFT_GRID_END = CRAFT_GRID_START + 8,
-            CRAFT_RESULT = CRAFT_GRID_END + 1,
-            VIEW_CELL_START = CRAFT_RESULT + 1,
-            VIEW_CELL_END = VIEW_CELL_START + 4,
-            BOOSTER_INDEX = 0,
-            MAGNET_INDEX = VIEW_CELL_END + 1;
+        HOTBAR_END = HOTBAR_START + 8,
+        INV_START = HOTBAR_END + 1,
+        INV_END = INV_START + 26,
+        ARMOR_START = INV_END + 1,
+        ARMOR_END = ARMOR_START + 3,
+        CRAFT_GRID_START = ARMOR_END + 1,
+        CRAFT_GRID_END = CRAFT_GRID_START + 8,
+        CRAFT_RESULT = CRAFT_GRID_END + 1,
+        VIEW_CELL_START = CRAFT_RESULT + 1,
+        VIEW_CELL_END = VIEW_CELL_START + 4,
+        BOOSTER_INDEX = 0,
+        MAGNET_INDEX = VIEW_CELL_END + 1;
     public static int CRAFTING_SLOT_X_POS = 80, CRAFTING_SLOT_Y_POS = 83;
     private SlotBooster boosterSlot;
-    private SlotMagnet magnetSlot;
+    private final SlotMagnet magnetSlot;
     private NullSlot nullSlot;
-    private Slot[] hotbarSlot;
-    private Slot[] inventorySlot;
-    private SlotArmor[] armorSlot;
-    private SlotCraftingMatrix[] craftMatrixSlot;
-    private SlotCraftingTerm craftingSlot;
-    private SlotViewCell[] viewCellSlot;
+    private final Slot[] hotbarSlot;
+    private final Slot[] inventorySlot;
+    private final SlotArmor[] armorSlot;
+    private final SlotCraftingMatrix[] craftMatrixSlot;
+    private final SlotCraftingTerm craftingSlot;
+    private final SlotViewCell[] viewCellSlot;
     public SlotTrash trashSlot;
     private int firstCraftingSlotNumber = -1, lastCraftingSlotNumber = -1;
 
     private final WirelessTerminalGuiObject obj;
-    private boolean isContainerValid = true;
     private double powerMultiplier = 0.5;
     private final IPortableCell civ;
     private int ticks = 0;
@@ -165,25 +148,11 @@ public class ContainerWirelessCraftingTerminal extends Container
     private final IItemList<IAEItemStack> items = AEApi.instance().storage().createItemList();
     private final IConfigManager clientCM;
     private IConfigManager serverCM;
-    private IEnergySource powerSrc;
-
-    @GuiSync(98)
-    public static boolean hasPower = false;
 
     private IConfigManagerHost gui;
-    private final BaseActionSource mySrc;
-    private final HashMap<Integer, SyncData> syncData = new HashMap<Integer, SyncData>();
-    private final List<PacketPartialItem> dataChunks = new LinkedList<PacketPartialItem>();
-    private IAEItemStack clientRequestedTargetItem = null;
-    private int ticksSinceCheck = 900;
-    private String customName;
-    private boolean sentCustomName;
-    private ContainerOpenContext openContext;
     private final AppEngInternalInventory output = new AppEngInternalInventory(this, 1);
-    private final HashSet<Integer> locked = new HashSet<Integer>();
-    private IWirelessCraftingTerminalItem thisItem;
-    private IGridNode networkNode;
-    private IMEInventoryHandler<IAEItemStack> cellInv;
+    private final IWirelessCraftingTerminalItem thisItem;
+    private final IGridNode networkNode;
     private IRecipe currentRecipe;
 
     /**
@@ -192,13 +161,12 @@ public class ContainerWirelessCraftingTerminal extends Container
      * @author p455w0rd
      */
     public ContainerWirelessCraftingTerminal(EntityPlayer player, InventoryPlayer inventoryPlayer) {
-
+        super(inventoryPlayer, getGuiObject(RandomUtils.getWirelessTerm(inventoryPlayer), player, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ));
         this.clientCM = new ConfigManager(this);
         this.clientCM.registerSetting(Settings.SORT_BY, SortOrder.NAME);
         this.clientCM.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
         this.clientCM.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
-        this.mySrc = new WCTPlayerSource(inventoryPlayer.player, this.getActionHost());
-        this.customName = "WCTContainer";
+        this.setCustomName("WCTContainer");
 
         this.boosterInventory = new WCTInventoryBooster(RandomUtils.getWirelessTerm(inventoryPlayer));
         this.magnetInventory = new WCTInventoryMagnet(RandomUtils.getWirelessTerm(inventoryPlayer));
@@ -218,12 +186,10 @@ public class ContainerWirelessCraftingTerminal extends Container
         viewCellSlot = new SlotViewCell[5];
 
         this.obj =
-                getGuiObject(containerstack, player, worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
-        this.civ = (IPortableCell) this.obj;
+            getGuiObject(containerstack, player, worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+        this.civ = this.obj;
         final IGridNode node = ((IGridHost) this.obj).getGridNode(ForgeDirection.UNKNOWN);
         this.networkNode = node;
-
-        this.prepareSync();
 
         if (Platform.isServer()) {
             this.serverCM = civ.getConfigManager();
@@ -232,7 +198,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                 this.monitor.addListener(this, null);
                 setCellInventory(this.monitor);
                 if (civ instanceof IPortableCell) {
-                    setPowerSource((IEnergySource) this.civ);
+                    setPowerSource(this.civ);
                 }
             } else {
                 this.setValidContainer(false);
@@ -260,7 +226,7 @@ public class ContainerWirelessCraftingTerminal extends Container
         // Add player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                inventorySlot[k] = new SlotPlayerInv(this.inventoryPlayer, j + i * 9 + 9, j * 18 + 8, 0 + i * 18);
+                inventorySlot[k] = new SlotPlayerInv(this.inventoryPlayer, j + i * 9 + 9, j * 18 + 8, i * 18);
                 this.addSlotToContainer(inventorySlot[k]);
                 k++;
             }
@@ -276,7 +242,7 @@ public class ContainerWirelessCraftingTerminal extends Container
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
                 craftMatrixSlot[k] =
-                        new SlotCraftingMatrix(this, this.craftingGrid, j + i * 3, 80 + j * 18, (i * 18) - 76);
+                    new SlotCraftingMatrix(this, this.craftingGrid, j + i * 3, 80 + j * 18, (i * 18) - 76);
                 this.addSlotToContainer(craftMatrixSlot[k]);
                 if (k == 0) {
                     this.firstCraftingSlotNumber = craftMatrixSlot[k].slotNumber;
@@ -287,16 +253,16 @@ public class ContainerWirelessCraftingTerminal extends Container
         this.lastCraftingSlotNumber = craftMatrixSlot[8].slotNumber;
 
         craftingSlot = new SlotCraftingTerm(
-                this.getPlayerInv().player,
-                this.mySrc,
-                this.getPowerSource(),
-                this.obj,
-                this.craftingGrid,
-                this.craftingGrid,
-                this.output,
-                174,
-                -58,
-                this);
+            this.getPlayerInv().player,
+            this.getActionSource(),
+            this.getPowerSource(),
+            this.obj,
+            this.craftingGrid,
+            this.craftingGrid,
+            this.output,
+            174,
+            -58,
+            this);
         // Add crafting result slot
         this.addSlotToContainer(craftingSlot);
 
@@ -319,12 +285,6 @@ public class ContainerWirelessCraftingTerminal extends Container
         thisItem.checkForBooster(containerstack);
     }
 
-    public void setCellInventory(final IMEInventoryHandler<IAEItemStack> cellInv) {
-        this.cellInv = cellInv;
-    }
-
-    public void onSlotChange(final Slot s) {}
-
     @Override
     protected Slot addSlotToContainer(final Slot newSlot) {
         if (newSlot instanceof AppEngSlot) {
@@ -333,7 +293,7 @@ public class ContainerWirelessCraftingTerminal extends Container
             return super.addSlotToContainer(newSlot);
         } else {
             throw new IllegalArgumentException(
-                    "Invalid Slot [" + newSlot + "] for WCT Container instead of AppEngSlot.");
+                "Invalid Slot [" + newSlot + "] for WCT Container instead of AppEngSlot.");
         }
     }
 
@@ -453,7 +413,7 @@ public class ContainerWirelessCraftingTerminal extends Container
         }
 
         // get target item.
-        final IAEItemStack slotItem = this.clientRequestedTargetItem;
+        final IAEItemStack slotItem = getTargetStack();
 
         switch (action) {
             case SHIFT_CLICK:
@@ -476,7 +436,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                     }
 
                     ais = Platform.poweredExtraction(
-                            this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
+                        this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
                     if (ais != null) {
                         adp.addItems(ais.getItemStack());
                     }
@@ -496,14 +456,14 @@ public class ContainerWirelessCraftingTerminal extends Container
                     final IAEItemStack extracted = ais.copy();
 
                     ais = Platform.poweredInsert(
-                            this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
+                        this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
                     if (ais == null) {
                         final InventoryAdaptor ia = new AdaptorPlayerHand(player);
 
                         final ItemStack fail = ia.removeItems(1, extracted.getItemStack(), null);
                         if (fail == null) {
                             this.getCellInventory()
-                                    .extractItems(extracted, Actionable.MODULATE, this.getActionSource());
+                                .extractItems(extracted, Actionable.MODULATE, this.getActionSource());
                         }
 
                         this.updateHeld(player);
@@ -534,7 +494,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                         IAEItemStack ais = slotItem.copy();
                         ais.setStackSize(1);
                         ais = Platform.poweredExtraction(
-                                this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
+                            this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
                         if (ais != null) {
                             final InventoryAdaptor ia = new AdaptorPlayerHand(player);
 
@@ -558,7 +518,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                         IAEItemStack ais = slotItem.copy();
                         ais.setStackSize(ais.getItemStack().getMaxStackSize());
                         ais = Platform.poweredExtraction(
-                                this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
+                            this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
                         if (ais != null) {
                             player.inventory.setItemStack(ais.getItemStack());
                         } else {
@@ -569,7 +529,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                 } else {
                     IAEItemStack ais = AEApi.instance().storage().createItemStack(player.inventory.getItemStack());
                     ais = Platform.poweredInsert(
-                            this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
+                        this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
                     if (ais != null) {
                         player.inventory.setItemStack(ais.getItemStack());
                     } else {
@@ -595,7 +555,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                             final long stackSize = Math.min(maxSize, ais.getStackSize());
                             ais.setStackSize((stackSize + 1) >> 1);
                             ais = Platform.poweredExtraction(
-                                    this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
+                                this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
                         }
 
                         if (ais != null) {
@@ -609,7 +569,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                     IAEItemStack ais = AEApi.instance().storage().createItemStack(player.inventory.getItemStack());
                     ais.setStackSize(1);
                     ais = Platform.poweredInsert(
-                            this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
+                        this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
                     if (ais == null) {
                         final ItemStack is = player.inventory.getItemStack();
                         is.stackSize--;
@@ -651,7 +611,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                         }
 
                         ais = Platform.poweredExtraction(
-                                this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
+                            this.getPowerSource(), this.getCellInventory(), ais, this.getActionSource());
                         if (ais != null) {
                             adp.addItems(ais.getItemStack());
                         } else {
@@ -663,23 +623,6 @@ public class ContainerWirelessCraftingTerminal extends Container
                 break;
             default:
                 break;
-        }
-    }
-
-    public IMEInventoryHandler<IAEItemStack> getCellInventory() {
-        return this.cellInv;
-    }
-
-    protected void updateHeld(final EntityPlayerMP p) {
-        if (Platform.isServer()) {
-            try {
-                NetworkHandler.instance.sendTo(
-                        new PacketInventoryAction(
-                                InventoryAction.UPDATE_HAND, 0, AEItemStack.create(p.inventory.getItemStack())),
-                        p);
-            } catch (final IOException e) {
-                WCTLog.debug(e.getMessage());
-            }
         }
     }
 
@@ -701,11 +644,11 @@ public class ContainerWirelessCraftingTerminal extends Container
 
     @Override
     public void onChangeInventory(
-            final IInventory inv,
-            final int slot,
-            final InvOperation mc,
-            final ItemStack removedStack,
-            final ItemStack newStack) {
+        final IInventory inv,
+        final int slot,
+        final InvOperation mc,
+        final ItemStack removedStack,
+        final ItemStack newStack) {
         // <3
     }
 
@@ -750,11 +693,11 @@ public class ContainerWirelessCraftingTerminal extends Container
         return viewCellSlot[index];
     }
 
-    private WirelessTerminalGuiObject getGuiObject(
-            final ItemStack it, final EntityPlayer player, final World w, final int x, final int y, final int z) {
+    public static WirelessTerminalGuiObject getGuiObject(
+        final ItemStack it, final EntityPlayer player, final World w, final int x, final int y, final int z) {
         if (it != null) {
             final IWirelessCraftingTermHandler wh = (IWirelessCraftingTermHandler)
-                    AEApi.instance().registries().wireless().getWirelessTerminalHandler(it);
+                AEApi.instance().registries().wireless().getWirelessTerminalHandler(it);
             if (wh != null) {
                 return new WirelessTerminalGuiObject(wh, it, player, w, x, y, z);
             }
@@ -765,22 +708,12 @@ public class ContainerWirelessCraftingTerminal extends Container
 
     @Override
     public void detectAndSendChanges() {
-
-        this.sendCustomName();
-
-        // if (Platform.isSameItem(this.civ.getItemStack(), this.getPlayerInv().getCurrentItem())) {
-        //	this.getPlayerInv().setInventorySlotContents(this.getPlayerInv().currentItem, this.civ.getItemStack());
-        // }
-        // else {
-        // this.setValidContainer(false);
-        // }
-
         // drain 1 ae t
         this.ticks++;
         if (this.ticks > 10) {
             if (!isBoosterInstalled() || !Reference.WCT_BOOSTER_ENABLED) {
                 this.civ.extractAEPower(
-                        this.getPowerMultiplier() * this.ticks, Actionable.MODULATE, PowerMultiplier.CONFIG);
+                    this.getPowerMultiplier() * this.ticks, Actionable.MODULATE, PowerMultiplier.CONFIG);
             } else {
                 this.civ.extractAEPower((int) (0.5 * this.ticks), Actionable.MODULATE, PowerMultiplier.CONFIG);
             }
@@ -801,7 +734,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                     for (final Object crafter : this.crafters) {
                         try {
                             NetworkHandler.instance.sendTo(
-                                    new PacketValueConfig(set.name(), sideLocal.name()), (EntityPlayerMP) crafter);
+                                new PacketValueConfig(set.name(), sideLocal.name()), (EntityPlayerMP) crafter);
                         } catch (final IOException e) {
                             WCTLog.debug(e.getMessage());
                         }
@@ -838,18 +771,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                     WCTLog.debug(e.getMessage());
                 }
             }
-
-            this.sendCustomName();
-            if (Platform.isServer()) {
-                for (final Object crafter : this.crafters) {
-                    final ICrafting icrafting = (ICrafting) crafter;
-                    for (final SyncData sd : this.syncData.values()) {
-                        sd.tick(icrafting);
-                    }
-                }
-            }
         }
-        // if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
         if (!isInRange()) {
             if (!isBoosterInstalled() || !Reference.WCT_BOOSTER_ENABLED) {
                 if (this.isValidContainer()) {
@@ -860,14 +782,14 @@ public class ContainerWirelessCraftingTerminal extends Container
             if (!networkIsPowered()) {
                 if (this.isValidContainer()) {
                     this.getPlayerInv()
-                            .player
-                            .addChatMessage(new ChatComponentText(LocaleHandler.NoNetworkPower.getLocal()));
+                        .player
+                        .addChatMessage(new ChatComponentText(LocaleHandler.NoNetworkPower.getLocal()));
                 }
                 this.setValidContainer(false);
             }
         } else if (!hasAccess(SecurityPermissions.CRAFT, true)
-                || !hasAccess(SecurityPermissions.EXTRACT, true)
-                || !hasAccess(SecurityPermissions.INJECT, true)) {
+            || !hasAccess(SecurityPermissions.EXTRACT, true)
+            || !hasAccess(SecurityPermissions.INJECT, true)) {
             if (this.isValidContainer()) {
                 this.getPlayerInv().player.addChatMessage(PlayerMessages.CommunicationError.get());
             }
@@ -875,7 +797,7 @@ public class ContainerWirelessCraftingTerminal extends Container
         } else {
             this.setPowerMultiplier(AEConfig.instance.wireless_getDrainRate(this.obj.getRange()));
         }
-        // }
+
         super.detectAndSendChanges();
     }
 
@@ -885,14 +807,12 @@ public class ContainerWirelessCraftingTerminal extends Container
             return false;
         }
         boolean hasStack =
-                getSlotFromInventory(this.boosterInventory, BOOSTER_INDEX).getHasStack();
+            getSlotFromInventory(this.boosterInventory, BOOSTER_INDEX).getHasStack();
         if (hasStack) {
             Item boosterSlotContents = getSlotFromInventory(this.boosterInventory, BOOSTER_INDEX)
-                    .getStack()
-                    .getItem();
-            if (boosterSlotContents instanceof ItemInfinityBooster) {
-                return true;
-            }
+                .getStack()
+                .getItem();
+            return boosterSlotContents instanceof ItemInfinityBooster;
         }
         return false;
     }
@@ -903,88 +823,14 @@ public class ContainerWirelessCraftingTerminal extends Container
             return false;
         }
         boolean hasStack =
-                getSlotFromInventory(this.magnetInventory, MAGNET_INDEX).getHasStack();
+            getSlotFromInventory(this.magnetInventory, MAGNET_INDEX).getHasStack();
         if (hasStack) {
             Item magnetSlotContents = getSlotFromInventory(this.magnetInventory, MAGNET_INDEX)
-                    .getStack()
-                    .getItem();
-            if (magnetSlotContents instanceof ItemMagnet) {
-                return true;
-            }
+                .getStack()
+                .getItem();
+            return magnetSlotContents instanceof ItemMagnet;
         }
         return false;
-    }
-
-    public BaseActionSource getActionSource() {
-        return this.mySrc;
-    }
-
-    @Override
-    public boolean canInteractWith(final EntityPlayer entityplayer) {
-        if (this.isValidContainer()) {
-            return true;
-        }
-        return false;
-    }
-
-    private void sendCustomName() {
-        if (!this.sentCustomName) {
-            this.sentCustomName = true;
-            if (Platform.isServer()) {
-                ICustomNameObject name = null;
-                if (this.obj instanceof ICustomNameObject) {
-                    name = (ICustomNameObject) this.obj;
-                }
-
-                if (this instanceof ICustomNameObject) {
-                    name = (ICustomNameObject) this;
-                }
-
-                if (name != null) {
-                    if (name.hasCustomName()) {
-                        this.setCustomName(name.getCustomName());
-                    }
-
-                    if (this.getCustomName() != null) {
-                        try {
-                            NetworkHandler.instance.sendTo(
-                                    new PacketValueConfig("CustomName", this.getCustomName()),
-                                    (EntityPlayerMP) this.getInventoryPlayer().player);
-                        } catch (final IOException e) {
-                            WCTLog.debug(e.getMessage());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public void setCustomName(final String customName) {
-        this.customName = customName;
-    }
-
-    public String getCustomName() {
-        return this.customName;
-    }
-
-    public void stringSync(final int idx, final String value) {
-        if (this.syncData.containsKey(idx)) {
-            this.syncData.get(idx).update(value);
-        }
-    }
-
-    public void verifyPermissions(final SecurityPermissions security, final boolean requirePower) {
-        if (Platform.isClient()) {
-            return;
-        }
-
-        this.ticksSinceCheck++;
-        if (this.ticksSinceCheck < 20) {
-            return;
-        }
-
-        this.ticksSinceCheck = 0;
-        this.setValidContainer(this.isValidContainer() && this.hasAccess(security, requirePower));
     }
 
     protected boolean isInRange() {
@@ -992,174 +838,15 @@ public class ContainerWirelessCraftingTerminal extends Container
     }
 
     protected boolean networkIsPowered() {
-        final WCTIActionHost host = this.getActionHost();
+        final IActionHost host = this.getActionHost();
         if (host != null) {
             final IGrid grid = this.obj.getTargetGrid();
             if (grid != null) {
                 final IEnergyGrid eg = grid.getCache(IEnergyGrid.class);
-                if (eg.isNetworkPowered()) {
-                    return true;
-                }
+                return eg.isNetworkPowered();
             }
         }
         return false;
-    }
-
-    protected boolean hasAccess(final SecurityPermissions perm, final boolean requirePower) {
-        final IGrid grid = this.obj.getTargetGrid();
-        if (grid != null) {
-            final IEnergyGrid eg = grid.getCache(IEnergyGrid.class);
-            if (!eg.isNetworkPowered()) {
-                return false;
-            }
-        }
-        final ISecurityGrid sg = grid.getCache(ISecurityGrid.class);
-        if (sg.hasPermission(this.getInventoryPlayer().player, perm)) {
-            return true;
-        }
-        return false;
-    }
-
-    /*
-    	protected boolean hasAccess(final SecurityPermissions perm, final boolean requirePower) {
-    		final WCTIActionHost host = this.getActionHost();
-
-    		if (host != null) {
-    			final IGridNode gn = host.getActionableNode();
-    			if (gn != null) {
-    				final IGrid g = gn.getGrid();
-    				if (g != null) {
-    					if (requirePower) {
-    						final IEnergyGrid eg = g.getCache(IEnergyGrid.class);
-    						if (!eg.isNetworkPowered() && Platform.isServer()) {
-    							return false;
-    						}
-    					}
-
-    					final ISecurityGrid sg = g.getCache(ISecurityGrid.class);
-    					if (sg.hasPermission(this.player, perm) && Platform.isServer()) {
-    						return true;
-    					}
-    				}
-    			}
-    		}
-    		return false;
-    	}
-    */
-    public void lockPlayerInventorySlot(final int idx) {
-        this.locked.add(idx);
-    }
-
-    public boolean isValidForSlot(final Slot s, final ItemStack i) {
-        return true;
-    }
-
-    public void postPartial(final PacketPartialItem packetPartialItem) {
-        this.dataChunks.add(packetPartialItem);
-        if (packetPartialItem.getPageCount() == this.dataChunks.size()) {
-            this.parsePartials();
-        }
-    }
-
-    private void parsePartials() {
-        int total = 0;
-        for (final PacketPartialItem ppi : this.dataChunks) {
-            total += ppi.getSize();
-        }
-
-        final byte[] buffer = new byte[total];
-        int cursor = 0;
-
-        for (final PacketPartialItem ppi : this.dataChunks) {
-            cursor = ppi.write(buffer, cursor);
-        }
-
-        try {
-            final NBTTagCompound data = CompressedStreamTools.readCompressed(new ByteArrayInputStream(buffer));
-            if (data != null) {
-                this.setTargetStack(AEApi.instance().storage().createItemStack(ItemStack.loadItemStackFromNBT(data)));
-            }
-        } catch (final IOException e) {
-            WCTLog.debug(e.getMessage());
-        }
-
-        this.dataChunks.clear();
-    }
-
-    public IAEItemStack getTargetStack() {
-        return this.clientRequestedTargetItem;
-    }
-
-    public void setTargetStack(final IAEItemStack stack) {
-        // client doesn't need to re-send, makes for lower overhead rapid
-        // packets.
-        if (Platform.isClient()) {
-            final ItemStack a = stack == null ? null : stack.getItemStack();
-            final ItemStack b =
-                    this.clientRequestedTargetItem == null ? null : this.clientRequestedTargetItem.getItemStack();
-
-            if (Platform.isSameItemPrecise(a, b)) {
-                return;
-            }
-
-            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            final NBTTagCompound item = new NBTTagCompound();
-
-            if (stack != null) {
-                stack.writeToNBT(item);
-            }
-
-            try {
-                CompressedStreamTools.writeCompressed(item, stream);
-
-                final int maxChunkSize = 30000;
-                final List<byte[]> miniPackets = new LinkedList<byte[]>();
-
-                final byte[] data = stream.toByteArray();
-
-                final ByteArrayInputStream bis = new ByteArrayInputStream(data, 0, stream.size());
-                while (bis.available() > 0) {
-                    final int nextBLock = bis.available() > maxChunkSize ? maxChunkSize : bis.available();
-                    final byte[] nextSegment = new byte[nextBLock];
-                    bis.read(nextSegment);
-                    miniPackets.add(nextSegment);
-                }
-                bis.close();
-                stream.close();
-
-                int page = 0;
-                for (final byte[] packet : miniPackets) {
-                    final PacketPartialItem ppi = new PacketPartialItem(page, miniPackets.size(), packet);
-                    page++;
-                    NetworkHandler.instance.sendToServer(ppi);
-                }
-            } catch (final IOException e) {
-                WCTLog.debug(e.getMessage());
-                return;
-            }
-        }
-
-        this.clientRequestedTargetItem = stack == null ? null : stack.copy();
-    }
-
-    private void prepareSync() {
-        for (final Field f : this.getClass().getFields()) {
-            if (f.isAnnotationPresent(GuiSync.class)) {
-                final GuiSync annotation = f.getAnnotation(GuiSync.class);
-                if (this.syncData.containsKey(annotation.value())) {
-                    WCTLog.warning("Channel already in use: " + annotation.value() + " for " + f.getName());
-                } else {
-                    this.syncData.put(annotation.value(), new SyncData(this, f, annotation));
-                }
-            }
-        }
-    }
-
-    protected WCTIActionHost getActionHost() {
-        if (this.obj instanceof WCTIActionHost) {
-            return (WCTIActionHost) this.obj;
-        }
-        return null;
     }
 
     @Override
@@ -1198,9 +885,9 @@ public class ContainerWirelessCraftingTerminal extends Container
 
     @Override
     public void postChange(
-            final IBaseMonitor<IAEItemStack> monitor,
-            final Iterable<IAEItemStack> change,
-            final BaseActionSource source) {
+        final IBaseMonitor<IAEItemStack> monitor,
+        final Iterable<IAEItemStack> change,
+        final BaseActionSource source) {
         for (final IAEItemStack is : change) {
             this.items.add(is);
         }
@@ -1258,21 +945,9 @@ public class ContainerWirelessCraftingTerminal extends Container
         }
     }
 
-    public void onUpdate(final String field, final Object oldValue, final Object newValue) {
-        // =]
-    }
-
-    public IEnergySource getPowerSource() {
-        return this.powerSrc;
-    }
-
     public boolean isPowered() {
         double pwr = this.thisItem.getAECurrentPower(this.containerstack);
         return (pwr > 0.0);
-    }
-
-    public void setPowerSource(final IEnergySource powerSrc) {
-        this.powerSrc = powerSrc;
     }
 
     private double getPowerMultiplier() {
@@ -1281,37 +956,6 @@ public class ContainerWirelessCraftingTerminal extends Container
 
     void setPowerMultiplier(final double powerMultiplier) {
         this.powerMultiplier = powerMultiplier;
-    }
-
-    public InventoryPlayer getPlayerInv() {
-        return this.getInventoryPlayer();
-    }
-
-    public InventoryPlayer getInventoryPlayer() {
-        return this.inventoryPlayer;
-    }
-
-    public boolean isValidContainer() {
-        return this.isContainerValid;
-    }
-
-    public void setValidContainer(final boolean isContainerValid) {
-        this.isContainerValid = isContainerValid;
-    }
-
-    public Object getTarget() {
-        if (this.obj != null) {
-            return this.obj;
-        }
-        return null;
-    }
-
-    public ContainerOpenContext getOpenContext() {
-        return this.openContext;
-    }
-
-    public void setOpenContext(final ContainerOpenContext openContext) {
-        this.openContext = openContext;
     }
 
     /**
@@ -1325,7 +969,7 @@ public class ContainerWirelessCraftingTerminal extends Container
         NBTTagList tagList = nbtTagCompound.getTagList("CraftingMatrix", 10);
         craftMatrixInventory = new ItemStack[9];
         for (int i = 0; i < tagList.tagCount(); ++i) {
-            NBTTagCompound tagCompound = (NBTTagCompound) tagList.getCompoundTagAt(i);
+            NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
             int slot = tagCompound.getByte("Slot");
             if (slot >= 0 && slot < craftMatrixInventory.length) {
                 craftMatrixInventory[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
@@ -1342,27 +986,27 @@ public class ContainerWirelessCraftingTerminal extends Container
         }
         switch (which) {
             case "booster":
-                ((WCTInventoryBooster) boosterInventory).writeNBT(this.containerstack.getTagCompound());
+                boosterInventory.writeNBT(this.containerstack.getTagCompound());
                 break;
             case "crafting":
-                ((WCTInventoryCrafting) craftingGrid).writeNBT(this.containerstack.getTagCompound());
+                craftingGrid.writeNBT(this.containerstack.getTagCompound());
                 break;
             case "viewCell":
-                ((WCTInventoryViewCell) viewCellInventory).writeNBT(this.containerstack.getTagCompound());
+                viewCellInventory.writeNBT(this.containerstack.getTagCompound());
                 break;
             case "magnet":
-                ((WCTInventoryMagnet) magnetInventory).writeNBT(this.containerstack.getTagCompound());
+                magnetInventory.writeNBT(this.containerstack.getTagCompound());
                 break;
             case "trash":
-                ((WCTInventoryTrash) trashInventory).writeNBT(this.containerstack.getTagCompound());
+                trashInventory.writeNBT(this.containerstack.getTagCompound());
                 break;
             case "all":
             default:
-                ((WCTInventoryBooster) boosterInventory).writeNBT(this.containerstack.getTagCompound());
-                ((WCTInventoryCrafting) craftingGrid).writeNBT(this.containerstack.getTagCompound());
-                ((WCTInventoryViewCell) viewCellInventory).writeNBT(this.containerstack.getTagCompound());
-                ((WCTInventoryMagnet) magnetInventory).writeNBT(this.containerstack.getTagCompound());
-                ((WCTInventoryTrash) trashInventory).writeNBT(this.containerstack.getTagCompound());
+                boosterInventory.writeNBT(this.containerstack.getTagCompound());
+                craftingGrid.writeNBT(this.containerstack.getTagCompound());
+                viewCellInventory.writeNBT(this.containerstack.getTagCompound());
+                magnetInventory.writeNBT(this.containerstack.getTagCompound());
+                trashInventory.writeNBT(this.containerstack.getTagCompound());
                 break;
         }
     }
@@ -1604,79 +1248,10 @@ public class ContainerWirelessCraftingTerminal extends Container
         return null;
     }
 
-    public void swapSlotContents(final int slotA, final int slotB) {
-        final Slot a = this.getSlot(slotA);
-        final Slot b = this.getSlot(slotB);
-
-        // NPE protection...
-        if (a == null || b == null) {
-            return;
-        }
-
-        final ItemStack isA = a.getStack();
-        final ItemStack isB = b.getStack();
-
-        // something to do?
-        if (isA == null && isB == null) {
-            return;
-        }
-
-        // can take?
-
-        if (isA != null && !a.canTakeStack(this.getInventoryPlayer().player)) {
-            return;
-        }
-
-        if (isB != null && !b.canTakeStack(this.getInventoryPlayer().player)) {
-            return;
-        }
-
-        // swap valid?
-
-        if (isB != null && !a.isItemValid(isB)) {
-            return;
-        }
-
-        if (isA != null && !b.isItemValid(isA)) {
-            return;
-        }
-
-        ItemStack testA = isB == null ? null : isB.copy();
-        ItemStack testB = isA == null ? null : isA.copy();
-
-        // can put some back?
-        if (testA != null && testA.stackSize > a.getSlotStackLimit()) {
-            if (testB != null) {
-                return;
-            }
-
-            final int totalA = testA.stackSize;
-            testA.stackSize = a.getSlotStackLimit();
-            testB = testA.copy();
-
-            testB.stackSize = totalA - testA.stackSize;
-        }
-
-        if (testB != null && testB.stackSize > b.getSlotStackLimit()) {
-            if (testA != null) {
-                return;
-            }
-
-            final int totalB = testB.stackSize;
-            testB.stackSize = b.getSlotStackLimit();
-            testA = testB.copy();
-
-            testA.stackSize = totalB - testA.stackSize;
-        }
-
-        a.putStack(testA);
-        b.putStack(testB);
-    }
-
     @SuppressWarnings("unused")
     private boolean isCraftMatrixSlot(AppEngSlot cs) {
         return (cs.getSlotIndex() >= this.firstCraftingSlotNumber)
-                && !(cs.getSlotIndex() <= this.lastCraftingSlotNumber);
+            && !(cs.getSlotIndex() <= this.lastCraftingSlotNumber);
     }
 
     private void updateSlot(final Slot clickSlot) {
@@ -1688,10 +1263,10 @@ public class ContainerWirelessCraftingTerminal extends Container
             return input;
         }
         final IAEItemStack ais = Platform.poweredInsert(
-                this.getPowerSource(),
-                this.civ,
-                AEApi.instance().storage().createItemStack(input),
-                this.getActionSource());
+            this.getPowerSource(),
+            this.civ,
+            AEApi.instance().storage().createItemStack(input),
+            this.getActionSource());
         if (ais == null) {
             return null;
         }
@@ -1728,19 +1303,15 @@ public class ContainerWirelessCraftingTerminal extends Container
 
     @SuppressWarnings("unused")
     private boolean notArmorOrBooster(ItemStack is) {
-        if ((is.getItem() instanceof ItemInfinityBooster) || (is.getItem() instanceof ItemArmor)) {
-            return false;
-        } else {
-            return true;
-        }
+        return (!(is.getItem() instanceof ItemInfinityBooster)) && (!(is.getItem() instanceof ItemArmor));
     }
 
     @Override
     public ItemStack slotClick(int slot, int button, int flag, EntityPlayer player) {
         try {
             if (slot >= 0
-                    && getSlot(slot) != null
-                    && getSlot(slot).getStack() == RandomUtils.getWirelessTerm(player.inventory)) {
+                && getSlot(slot) != null
+                && getSlot(slot).getStack() == RandomUtils.getWirelessTerm(player.inventory)) {
                 return null;
             }
             return super.slotClick(slot, button, flag, player);
@@ -1748,15 +1319,6 @@ public class ContainerWirelessCraftingTerminal extends Container
             // When clicking super fast, for some reason, MC tried to access this inv size (max index + 1)
         }
         return null;
-    }
-
-    public final void updateFullProgressBar(final int idx, final long value) {
-        if (this.syncData.containsKey(idx)) {
-            this.syncData.get(idx).update(value);
-            return;
-        }
-
-        this.updateProgressBar(idx, (int) value);
     }
 
     /**
@@ -1780,9 +1342,9 @@ public class ContainerWirelessCraftingTerminal extends Container
                 }
 
                 if (itemstack1 != null
-                        && itemstack1.getItem() == stack.getItem()
-                        && (!stack.getHasSubtypes() || stack.getItemDamage() == itemstack1.getItemDamage())
-                        && ItemStack.areItemStackTagsEqual(stack, itemstack1)) {
+                    && itemstack1.getItem() == stack.getItem()
+                    && (!stack.getHasSubtypes() || stack.getItemDamage() == itemstack1.getItemDamage())
+                    && ItemStack.areItemStackTagsEqual(stack, itemstack1)) {
                     int l = itemstack1.stackSize + stack.stackSize;
 
                     if (l <= stack.getMaxStackSize() && l <= slot.getSlotStackLimit()) {
@@ -1822,7 +1384,7 @@ public class ContainerWirelessCraftingTerminal extends Container
                         break;
                     } else {
                         putStackInSlot(
-                                k, new ItemStack(stack.getItem(), slot.getSlotStackLimit(), stack.getItemDamage()));
+                            k, new ItemStack(stack.getItem(), slot.getSlotStackLimit(), stack.getItemDamage()));
                         stack.stackSize -= slot.getSlotStackLimit();
                         boosterInventory.markDirty();
                         flag1 = true;
