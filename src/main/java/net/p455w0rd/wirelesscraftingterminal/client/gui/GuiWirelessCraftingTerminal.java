@@ -538,7 +538,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui implements ISortSourc
     }
 
     public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
-        this.bindTexture(bgTexturePath);
+        this.bindMyTexture(bgTexturePath);
         final int x_width = 199;
 
         // draw "over inventory area"
@@ -656,7 +656,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui implements ISortSourc
         return this.repo.hasPower();
     }
 
-    public void bindTexture(final String file) {
+    public void bindMyTexture(final String file) {
         final ResourceLocation loc = new ResourceLocation(Reference.MODID, "textures/" + file);
         this.mc.getTextureManager().bindTexture(loc);
     }
