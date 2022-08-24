@@ -4,13 +4,13 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingJob;
+import appeng.container.implementations.ContainerCraftAmount;
+import appeng.container.implementations.ContainerCraftConfirm;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.util.concurrent.Future;
 import net.minecraft.entity.player.EntityPlayer;
 import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftAmount;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftConfirm;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
@@ -44,7 +44,7 @@ public class PacketCraftRequest extends WCTPacket {
             final ContainerCraftAmount cca = (ContainerCraftAmount) player.openContainer;
             final Object target = cca.getTarget();
             if (target instanceof IGridHost) {
-                final IGrid g = cca.obj2.getTargetGrid();
+                final IGrid g = cca.getGrid();
                 if (g == null || cca.getItemToCraft() == null) {
                     return;
                 }

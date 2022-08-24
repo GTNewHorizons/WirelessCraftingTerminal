@@ -14,7 +14,6 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftConfirm;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.container.WCTBaseContainer;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
@@ -61,12 +60,6 @@ public class PacketValueConfig extends WCTPacket {
             final ItemStack is = RandomUtils.getWirelessTerm(player.inventory);
             final IMouseWheelItem si = (IMouseWheelItem) is.getItem();
             si.onWheel(is, this.Value.equals("WheelUp"));
-        } else if (this.Name.equals("Terminal.Cpu") && c instanceof ContainerCraftConfirm) {
-            final ContainerCraftConfirm qk = (ContainerCraftConfirm) c;
-            qk.cycleCpu(this.Value.equals("Next"));
-        } else if (this.Name.equals("Terminal.Start") && c instanceof ContainerCraftConfirm) {
-            final ContainerCraftConfirm qk = (ContainerCraftConfirm) c;
-            qk.startJob();
         } else if (c instanceof IConfigurableObject) {
             final IConfigManager cm = ((IConfigurableObject) c).getConfigManager();
 
