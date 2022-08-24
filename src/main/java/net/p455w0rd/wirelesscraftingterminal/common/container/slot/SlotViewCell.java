@@ -1,20 +1,12 @@
 package net.p455w0rd.wirelesscraftingterminal.common.container.slot;
 
-import appeng.api.AEApi;
+import appeng.container.slot.SlotRestrictedInput;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 
-public class SlotViewCell extends AppEngSlot {
+public class SlotViewCell extends SlotRestrictedInput {
 
-    public SlotViewCell(IInventory inv, int index, int xPos, int yPos) {
-        super(inv, index, xPos, yPos);
-    }
-
-    @Override
-    public boolean isItemValid(ItemStack is) {
-        if (is == null || is.getItem() == null) {
-            return false;
-        }
-        return AEApi.instance().definitions().items().viewCell().isSameAs(is);
+    public SlotViewCell(IInventory inv, int index, int xPos, int yPos, InventoryPlayer playerInv) {
+        super(PlacableItemType.VIEW_CELL, inv, index, xPos, yPos, playerInv);
     }
 }

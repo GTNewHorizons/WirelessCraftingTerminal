@@ -33,7 +33,8 @@ import net.p455w0rd.wirelesscraftingterminal.integration.EnderIO;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 import org.lwjgl.input.Keyboard;
 
-public class ItemWirelessCraftingTerminal extends AERootPoweredItem implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBauble {
+public class ItemWirelessCraftingTerminal extends AERootPoweredItem
+        implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBauble {
 
     public static final String LINK_KEY_STRING = "key";
     public static double GLOBAL_POWER_MULTIPLIER = PowerMultiplier.CONFIG.multiplier;

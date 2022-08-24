@@ -57,6 +57,8 @@ public class GuiCraftingStatus extends appeng.client.gui.implementations.GuiCraf
     @Override
     public void initGui() {
         super.initGui();
+        // Hide "go back to wireless terminal" button as it opens the wrong GUI
+        this.buttonList.remove(this.buttonList.size() - 1);
 
         if (this.myIcon != null) {
             this.buttonList.add(

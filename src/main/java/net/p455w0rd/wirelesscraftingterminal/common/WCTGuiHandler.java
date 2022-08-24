@@ -63,24 +63,12 @@ public class WCTGuiHandler implements IGuiHandler {
 
                 if (guiId == Reference.GUI_CRAFT_AMOUNT) {
                     return updateGui(
-                        new ContainerCraftAmount(player, terminal),
-                            world,
-                            x,
-                            y,
-                            z,
-                            ForgeDirection.UNKNOWN,
-                            obj);
+                            new ContainerCraftAmount(player, terminal), world, x, y, z, ForgeDirection.UNKNOWN, obj);
                 }
 
                 if (guiId == Reference.GUI_CRAFT_CONFIRM) {
                     return updateGui(
-                        new ContainerCraftConfirm(player, terminal),
-                            world,
-                            x,
-                            y,
-                            z,
-                            ForgeDirection.UNKNOWN,
-                            obj);
+                            new ContainerCraftConfirm(player, terminal), world, x, y, z, ForgeDirection.UNKNOWN, obj);
                 }
             }
         }

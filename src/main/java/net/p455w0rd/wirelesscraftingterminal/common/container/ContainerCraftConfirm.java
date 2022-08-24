@@ -2,10 +2,7 @@ package net.p455w0rd.wirelesscraftingterminal.common.container;
 
 import appeng.api.implementations.guiobjects.IPortableCell;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwitchGuis;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 public class ContainerCraftConfirm extends appeng.container.implementations.ContainerCraftConfirm {

@@ -99,7 +99,6 @@ public class PacketInventoryAction extends WCTPacket {
             context = ((AEBaseContainer) baseContainer).getOpenContext();
         }
 
-
         if (this.action == InventoryAction.AUTO_CRAFT) {
             // if( context != null )
             // {

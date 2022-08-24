@@ -2,6 +2,8 @@ package net.p455w0rd.wirelesscraftingterminal.integration.modules;
 
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.container.slot.SlotCraftingMatrix;
+import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.integration.modules.NEIHelpers.NEIAEShapelessRecipeHandler;
 import appeng.util.Platform;
 import codechicken.nei.PositionedStack;
@@ -24,8 +26,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
-import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotCraftingMatrix;
-import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotFakeCraftingMatrix;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketNEIRecipe;
 import net.p455w0rd.wirelesscraftingterminal.helpers.Reflected;

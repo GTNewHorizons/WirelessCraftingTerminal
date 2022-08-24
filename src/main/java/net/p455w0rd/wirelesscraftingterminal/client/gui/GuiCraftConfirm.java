@@ -1,12 +1,9 @@
 package net.p455w0rd.wirelesscraftingterminal.client.gui;
 
 import appeng.api.storage.ITerminalHost;
-import appeng.core.localization.GuiText;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwitchGuis;
-import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 public class GuiCraftConfirm extends appeng.client.gui.implementations.GuiCraftConfirm {

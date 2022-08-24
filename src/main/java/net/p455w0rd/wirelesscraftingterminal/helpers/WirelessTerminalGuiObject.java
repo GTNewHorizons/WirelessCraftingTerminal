@@ -34,7 +34,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
 import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTIActionHost;
 
-public class WirelessTerminalGuiObject implements IActionHost, IPortableCell, IInventorySlotAware, WCTIActionHost, IGuiItemObject {
+public class WirelessTerminalGuiObject
+        implements IActionHost, IPortableCell, IInventorySlotAware, WCTIActionHost, IGuiItemObject {
 
     private final ItemStack effectiveItem;
     private final IWirelessTermHandler wth;
