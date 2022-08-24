@@ -12,7 +12,9 @@ import appeng.client.ActionKey;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.GuiScrollbar;
+import appeng.client.gui.widgets.GuiTabButton;
 import appeng.client.gui.widgets.ISortSource;
+import appeng.client.gui.widgets.MEGuiTextField;
 import appeng.client.me.InternalSlotME;
 import appeng.client.me.ItemRepo;
 import appeng.client.me.SlotME;
@@ -44,9 +46,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.p455w0rd.wirelesscraftingterminal.client.gui.widgets.GuiTabButton;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.widgets.GuiTrashButton;
-import net.p455w0rd.wirelesscraftingterminal.client.gui.widgets.MEGuiTextField;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotTrash;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
@@ -388,13 +388,9 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui implements ISortSourc
                         Settings.TERMINAL_STYLE,
                         AEConfig.instance.settings.getSetting(Settings.TERMINAL_STYLE)));
 
-        this.searchField = new MEGuiTextField(this.fontRendererObj, SEARCH_X, SEARCH_Y, SEARCH_WIDTH, SEARCH_HEIGHT);
-
-        this.searchField.setEnableBackgroundDrawing(false);
-        this.searchField.setMaxStringLength(25);
-        this.searchField.setTextColor(0xFFFFFF);
-        this.searchField.setVisible(true);
-        this.searchField.setEnabled(true);
+        this.searchField = new MEGuiTextField(SEARCH_WIDTH, SEARCH_HEIGHT);
+        this.searchField.x = SEARCH_X;
+        this.searchField.y = SEARCH_Y;
 
         this.buttonList.add(
                 this.craftingStatusBtn = new GuiTabButton(

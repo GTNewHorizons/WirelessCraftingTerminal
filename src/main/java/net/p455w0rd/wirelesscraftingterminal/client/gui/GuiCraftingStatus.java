@@ -4,11 +4,11 @@ import appeng.api.AEApi;
 import appeng.api.definitions.IDefinitions;
 import appeng.api.definitions.IParts;
 import appeng.api.storage.ITerminalHost;
+import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.implementations.ContainerCraftingStatus;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.p455w0rd.wirelesscraftingterminal.client.gui.widgets.GuiTabButton;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwitchGuis;
 import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
@@ -57,8 +57,6 @@ public class GuiCraftingStatus extends appeng.client.gui.implementations.GuiCraf
     @Override
     public void initGui() {
         super.initGui();
-        // Hide "go back to wireless terminal" button as it opens the wrong GUI
-        this.buttonList.remove(this.buttonList.size() - 1);
 
         if (this.myIcon != null) {
             this.buttonList.add(
