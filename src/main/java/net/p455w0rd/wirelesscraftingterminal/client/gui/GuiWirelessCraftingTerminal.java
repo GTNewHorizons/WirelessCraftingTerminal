@@ -71,8 +71,8 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui implements ISortSourc
             AE_NUM_ROWS = 0,
             GUI_UPPER_HEIGHT = 35,
             GUI_SEARCH_ROW = 35,
-            SEARCH_X = 81,
-            SEARCH_Y = 5,
+            SEARCH_X = 80,
+            SEARCH_Y = 4,
             SEARCH_WIDTH = 88,
             SEARCH_HEIGHT = 12,
             SEARCH_MAXCHARS = 15,
@@ -262,8 +262,8 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui implements ISortSourc
                 final PacketInventoryAction p =
                         new PacketInventoryAction(action, this.inventorySlots.inventorySlots.size(), 0);
                 NetworkHandler.instance.sendToServer(p);
+                return;
             }
-            return;
         }
         super.handleMouseClick(slot, slotIdx, ctrlDown, mouseButton);
     }
@@ -765,6 +765,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui implements ISortSourc
         }
 
         this.repo.updateView();
+        this.setScrollBar();
     }
 
     public boolean isCustomSortOrder() {
