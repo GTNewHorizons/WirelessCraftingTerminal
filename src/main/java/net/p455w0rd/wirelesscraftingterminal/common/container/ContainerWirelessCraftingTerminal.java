@@ -339,6 +339,7 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
         writeToNBT("crafting");
     }
 
+    @Override
     public void doAction(final EntityPlayerMP player, final InventoryAction action, final int slot, final long id) {
         if (slot >= 0 && slot < this.inventorySlots.size()) {
             final Slot s = this.getSlot(slot);
@@ -350,7 +351,9 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
                     case CRAFT_STACK:
                         ((SlotCraftingTerm) s).doClick(action, player);
                         this.updateHeld(player);
+                        break;
                     default:
+                        break;
                 }
             }
 
@@ -1253,12 +1256,6 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
 
         this.updateSlot(clickSlot);
         return null;
-    }
-
-    @SuppressWarnings("unused")
-    private boolean isCraftMatrixSlot(AppEngSlot cs) {
-        return (cs.getSlotIndex() >= this.firstCraftingSlotNumber)
-                && !(cs.getSlotIndex() <= this.lastCraftingSlotNumber);
     }
 
     private void updateSlot(final Slot clickSlot) {
