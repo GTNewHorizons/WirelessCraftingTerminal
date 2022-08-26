@@ -113,7 +113,7 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
     public ItemStack[] craftMatrixInventory;
     private final World worldObj;
     private final EntityPlayer player;
-    private static final int HOTBAR_START = 1,
+    public static final int HOTBAR_START = 1,
             HOTBAR_END = HOTBAR_START + 8,
             INV_START = HOTBAR_END + 1,
             INV_END = INV_START + 26,

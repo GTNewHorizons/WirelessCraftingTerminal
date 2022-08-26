@@ -31,6 +31,7 @@ import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import codechicken.nei.TextField;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -59,8 +60,11 @@ import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import yalter.mousetweaks.api.IMTModGuiContainer;
 
-public class GuiWirelessCraftingTerminal extends AEBaseGui implements ISortSource, IConfigManagerHost {
+@Optional.Interface(modid = "MouseTweaks", iface = "yalter.mousetweaks.api.IMTModGuiContainer")
+public class GuiWirelessCraftingTerminal extends AEBaseGui
+        implements ISortSource, IConfigManagerHost, IMTModGuiContainer {
 
     private float xSize_lo;
     private float ySize_lo;
@@ -832,4 +836,69 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui implements ISortSourc
         }
         return false;
     }
+
+    // MouseTweaks compat
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public int getAPIVersion() {
+        return 1;
+    }
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public String getModName() {
+        return Reference.NAME;
+    }
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public boolean isMouseTweaksDisabled() {
+        return true;
+    }
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public boolean isWheelTweakDisabled() {
+        return true;
+    }
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public boolean isCraftingOutputSlot(Object modContainer, Object slot) {
+        return slot == containerWCT.getSlot(ContainerWirelessCraftingTerminal.CRAFT_RESULT);
+    }
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public Object getModContainer() {
+        return containerWCT;
+    }
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public int getModSlotCount(Object modContainer) {
+        return containerWCT.inventorySlots.size();
+    }
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public Object getModSlot(Object modContainer, int slotNumber) {
+        return slotNumber < containerWCT.inventorySlots.size() ? containerWCT.inventorySlots.get(slotNumber) : null;
+    }
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public Object getModSelectedSlot(Object modContainer, int slotCount) {
+        Slot s = getSlot(currentMouseX, currentMouseY);
+        return s;
+    }
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public void clickModSlot(Object modContainer, Object slotO, int mouseButton, boolean shiftPressed) {}
+
+    @Override
+    @Optional.Method(modid = "MouseTweaks")
+    public void disableRMBDragIfRequired(Object modContainer, Object firstSlot, boolean shouldClick) {}
 }
