@@ -3,6 +3,7 @@ package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 import appeng.api.config.Settings;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
+import appeng.container.AEBaseContainer;
 import appeng.helpers.IMouseWheelItem;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -14,9 +15,6 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftConfirm;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
-import net.p455w0rd.wirelesscraftingterminal.common.container.WCTBaseContainer;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
@@ -61,12 +59,6 @@ public class PacketValueConfig extends WCTPacket {
             final ItemStack is = RandomUtils.getWirelessTerm(player.inventory);
             final IMouseWheelItem si = (IMouseWheelItem) is.getItem();
             si.onWheel(is, this.Value.equals("WheelUp"));
-        } else if (this.Name.equals("Terminal.Cpu") && c instanceof ContainerCraftConfirm) {
-            final ContainerCraftConfirm qk = (ContainerCraftConfirm) c;
-            qk.cycleCpu(this.Value.equals("Next"));
-        } else if (this.Name.equals("Terminal.Start") && c instanceof ContainerCraftConfirm) {
-            final ContainerCraftConfirm qk = (ContainerCraftConfirm) c;
-            qk.startJob();
         } else if (c instanceof IConfigurableObject) {
             final IConfigManager cm = ((IConfigurableObject) c).getConfigManager();
 
@@ -92,19 +84,12 @@ public class PacketValueConfig extends WCTPacket {
         final Container c = player.openContainer;
 
         if (this.Name.equals("CustomName")) {
-            if (c instanceof ContainerWirelessCraftingTerminal) {
-                ((ContainerWirelessCraftingTerminal) c).setCustomName(this.Value);
-            }
-            if (c instanceof WCTBaseContainer) {
-                ((WCTBaseContainer) c).setCustomName(this.Value);
+            if (c instanceof AEBaseContainer) {
+                ((AEBaseContainer) c).setCustomName(this.Value);
             }
         } else if (this.Name.startsWith("SyncDat.")) {
-            if (c instanceof ContainerWirelessCraftingTerminal) {
-                ((ContainerWirelessCraftingTerminal) c)
-                        .stringSync(Integer.parseInt(this.Name.substring(8)), this.Value);
-            }
-            if (c instanceof WCTBaseContainer) {
-                ((WCTBaseContainer) c).stringSync(Integer.parseInt(this.Name.substring(8)), this.Value);
+            if (c instanceof AEBaseContainer) {
+                ((AEBaseContainer) c).stringSync(Integer.parseInt(this.Name.substring(8)), this.Value);
             }
         } else if (c instanceof IConfigurableObject) {
             final IConfigManager cm = ((IConfigurableObject) c).getConfigManager();

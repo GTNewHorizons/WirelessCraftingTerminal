@@ -9,7 +9,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-public class SlotArmor extends AppEngSlot {
+public class SlotArmor extends appeng.container.slot.AppEngSlot {
 
     /*
      * The armor type that can be placed on that slot, it uses the same values

@@ -2,6 +2,9 @@ package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.ClientHelper;
+import appeng.container.AEBaseContainer;
+import appeng.container.ContainerOpenContext;
+import appeng.container.implementations.ContainerCraftAmount;
 import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
@@ -12,10 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftAmount;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerOpenContext;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
-import net.p455w0rd.wirelesscraftingterminal.common.container.WCTBaseContainer;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
@@ -95,14 +95,8 @@ public class PacketInventoryAction extends WCTPacket {
         final EntityPlayerMP sender = (EntityPlayerMP) player;
         Container baseContainer = sender.openContainer;
         ContainerOpenContext context = null;
-        if (sender.openContainer instanceof ContainerWirelessCraftingTerminal) {
-            baseContainer = (ContainerWirelessCraftingTerminal) sender.openContainer;
-            context = ((ContainerWirelessCraftingTerminal) baseContainer).getOpenContext();
-        }
-
-        if (sender.openContainer instanceof WCTBaseContainer) {
-            baseContainer = (WCTBaseContainer) sender.openContainer;
-            context = ((WCTBaseContainer) baseContainer).getOpenContext();
+        if (baseContainer instanceof AEBaseContainer) {
+            context = ((AEBaseContainer) baseContainer).getOpenContext();
         }
 
         if (this.action == InventoryAction.AUTO_CRAFT) {
@@ -129,13 +123,13 @@ public class PacketInventoryAction extends WCTPacket {
                     }
                 }
 
-                if (baseContainer instanceof WCTBaseContainer) {
-                    if (((WCTBaseContainer) baseContainer).getTargetStack() != null) {
+                if (baseContainer instanceof AEBaseContainer) {
+                    if (((AEBaseContainer) baseContainer).getTargetStack() != null) {
                         cca.getCraftingItem()
-                                .putStack(((WCTBaseContainer) baseContainer)
+                                .putStack(((AEBaseContainer) baseContainer)
                                         .getTargetStack()
                                         .getItemStack());
-                        cca.setItemToCraft(((WCTBaseContainer) baseContainer).getTargetStack());
+                        cca.setItemToCraft(((AEBaseContainer) baseContainer).getTargetStack());
                     }
                 }
 
@@ -150,8 +144,8 @@ public class PacketInventoryAction extends WCTPacket {
                     ((ContainerWirelessCraftingTerminal) baseContainer)
                             .doAction(sender, this.action, this.slot, this.id);
             }
-            if (baseContainer instanceof WCTBaseContainer) {
-                ((WCTBaseContainer) baseContainer).doAction(sender, this.action, this.slot, this.id);
+            if (baseContainer instanceof AEBaseContainer) {
+                ((AEBaseContainer) baseContainer).doAction(sender, this.action, this.slot, this.id);
             }
         }
     }

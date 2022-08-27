@@ -9,7 +9,7 @@ import net.minecraft.util.IIcon;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemBoosterBGIcon;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemInfinityBooster;
 
-public class SlotBooster extends AppEngSlot {
+public class SlotBooster extends appeng.container.slot.AppEngSlot {
 
     /**
      * Custom slot for infinity booster card

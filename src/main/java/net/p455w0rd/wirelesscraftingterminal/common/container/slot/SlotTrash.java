@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 
-public class SlotTrash extends AppEngSlot {
+public class SlotTrash extends appeng.container.slot.AppEngSlot {
 
     private final EntityPlayer entityPlayer;
     private ItemStack itemStack;

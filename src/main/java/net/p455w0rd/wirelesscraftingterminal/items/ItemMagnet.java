@@ -1,6 +1,5 @@
 package net.p455w0rd.wirelesscraftingterminal.items;
 
-import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.guiobjects.IPortableCell;
 import appeng.api.networking.IGrid;
@@ -30,7 +29,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTermHandler;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
 import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
@@ -475,19 +473,6 @@ public class ItemMagnet extends Item {
             }
         }
         return true;
-    }
-
-    public WirelessTerminalGuiObject getGuiObject(
-            final ItemStack it, final EntityPlayer player, final World w, final int x, final int y, final int z) {
-        if (it != null) {
-            final IWirelessCraftingTermHandler wh = (IWirelessCraftingTermHandler)
-                    AEApi.instance().registries().wireless().getWirelessTerminalHandler(it);
-            if (wh != null) {
-                return new WirelessTerminalGuiObject(wh, it, player, w, x, y, z);
-            }
-        }
-
-        return null;
     }
 
     public static List<? extends Entity> getEntitiesInRange(

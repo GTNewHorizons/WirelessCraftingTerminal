@@ -31,6 +31,7 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
 import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTPlayerSource;
+import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
@@ -59,13 +60,7 @@ public class CommonProxy {
         }
     }
 
-    public void removeItemsFromNEI() {
-        // XD
-    }
-
-    public void registerRenderers() {
-        // =P
-    }
+    public void removeItemsFromNEI() {}
 
     @SubscribeEvent
     public void tickEvent(TickEvent.PlayerTickEvent e) {
@@ -132,10 +127,6 @@ public class CommonProxy {
     public void onPlayerLogin(PlayerLoggedInEvent e) {
         // SSP Login
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-            // boolean hasWCTAch = ((EntityPlayerMP)
-            // e.player).func_147099_x().hasAchievementUnlocked(AchievementHandler.wctAch);
-            // boolean hasBoosterAch = ((EntityPlayerMP)
-            // e.player).func_147099_x().hasAchievementUnlocked(AchievementHandler.boosterAch);
 
             ConfigHandler.removeBooster();
             ConfigHandler.removeBoosterIcon();
@@ -145,21 +136,6 @@ public class CommonProxy {
             } else {
                 ConfigHandler.reloadRecipes();
             }
-            // Was using this for hidden booster achievement
-            // it was giving me too much of a headache..maybe
-            // i'll implement in the future
-            /*
-             * AchievementPage achPg = AchievementPage.getAchievementPage(
-             * "Wireless Crafting Term"); if (achPg != null &&
-             * AchievementList.achievementList.contains(AchievementHandler.
-             * boosterAch) &&
-             * !achPg.getAchievements().contains(AchievementHandler.boosterAch))
-             * { AchievementList.achievementList.remove(AchievementHandler.
-             * boosterAch); } if ((Reference.WCT_BOOSTER_ENABLED && hasWCTAch)
-             * || hasBoosterAch) {
-             * AchievementHandler.addAchievementToPage(AchievementHandler.
-             * boosterAch, true, e.player); }
-             */
 
             /* NH fork definitely does not need version checking
             if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
@@ -225,7 +201,7 @@ public class CommonProxy {
                     if (magnetStack.getItem() instanceof ItemMagnet) {
                         ItemMagnet magnet = (ItemMagnet) magnetStack.getItem();
 
-                        magnet.obj = magnet.getGuiObject(
+                        magnet.obj = ContainerWirelessCraftingTerminal.getGuiObject(
                                 WCTStack, player, world, (int) player.posX, (int) player.posY, (int) player.posZ);
                         magnet.civ = magnet.obj;
                         magnet.powerSrc = magnet.civ;
@@ -339,16 +315,4 @@ public class CommonProxy {
             }
         }
     }
-
-    /*
-     * @SubscribeEvent public void achievementGetEvent(AchievementEvent event) {
-     * int index = AchievementList.achievementList.indexOf(wctAch); if
-     * (event.achievement.equals(AchievementList.achievementList.get(index))) {
-     * if (Reference.WCT_BOOSTER_ENABLED) { EnumChatFormatting purple =
-     * EnumChatFormatting.LIGHT_PURPLE; EnumChatFormatting green =
-     * EnumChatFormatting.GREEN; event.entityPlayer.addChatMessage(new
-     * ChatComponentText(EnumChatFormatting.ITALIC + "" + purple + "[" + green +
-     * "Wireless Crafting Terminal" + purple + "]: " + green + " New" + purple +
-     * " Achievment" + green + " Unlocked" + purple + "!")); } } }
-     */
 }

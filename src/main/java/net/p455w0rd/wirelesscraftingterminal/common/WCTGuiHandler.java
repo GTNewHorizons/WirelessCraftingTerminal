@@ -2,10 +2,13 @@ package net.p455w0rd.wirelesscraftingterminal.common;
 
 import appeng.api.AEApi;
 import appeng.api.implementations.guiobjects.IPortableCell;
+import appeng.container.AEBaseContainer;
+import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftingStatus;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTermHandler;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiCraftAmount;
 import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiCraftConfirm;
@@ -37,19 +40,35 @@ public class WCTGuiHandler implements IGuiHandler {
                 final IPortableCell terminal = obj;
 
                 if (guiId == Reference.GUI_WCT) {
-                    return new ContainerWirelessCraftingTerminal(player, player.inventory);
+                    return updateGui(
+                            new ContainerWirelessCraftingTerminal(player, player.inventory),
+                            world,
+                            x,
+                            y,
+                            z,
+                            ForgeDirection.UNKNOWN,
+                            obj);
                 }
 
                 if (guiId == Reference.GUI_CRAFTING_STATUS) {
-                    return new ContainerCraftingStatus(player.inventory, terminal);
+                    return updateGui(
+                            new ContainerCraftingStatus(player.inventory, terminal),
+                            world,
+                            x,
+                            y,
+                            z,
+                            ForgeDirection.UNKNOWN,
+                            obj);
                 }
 
                 if (guiId == Reference.GUI_CRAFT_AMOUNT) {
-                    return new ContainerCraftAmount(player.inventory, terminal);
+                    return updateGui(
+                            new ContainerCraftAmount(player, terminal), world, x, y, z, ForgeDirection.UNKNOWN, obj);
                 }
 
                 if (guiId == Reference.GUI_CRAFT_CONFIRM) {
-                    return new ContainerCraftConfirm(player.inventory, terminal);
+                    return updateGui(
+                            new ContainerCraftConfirm(player, terminal), world, x, y, z, ForgeDirection.UNKNOWN, obj);
                 }
             }
         }
@@ -100,5 +119,26 @@ public class WCTGuiHandler implements IGuiHandler {
     public static void launchGui(
             final int ID, final EntityPlayer player, final World world, final int x, final int y, final int z) {
         player.openGui(WirelessCraftingTerminal.INSTANCE, ID, world, x, y, z);
+    }
+
+    private Object updateGui(
+            final Object newContainer,
+            final World w,
+            final int x,
+            final int y,
+            final int z,
+            final ForgeDirection side,
+            final Object myItem) {
+        if (newContainer instanceof AEBaseContainer) {
+            final AEBaseContainer bc = (AEBaseContainer) newContainer;
+            bc.setOpenContext(new ContainerOpenContext(myItem));
+            bc.getOpenContext().setWorld(w);
+            bc.getOpenContext().setX(x);
+            bc.getOpenContext().setY(y);
+            bc.getOpenContext().setZ(z);
+            bc.getOpenContext().setSide(side);
+        }
+
+        return newContainer;
     }
 }
