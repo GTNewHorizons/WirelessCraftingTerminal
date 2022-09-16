@@ -224,7 +224,11 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
 
         // Add hotbar slots
         for (int i = 0; i < 9; ++i) {
-            hotbarSlot[i] = new SlotPlayerHotBar(this.inventoryPlayer, i, i * 18 + 8, 58);
+            if (player.inventory.getStackInSlot(i) != null && player.inventory.getStackInSlot(i).getItem() == this.thisItem) {
+                hotbarSlot[i] = new SlotDisabled(this.inventoryPlayer, i, i * 18 + 8, 58);
+            } else {
+                hotbarSlot[i] = new SlotPlayerHotBar(this.inventoryPlayer, i, i * 18 + 8, 58);
+            }
             this.addSlotToContainer(hotbarSlot[i]);
         }
 
@@ -233,7 +237,11 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
         // Add player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                inventorySlot[k] = new SlotPlayerInv(this.inventoryPlayer, j + i * 9 + 9, j * 18 + 8, i * 18);
+                if (player.inventory.getStackInSlot(j + i * 9 + 9) != null && player.inventory.getStackInSlot(j + i * 9 + 9).getItem() == this.thisItem) {
+                    inventorySlot[k] = new SlotDisabled(this.inventoryPlayer, j + i * 9 + 9, j * 18 + 8, i * 18);
+                } else {
+                    inventorySlot[k] = new SlotPlayerInv(this.inventoryPlayer, j + i * 9 + 9, j * 18 + 8, i * 18);
+                }
                 this.addSlotToContainer(inventorySlot[k]);
                 k++;
             }
