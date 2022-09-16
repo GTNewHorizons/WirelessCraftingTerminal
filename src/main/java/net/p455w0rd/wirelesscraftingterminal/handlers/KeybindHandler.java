@@ -51,6 +51,12 @@ public class KeybindHandler {
             IWirelessCraftingTerminalItem wirelessTerm = (IWirelessCraftingTerminalItem) is.getItem();
             if (wirelessTerm != null && wirelessTerm.isWirelessCraftingEnabled(is)) {
                 if (!FMLClientHandler.instance().isGUIOpen(GuiWirelessCraftingTerminal.class)) {
+                    for (int i = 0; i < p.inventory.mainInventory.length; ++i) {
+                        if (p.inventory.mainInventory[i] != null && p.inventory.mainInventory[i].getItem() == wirelessTerm) {
+                            p.inventory.currentItem = i + 1;
+                            break;
+                        }
+                    }
                     NetworkHandler.instance.sendToServer(new PacketOpenGui(Reference.GUI_WCT));
                 }
             }
