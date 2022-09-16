@@ -1317,6 +1317,8 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
                     && getSlot(slot) != null
                     && getSlot(slot).getStack() == RandomUtils.getWirelessTerm(player.inventory)) {
                 return null;
+            } else if (player.inventory.currentItem == button && flag == 2) {
+                return null;
             }
             return super.slotClick(slot, button, flag, player);
         } catch (IndexOutOfBoundsException e) {
