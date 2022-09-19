@@ -29,7 +29,6 @@ import appeng.container.AEBaseContainer;
 import appeng.container.ContainerNull;
 import appeng.container.slot.AppEngCraftingSlot;
 import appeng.container.slot.AppEngSlot;
-import appeng.container.slot.NullSlot;
 import appeng.container.slot.SlotCraftingMatrix;
 import appeng.container.slot.SlotCraftingTerm;
 import appeng.container.slot.SlotDisabled;
@@ -113,7 +112,7 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
     public ItemStack[] craftMatrixInventory;
     private final World worldObj;
     private final EntityPlayer player;
-    public static final int HOTBAR_START = 1,
+    public static final int HOTBAR_START = 2,
             HOTBAR_END = HOTBAR_START + 8,
             INV_START = HOTBAR_END + 1,
             INV_END = INV_START + 26,
@@ -124,12 +123,11 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
             CRAFT_RESULT = CRAFT_GRID_END + 1,
             VIEW_CELL_START = CRAFT_RESULT + 1,
             VIEW_CELL_END = VIEW_CELL_START + 4,
-            BOOSTER_INDEX = 0,
+            BOOSTER_INDEX = 1,
             MAGNET_INDEX = VIEW_CELL_END + 1;
     public static int CRAFTING_SLOT_X_POS = 80, CRAFTING_SLOT_Y_POS = 83;
     private SlotBooster boosterSlot;
     private final SlotMagnet magnetSlot;
-    private NullSlot nullSlot;
     private final Slot[] hotbarSlot;
     private final Slot[] inventorySlot;
     private final SlotArmor[] armorSlot;
@@ -214,12 +212,14 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
             this.monitor = null;
         }
 
+        // Dummy slot at index 0 to work around ME slots all having their slot number set to 0.
+        this.addSlotToContainer(new SlotInaccessible(new AppEngInternalInventory(null, 1), 0, -1000, -1000));
+
         if (Reference.WCT_BOOSTER_ENABLED) {
             boosterSlot = new SlotBooster(this.boosterInventory, 0, 134, -20);
             this.addSlotToContainer(boosterSlot);
         } else {
-            nullSlot = new NullSlot();
-            this.addSlotToContainer(nullSlot);
+            this.addSlotToContainer(new SlotInaccessible(new AppEngInternalInventory(null, 1), 0, -1000, -1000));
         }
 
         // Add hotbar slots
