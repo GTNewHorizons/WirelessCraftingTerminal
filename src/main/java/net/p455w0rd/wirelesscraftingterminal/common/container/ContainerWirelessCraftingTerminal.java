@@ -822,16 +822,14 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
     }
 
     public boolean isBoosterInstalled() {
-        Slot slot = getSlotFromInventory(this.boosterInventory, BOOSTER_INDEX);
+        Slot slot = getSlotFromInventory(this.boosterInventory, 0);
         if (slot == null) {
             return false;
         }
-        boolean hasStack =
-                getSlotFromInventory(this.boosterInventory, BOOSTER_INDEX).getHasStack();
+        boolean hasStack = getSlotFromInventory(this.boosterInventory, 0).getHasStack();
         if (hasStack) {
-            Item boosterSlotContents = getSlotFromInventory(this.boosterInventory, BOOSTER_INDEX)
-                    .getStack()
-                    .getItem();
+            Item boosterSlotContents =
+                    getSlotFromInventory(this.boosterInventory, 0).getStack().getItem();
             return boosterSlotContents instanceof ItemInfinityBooster;
         }
         return false;
