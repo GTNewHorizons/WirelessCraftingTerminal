@@ -1,12 +1,13 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;
 import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 public class PacketOpenGui extends WCTPacket {
 
@@ -29,7 +30,12 @@ public class PacketOpenGui extends WCTPacket {
     public void serverPacketData(final INetworkInfo manager, final WCTPacket packet, final EntityPlayer player) {
         if (player.openContainer instanceof ContainerPlayer) {
             WCTGuiHandler.launchGui(
-                    this.whichGui, player, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+                    this.whichGui,
+                    player,
+                    player.worldObj,
+                    (int) player.posX,
+                    (int) player.posY,
+                    (int) player.posZ);
         }
     }
 

@@ -3,6 +3,7 @@ package net.p455w0rd.wirelesscraftingterminal.common.container;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -25,11 +26,7 @@ public class ContainerMagnet extends Container {
     @SuppressWarnings("rawtypes")
     private final Set distributeSlotSet = new HashSet();
 
-    private final int PLAYER_INV_START = 0,
-            PLAYER_INV_END = 26,
-            HOTBAR_START = 27,
-            HOTBAR_END = 35,
-            FILTERS_START = 36,
+    private final int PLAYER_INV_START = 0, PLAYER_INV_END = 26, HOTBAR_START = 27, HOTBAR_END = 35, FILTERS_START = 36,
             FILTERS_END = 62;
 
     public ContainerMagnet(EntityPlayer player, InventoryPlayer inventoryPlayer) {
@@ -84,7 +81,7 @@ public class ContainerMagnet extends Container {
         return false;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public ItemStack slotClick(int slotNum, int mouseButton, int modifier, EntityPlayer player) {
         if (slotNum >= this.inventorySlots.size()) {
@@ -103,8 +100,7 @@ public class ContainerMagnet extends Container {
                 }
 
                 if (mouseButton == 1) {
-                    player.dropPlayerItemWithRandomChoice(
-                            inventoryplayer.getItemStack().splitStack(1), true);
+                    player.dropPlayerItemWithRandomChoice(inventoryplayer.getItemStack().splitStack(1), true);
 
                     if (inventoryplayer.getItemStack().stackSize == 0) {
                         inventoryplayer.setItemStack((ItemStack) null);
@@ -117,7 +113,7 @@ public class ContainerMagnet extends Container {
         // Click+drag stack
         else if (modifier == 5) {
             // if (isInFilters(slotNum)) {
-            //	return null;
+            // return null;
             // }
             int currentDistributeState = this.distributeState;
             this.distributeState = checkForPressedButton(mouseButton);
@@ -139,8 +135,7 @@ public class ContainerMagnet extends Container {
             } else if (this.distributeState == 1) {
                 Slot slot = (Slot) this.inventorySlots.get(slotNum);
 
-                if (slot != null
-                        && stackFitsInSlot(slot, inventoryplayer.getItemStack(), true)
+                if (slot != null && stackFitsInSlot(slot, inventoryplayer.getItemStack(), true)
                         && slot.isItemValid(inventoryplayer.getItemStack())
                         && inventoryplayer.getItemStack().stackSize > this.distributeSlotSet.size()
                         && this.canDragIntoSlot(slot)) {
@@ -155,8 +150,7 @@ public class ContainerMagnet extends Container {
                     while (iterator.hasNext()) {
                         Slot slot1 = (Slot) iterator.next();
 
-                        if (slot1 != null
-                                && stackFitsInSlot(slot1, inventoryplayer.getItemStack(), true)
+                        if (slot1 != null && stackFitsInSlot(slot1, inventoryplayer.getItemStack(), true)
                                 && slot1.isItemValid(inventoryplayer.getItemStack())
                                 && inventoryplayer.getItemStack().stackSize >= this.distributeSlotSet.size()
                                 && this.canDragIntoSlot(slot1)) {
@@ -237,12 +231,12 @@ public class ContainerMagnet extends Container {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void setSlotStack(
-            Set slotSet, int stackSizeSelector, ItemStack stackToResize, int currentSlotStackSize) {
+    public static void setSlotStack(Set slotSet, int stackSizeSelector, ItemStack stackToResize,
+            int currentSlotStackSize) {
         switch (stackSizeSelector) {
             case 0:
-                stackToResize.stackSize =
-                        MathHelper.floor_float((float) stackToResize.stackSize / (float) slotSet.size());
+                stackToResize.stackSize = MathHelper
+                        .floor_float((float) stackToResize.stackSize / (float) slotSet.size());
                 break;
             case 1:
                 stackToResize.stackSize = 1;
@@ -254,8 +248,7 @@ public class ContainerMagnet extends Container {
     public static boolean stackFitsInSlot(Slot slot, ItemStack itemStack, boolean sizeMatters) {
         boolean flag1 = slot == null || !slot.getHasStack();
 
-        if (slot != null
-                && slot.getHasStack()
+        if (slot != null && slot.getHasStack()
                 && itemStack != null
                 && itemStack.isItemEqual(slot.getStack())
                 && ItemStack.areItemStackTagsEqual(slot.getStack(), itemStack)) {
@@ -439,8 +432,7 @@ public class ContainerMagnet extends Container {
                     continue;
                 }
 
-                if (itemstack1 != null
-                        && itemstack1.getItem() == stack.getItem()
+                if (itemstack1 != null && itemstack1.getItem() == stack.getItem()
                         && (!stack.getHasSubtypes() || stack.getItemDamage() == itemstack1.getItemDamage())
                         && ItemStack.areItemStackTagsEqual(stack, itemstack1)) {
                     int l = itemstack1.stackSize + stack.stackSize;
@@ -482,7 +474,8 @@ public class ContainerMagnet extends Container {
                         break;
                     } else {
                         putStackInSlot(
-                                k, new ItemStack(stack.getItem(), slot.getSlotStackLimit(), stack.getItemDamage()));
+                                k,
+                                new ItemStack(stack.getItem(), slot.getSlotStackLimit(), stack.getItemDamage()));
                         stack.stackSize -= slot.getSlotStackLimit();
                         magnetInventory.markDirty();
                         flag1 = true;

@@ -1,12 +1,5 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
-import appeng.api.storage.data.IAEItemStack;
-import appeng.util.item.AEItemStack;
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import javax.annotation.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +20,16 @@ import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
 
+import appeng.api.storage.data.IAEItemStack;
+import appeng.util.item.AEItemStack;
+import cpw.mods.fml.common.network.internal.FMLProxyPacket;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+
 public class PacketMEInventoryUpdate extends WCTPacket {
+
     private static final int UNCOMPRESSED_PACKET_BYTE_LIMIT = 16 * 1024 * 1024;
     private static final int OPERATION_BYTE_LIMIT = 2 * 1024;
     private static final int TEMP_BUFFER_SIZE = 1024;
@@ -54,6 +58,7 @@ public class PacketMEInventoryUpdate extends WCTPacket {
         this.ref = stream.readByte();
 
         final GZIPInputStream gzReader = new GZIPInputStream(new InputStream() {
+
             @Override
             public int read() throws IOException {
                 if (stream.readableBytes() <= 0) {
@@ -94,6 +99,7 @@ public class PacketMEInventoryUpdate extends WCTPacket {
         this.data.writeByte(this.ref);
 
         this.compressFrame = new GZIPOutputStream(new OutputStream() {
+
             @Override
             public void write(final int value) throws IOException {
                 PacketMEInventoryUpdate.this.data.writeByte(value);

@@ -1,8 +1,9 @@
 package net.p455w0rd.wirelesscraftingterminal.common.container.slot;
 
-import appeng.container.slot.SlotFake;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+
+import appeng.container.slot.SlotFake;
 
 public class OptionalSlotFake extends SlotFake {
 
@@ -12,15 +13,8 @@ public class OptionalSlotFake extends SlotFake {
     private final IOptionalSlotHost host;
     private boolean renderDisabled = true;
 
-    public OptionalSlotFake(
-            final IInventory inv,
-            final IOptionalSlotHost containerBus,
-            final int idx,
-            final int x,
-            final int y,
-            final int offX,
-            final int offY,
-            final int groupNum) {
+    public OptionalSlotFake(final IInventory inv, final IOptionalSlotHost containerBus, final int idx, final int x,
+            final int y, final int offX, final int offY, final int groupNum) {
         super(inv, idx, x + offX * 18, y + offY * 18);
         this.srcX = x;
         this.srcY = y;

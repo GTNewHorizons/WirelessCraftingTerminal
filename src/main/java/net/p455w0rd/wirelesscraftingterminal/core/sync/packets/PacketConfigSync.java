@@ -1,13 +1,14 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayer;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
 import net.p455w0rd.wirelesscraftingterminal.handlers.ConfigHandler;
 import net.p455w0rd.wirelesscraftingterminal.handlers.RecipeHandler;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 public class PacketConfigSync extends WCTPacket {
 

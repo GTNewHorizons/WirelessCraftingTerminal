@@ -1,18 +1,7 @@
 package net.p455w0rd.wirelesscraftingterminal.common;
 
-import appeng.api.AEApi;
-import appeng.api.features.IWirelessTermHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.LoaderState;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import java.io.File;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
@@ -25,17 +14,34 @@ import net.p455w0rd.wirelesscraftingterminal.items.ItemEnum;
 import net.p455w0rd.wirelesscraftingterminal.proxy.CommonProxy;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
+import appeng.api.AEApi;
+import appeng.api.features.IWirelessTermHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.LoaderState;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+
 @Mod(
         modid = Reference.MODID,
         acceptedMinecraftVersions = "[1.7.10]",
         name = Reference.NAME,
         version = Reference.VERSION,
         guiFactory = Reference.GUI_FACTORY,
-        dependencies = "" + "required-after:Forge@[" + net.minecraftforge.common.ForgeVersion.majorVersion
+        dependencies = "" + "required-after:Forge@["
+                + net.minecraftforge.common.ForgeVersion.majorVersion
                 + '.' // majorVersion
-                + net.minecraftforge.common.ForgeVersion.minorVersion + '.' // minorVersion
-                + net.minecraftforge.common.ForgeVersion.revisionVersion + '.' // revisionVersion
-                + net.minecraftforge.common.ForgeVersion.buildVersion + ",);"
+                + net.minecraftforge.common.ForgeVersion.minorVersion
+                + '.' // minorVersion
+                + net.minecraftforge.common.ForgeVersion.revisionVersion
+                + '.' // revisionVersion
+                + net.minecraftforge.common.ForgeVersion.buildVersion
+                + ",);"
                 + "required-after:appliedenergistics2@[rv3-beta-1,);after:NotEnoughItems;")
 public class WirelessCraftingTerminal {
 
@@ -57,8 +63,8 @@ public class WirelessCraftingTerminal {
         WirelessCraftingTerminal.proxy.registerItems();
         ConfigHandler.init(new File(event.getModConfigurationDirectory(), Reference.CONFIG_FILE));
         FMLCommonHandler.instance().bus().register(proxy);
-        AEApi.instance().registries().wireless().registerWirelessHandler((IWirelessTermHandler)
-                ItemEnum.WIRELESS_CRAFTING_TERMINAL.getItem());
+        AEApi.instance().registries().wireless()
+                .registerWirelessHandler((IWirelessTermHandler) ItemEnum.WIRELESS_CRAFTING_TERMINAL.getItem());
         WCTLog.endSection("PreInit", stopwatch);
     }
 

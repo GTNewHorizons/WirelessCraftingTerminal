@@ -1,19 +1,7 @@
 package net.p455w0rd.wirelesscraftingterminal.items;
 
-import appeng.api.config.*;
-import appeng.api.features.IWirelessTermHandler;
-import appeng.api.util.IConfigManager;
-import appeng.items.tools.powered.powersink.AERootPoweredItem;
-import appeng.util.ConfigManager;
-import appeng.util.IConfigManagerHost;
-import appeng.util.Platform;
-import baubles.api.BaubleType;
-import baubles.api.IBauble;
-import com.google.common.base.Optional;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,7 +19,24 @@ import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.integration.EnderIO;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
 import org.lwjgl.input.Keyboard;
+
+import appeng.api.config.*;
+import appeng.api.features.IWirelessTermHandler;
+import appeng.api.util.IConfigManager;
+import appeng.items.tools.powered.powersink.AERootPoweredItem;
+import appeng.util.ConfigManager;
+import appeng.util.IConfigManagerHost;
+import appeng.util.Platform;
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
+
+import com.google.common.base.Optional;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemWirelessCraftingTerminal extends AERootPoweredItem
         implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBauble {
@@ -80,8 +85,7 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
     }
 
     /**
-     * This method return the type of bauble this is.
-     * Type is used to determine the slots it can go into.
+     * This method return the type of bauble this is. Type is used to determine the slots it can go into.
      *
      * @param itemstack
      */
@@ -234,8 +238,7 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
         final ConfigManager out = new ConfigManager(new IConfigManagerHost() {
 
             @Override
-            public void updateSetting(
-                    final IConfigManager manager,
+            public void updateSetting(final IConfigManager manager,
                     @SuppressWarnings("rawtypes") final Enum settingName,
                     @SuppressWarnings("rawtypes") final Enum newValue) {
                 final NBTTagCompound data = Platform.openNbtData(target);
@@ -251,7 +254,7 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
         return out;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void getCheckedSubItems(Item item, CreativeTabs creativeTab, List itemList) {
         List itemList2 = itemList;
@@ -271,14 +274,13 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
         return true;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @SideOnly(Side.CLIENT)
     @Override
     public void addCheckedInformation(ItemStack is, EntityPlayer player, List list, boolean displayMore) {
-        String shift = LocaleHandler.PressShift.getLocal()
-                .replace(
-                        "Shift",
-                        color("yellow") + "" + color("bold") + "" + color("italics") + "Shift" + color("gray"));
+        String shift = LocaleHandler.PressShift.getLocal().replace(
+                "Shift",
+                color("yellow") + "" + color("bold") + "" + color("italics") + "Shift" + color("gray"));
         final NBTTagCompound tag = ensureTagCompound(is);
 
         String encKey = tag.getString("key");
@@ -292,19 +294,22 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
             pctTxtColor = color("red") + "";
         }
         list.add(color("aqua") + "==============================");
-        list.add(StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + pctTxtColor
-                + (int) aeCurrPower + " AE - " + aeCurrPowerPct + "%");
+        list.add(
+                StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": "
+                        + pctTxtColor
+                        + (int) aeCurrPower
+                        + " AE - "
+                        + aeCurrPowerPct
+                        + "%");
         if (isShiftKeyDown()) {
             String linked = color("red") + StatCollector.translateToLocal("gui.appliedenergistics2.Unlinked");
             if (encKey != null && !encKey.isEmpty()) {
                 linked = color("blue") + StatCollector.translateToLocal("gui.appliedenergistics2.Linked");
             }
             list.add(LocaleHandler.LinkStatus.getLocal() + ": " + linked);
-            String boosterStatus = (checkForBooster(is)
-                    ? color("green") + "" + LocaleHandler.Installed.getLocal()
+            String boosterStatus = (checkForBooster(is) ? color("green") + "" + LocaleHandler.Installed.getLocal()
                     : color("red") + "" + LocaleHandler.NotInstalled.getLocal());
-            String magnetStatus = (isMagnetInstalled(is)
-                    ? color("green") + "" + LocaleHandler.Installed.getLocal()
+            String magnetStatus = (isMagnetInstalled(is) ? color("green") + "" + LocaleHandler.Installed.getLocal()
                     : color("red") + "" + LocaleHandler.NotInstalled.getLocal());
             if (Reference.WCT_BOOSTER_ENABLED) {
                 list.add(getItemName("infinityBoosterCard") + ": " + boosterStatus);
@@ -457,7 +462,8 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
             double currentAEPower = getAECurrentPower(container);
             if ((int) currentAEPower < Reference.WCT_MAX_POWER) {
                 int leftOver = (int) PowerUnits.AE.convertTo(
-                        PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)));
+                        PowerUnits.RF,
+                        injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)));
                 return maxReceive - leftOver;
             } else {
                 return 0;
@@ -478,7 +484,8 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
             }
         } else {
             return (int) PowerUnits.AE.convertTo(
-                    PowerUnits.RF, extractAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxExtract)));
+                    PowerUnits.RF,
+                    extractAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxExtract)));
         }
     }
 

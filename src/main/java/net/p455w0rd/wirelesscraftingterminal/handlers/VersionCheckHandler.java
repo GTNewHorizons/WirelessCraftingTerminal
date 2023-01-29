@@ -1,19 +1,21 @@
 package net.p455w0rd.wirelesscraftingterminal.handlers;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 
 public class VersionCheckHandler {
 
@@ -43,8 +45,12 @@ public class VersionCheckHandler {
         if (!fetchVersion().equals(Reference.VERSION) && !Reference.WCT_HASCHECKEDVERSION) {
             Reference.WCT_HASCHECKEDVERSION = true;
             player.addChatMessage(
-                    new ChatComponentText(EnumChatFormatting.BLUE + "-=-=-=-=-=[" + EnumChatFormatting.WHITE
-                            + "Wireless Crafting Terminal" + EnumChatFormatting.BLUE + "]=-=-=-=-=-"));
+                    new ChatComponentText(
+                            EnumChatFormatting.BLUE + "-=-=-=-=-=["
+                                    + EnumChatFormatting.WHITE
+                                    + "Wireless Crafting Terminal"
+                                    + EnumChatFormatting.BLUE
+                                    + "]=-=-=-=-=-"));
             player.addChatMessage(new ChatComponentText(LocaleHandler.NewVersionAvailable.getLocal()));
             IChatComponent component = IChatComponent.Serializer.func_150699_a(LocaleHandler.ClickString.getLocal());
             player.addChatComponentMessage(component);
@@ -57,9 +63,9 @@ public class VersionCheckHandler {
     private String fetchVersion() {
         try {
             InputStream in = new URL(
-                            new String(
-                                    "https://raw.githubusercontent.com/p455w0rd/WirelessCraftingTerminal/master/latestversionrv3.txt"))
-                    .openStream();
+                    new String(
+                            "https://raw.githubusercontent.com/p455w0rd/WirelessCraftingTerminal/master/latestversionrv3.txt"))
+                                    .openStream();
             BufferedReader r = new BufferedReader(new InputStreamReader(in));
             return r.readLine();
         } catch (MalformedURLException ignored) {

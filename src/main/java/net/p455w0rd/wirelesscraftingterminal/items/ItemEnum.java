@@ -4,6 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public enum ItemEnum {
+
     BOOSTER_CARD("infinityBoosterCard", new ItemInfinityBooster().setUnlocalizedName("infinityBoosterCard")),
     BOOSTER_ICON("infinityBoosterIcon", new ItemInfinityBooster().hasEffect(true)),
     WIRELESS_CRAFTING_TERMINAL("wirelessCraftingTerminal", new ItemWirelessCraftingTerminal()),

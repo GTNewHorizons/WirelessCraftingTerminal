@@ -1,7 +1,5 @@
 package net.p455w0rd.wirelesscraftingterminal.common.container.slot;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -9,12 +7,14 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class SlotArmor extends appeng.container.slot.AppEngSlot {
 
     /*
-     * The armor type that can be placed on that slot, it uses the same values
-     * of armorType field on ItemArmor. Probably could've done just as well
-     * with vanilla armor slot class. if so, this will be removed in the future.
+     * The armor type that can be placed on that slot, it uses the same values of armorType field on ItemArmor. Probably
+     * could've done just as well with vanilla armor slot class. if so, this will be removed in the future.
      */
     final int armorType;
 

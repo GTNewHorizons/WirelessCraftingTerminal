@@ -1,11 +1,5 @@
 package net.p455w0rd.wirelesscraftingterminal.client.gui;
 
-import appeng.api.AEApi;
-import appeng.api.definitions.IDefinitions;
-import appeng.api.definitions.IParts;
-import appeng.api.storage.ITerminalHost;
-import appeng.client.gui.widgets.GuiTabButton;
-import appeng.container.implementations.ContainerCraftingStatus;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,7 +10,15 @@ import net.p455w0rd.wirelesscraftingterminal.items.ItemEnum;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
+import appeng.api.AEApi;
+import appeng.api.definitions.IDefinitions;
+import appeng.api.definitions.IParts;
+import appeng.api.storage.ITerminalHost;
+import appeng.client.gui.widgets.GuiTabButton;
+import appeng.container.implementations.ContainerCraftingStatus;
+
 public class GuiCraftingStatus extends appeng.client.gui.implementations.GuiCraftingStatus {
+
     private GuiTabButton originalGuiBtn;
     private int originalGui;
     private ItemStack myIcon = null;
@@ -31,8 +33,7 @@ public class GuiCraftingStatus extends appeng.client.gui.implementations.GuiCraf
         final IParts parts = definitions.parts();
 
         if (target instanceof WirelessTerminalGuiObject) {
-            for (final ItemStack wirelessTerminalStack :
-                    definitions.items().wirelessTerminal().maybeStack(1).asSet()) {
+            for (final ItemStack wirelessTerminalStack : definitions.items().wirelessTerminal().maybeStack(1).asSet()) {
                 this.myIcon = wirelessTerminalStack;
             }
 

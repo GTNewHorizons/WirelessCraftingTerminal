@@ -84,8 +84,7 @@ public class SlotTrash extends appeng.container.slot.AppEngSlot {
     }
 
     public void readNBT() {
-        NBTTagCompound nbtTagCompound =
-                RandomUtils.getWirelessTerm(entityPlayer.inventory).getTagCompound();
+        NBTTagCompound nbtTagCompound = RandomUtils.getWirelessTerm(entityPlayer.inventory).getTagCompound();
         NBTTagList tagList = nbtTagCompound.getTagList(this.name, 10);
         NBTTagCompound tagCompound = tagList.getCompoundTagAt(0);
         if (tagCompound != null) {
@@ -94,8 +93,7 @@ public class SlotTrash extends appeng.container.slot.AppEngSlot {
     }
 
     public void writeNBT() {
-        NBTTagCompound nbtTagCompound =
-                RandomUtils.getWirelessTerm(entityPlayer.inventory).getTagCompound();
+        NBTTagCompound nbtTagCompound = RandomUtils.getWirelessTerm(entityPlayer.inventory).getTagCompound();
         NBTTagList tagList = new NBTTagList();
         if (itemStack != null) {
             NBTTagCompound tagCompound = new NBTTagCompound();

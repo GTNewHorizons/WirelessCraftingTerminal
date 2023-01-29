@@ -3,6 +3,7 @@ package net.p455w0rd.wirelesscraftingterminal.api.recipes.game;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -13,6 +14,7 @@ import net.p455w0rd.wirelesscraftingterminal.api.exceptions.RegistrationError;
 import net.p455w0rd.wirelesscraftingterminal.api.recipes.IIngredient;
 
 public class ShapedRecipe implements IRecipe, IRecipeBakeable {
+
     // Added in for future ease of change, but hard coded for now.
     private static final int MAX_CRAFT_GRID_WIDTH = 3;
     private static final int MAX_CRAFT_GRID_HEIGHT = 3;
@@ -195,9 +197,8 @@ public class ShapedRecipe implements IRecipe, IRecipeBakeable {
         if (input == null && target != null || input != null && target == null) {
             return false;
         }
-        return (target.getItem() == input.getItem()
-                && (target.getItemDamage() == OreDictionary.WILDCARD_VALUE
-                        || target.getItemDamage() == input.getItemDamage()));
+        return (target.getItem() == input.getItem() && (target.getItemDamage() == OreDictionary.WILDCARD_VALUE
+                || target.getItemDamage() == input.getItemDamage()));
     }
 
     public ShapedRecipe setMirrored(final boolean mirror) {

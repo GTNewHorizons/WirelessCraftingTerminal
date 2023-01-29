@@ -1,11 +1,12 @@
 package net.p455w0rd.wirelesscraftingterminal.proxy;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.p455w0rd.wirelesscraftingterminal.handlers.KeybindHandler;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemEnum;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 
 public class ClientProxy extends CommonProxy {
 

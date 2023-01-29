@@ -1,8 +1,9 @@
 package net.p455w0rd.wirelesscraftingterminal.common.container.slot;
 
-import appeng.container.slot.SlotRestrictedInput;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+
+import appeng.container.slot.SlotRestrictedInput;
 
 public class SlotViewCell extends SlotRestrictedInput {
 

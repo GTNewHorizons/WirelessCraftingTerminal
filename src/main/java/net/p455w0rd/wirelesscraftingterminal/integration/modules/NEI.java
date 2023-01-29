@@ -1,21 +1,9 @@
 package net.p455w0rd.wirelesscraftingterminal.integration.modules;
 
-import appeng.api.AEApi;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.container.slot.SlotCraftingMatrix;
-import appeng.container.slot.SlotFakeCraftingMatrix;
-import appeng.integration.modules.NEIHelpers.NEIAEShapelessRecipeHandler;
-import appeng.util.Platform;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.api.API;
-import codechicken.nei.api.IOverlayHandler;
-import codechicken.nei.api.IStackPositioner;
-import codechicken.nei.guihook.GuiContainerManager;
-import codechicken.nei.guihook.IContainerTooltipHandler;
-import codechicken.nei.recipe.IRecipeHandler;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -35,7 +23,22 @@ import net.p455w0rd.wirelesscraftingterminal.integration.abstraction.INEI;
 import net.p455w0rd.wirelesscraftingterminal.integration.modules.NEIHelpers.NEIAEShapedRecipeHandler;
 import net.p455w0rd.wirelesscraftingterminal.integration.modules.NEIHelpers.NEIGUIHandler;
 
+import appeng.api.AEApi;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.container.slot.SlotCraftingMatrix;
+import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.integration.modules.NEIHelpers.NEIAEShapelessRecipeHandler;
+import appeng.util.Platform;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.api.API;
+import codechicken.nei.api.IOverlayHandler;
+import codechicken.nei.api.IStackPositioner;
+import codechicken.nei.guihook.GuiContainerManager;
+import codechicken.nei.guihook.IContainerTooltipHandler;
+import codechicken.nei.recipe.IRecipeHandler;
+
 public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
+
     @Reflected
     public static NEI instance;
 
@@ -94,7 +97,12 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
 
         GuiContainerManager.drawItems.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(), stack, x, y);
         GuiContainerManager.drawItems.renderItemOverlayIntoGUI(
-                fontRenderer, mc.getTextureManager(), stack, x, y, String.valueOf(stack.stackSize));
+                fontRenderer,
+                mc.getTextureManager(),
+                stack,
+                x,
+                y,
+                String.valueOf(stack.stackSize));
     }
 
     @Override
@@ -109,24 +117,20 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
     }
 
     @Override
-    public List<String> handleTooltip(
-            final GuiContainer arg0, final int arg1, final int arg2, final List<String> current) {
+    public List<String> handleTooltip(final GuiContainer arg0, final int arg1, final int arg2,
+            final List<String> current) {
         return current;
     }
 
     @Override
-    public List<String> handleItemDisplayName(
-            final GuiContainer arg0, final ItemStack arg1, final List<String> current) {
+    public List<String> handleItemDisplayName(final GuiContainer arg0, final ItemStack arg1,
+            final List<String> current) {
         return current;
     }
 
     @Override
-    public List<String> handleItemTooltip(
-            final GuiContainer guiScreen,
-            final ItemStack stack,
-            final int mouseX,
-            final int mouseY,
-            final List<String> currentToolTip) {
+    public List<String> handleItemTooltip(final GuiContainer guiScreen, final ItemStack stack, final int mouseX,
+            final int mouseY, final List<String> currentToolTip) {
         if (guiScreen instanceof GuiWirelessCraftingTerminal) {
             return ((GuiWirelessCraftingTerminal) guiScreen).handleItemTooltip(stack, mouseX, mouseY, currentToolTip);
         }
@@ -146,10 +150,10 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
 
             for (final PositionedStack positionedStack : stacks) {
                 if (positionedStack.items != null && positionedStack.items.length > 0) {
-                    positionedStack.relx +=
-                            ContainerWirelessCraftingTerminal.CRAFTING_SLOT_X_POS - NEI.NEI_REGULAR_SLOT_OFFSET_X;
-                    positionedStack.rely +=
-                            ContainerWirelessCraftingTerminal.CRAFTING_SLOT_Y_POS - NEI.NEI_REGULAR_SLOT_OFFSET_Y;
+                    positionedStack.relx += ContainerWirelessCraftingTerminal.CRAFTING_SLOT_X_POS
+                            - NEI.NEI_REGULAR_SLOT_OFFSET_X;
+                    positionedStack.rely += ContainerWirelessCraftingTerminal.CRAFTING_SLOT_Y_POS
+                            - NEI.NEI_REGULAR_SLOT_OFFSET_Y;
                 }
             }
             return stacks;
@@ -157,6 +161,7 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
     }
 
     public class WCTOverlayHandler implements IOverlayHandler {
+
         /**
          * Reduces regular slot offsets to 0, 1, or 2
          */
@@ -171,10 +176,10 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
          */
         private boolean addCraftingItems(final PositionedStack ingredient, final IAEItemStack[] overlayItems) {
             // Calculate the slot positions
-            int slotX =
-                    (ingredient.relx - NEI.NEI_REGULAR_SLOT_OFFSET_X) / WCTOverlayHandler.REGULAR_SLOT_INDEX_DIVISOR;
-            int slotY =
-                    (ingredient.rely - NEI.NEI_REGULAR_SLOT_OFFSET_Y) / WCTOverlayHandler.REGULAR_SLOT_INDEX_DIVISOR;
+            int slotX = (ingredient.relx - NEI.NEI_REGULAR_SLOT_OFFSET_X)
+                    / WCTOverlayHandler.REGULAR_SLOT_INDEX_DIVISOR;
+            int slotY = (ingredient.rely - NEI.NEI_REGULAR_SLOT_OFFSET_Y)
+                    / WCTOverlayHandler.REGULAR_SLOT_INDEX_DIVISOR;
             // Calculate the slot index
             int slotIndex = slotX + (slotY * 3);
             // Add the item to the list
@@ -193,21 +198,19 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
             // overlayItems);
         }
 
-        @SuppressWarnings({"rawtypes", "unchecked"})
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         @Override
-        public void overlayRecipe(
-                final GuiContainer gui, final IRecipeHandler recipe, final int recipeIndex, final boolean shift) {
+        public void overlayRecipe(final GuiContainer gui, final IRecipeHandler recipe, final int recipeIndex,
+                final boolean shift) {
             try {
                 final List ingredients = recipe.getIngredientStacks(recipeIndex);
                 this.overlayRecipe(gui, ingredients, shift);
-            } catch (final Exception ignored) {
-            } catch (final Error ignored) {
-            }
+            } catch (final Exception ignored) {} catch (final Error ignored) {}
         }
 
         @SuppressWarnings("unchecked")
-        private void overlayRecipe(
-                final GuiContainer gui, final List<PositionedStack> ingredients, final boolean shift) {
+        private void overlayRecipe(final GuiContainer gui, final List<PositionedStack> ingredients,
+                final boolean shift) {
             try {
                 final NBTTagCompound recipe = new NBTTagCompound();
 
@@ -247,9 +250,7 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
 
                     NetworkHandler.instance.sendToServer(new PacketNEIRecipe(recipe));
                 }
-            } catch (final Exception ignored) {
-            } catch (final Error ignored) {
-            }
+            } catch (final Exception ignored) {} catch (final Error ignored) {}
         }
     }
 }

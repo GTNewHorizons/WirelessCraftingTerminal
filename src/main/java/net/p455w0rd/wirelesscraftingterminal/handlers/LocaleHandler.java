@@ -3,6 +3,7 @@ package net.p455w0rd.wirelesscraftingterminal.handlers;
 import net.minecraft.util.StatCollector;
 
 public enum LocaleHandler {
+
     TitleDesc,
     InfinityBoosterDesc,
     WirelessTermLabel("gui.labels.ae2wct"),

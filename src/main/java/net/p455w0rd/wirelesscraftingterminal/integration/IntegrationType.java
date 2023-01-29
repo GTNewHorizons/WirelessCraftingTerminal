@@ -1,6 +1,7 @@
 package net.p455w0rd.wirelesscraftingterminal.integration;
 
 public enum IntegrationType {
+
     RFItem(IntegrationSide.BOTH, "RedstoneFlux Power - Items", "CoFHAPI"),
 
     // Waila( IntegrationSide.BOTH, "Waila", "Waila" ),

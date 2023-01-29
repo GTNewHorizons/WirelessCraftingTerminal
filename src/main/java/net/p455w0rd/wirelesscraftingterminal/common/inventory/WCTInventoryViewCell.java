@@ -1,11 +1,12 @@
 package net.p455w0rd.wirelesscraftingterminal.common.inventory;
 
-import appeng.api.AEApi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import appeng.api.AEApi;
 
 public class WCTInventoryViewCell implements IInventory {
 

@@ -1,20 +1,22 @@
 package net.p455w0rd.wirelesscraftingterminal.handlers;
 
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import java.io.File;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.p455w0rd.wirelesscraftingterminal.common.WirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemEnum;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+
 public class ConfigHandler {
+
     /*
-     * A big part of what goes on here is reloading the cfg on-the-fly
-     * since Ender-Core adds the abilitty to modify config stuff while in game,
-     * I figured I'd add support for such possibilities
+     * A big part of what goes on here is reloading the cfg on-the-fly since Ender-Core adds the abilitty to modify
+     * config stuff while in game, I figured I'd add support for such possibilities
      */
     public static Configuration config;
     public static boolean enableInfinityBooster;
@@ -53,18 +55,17 @@ public class ConfigHandler {
         String mineTweakerOverrideDesc = LocaleHandler.MineTweakerOverride.getLocal();
         String doVersionCheckDesc = LocaleHandler.DoVersionCheck.getLocal();
         String saveSearchStringDesc = LocaleHandler.SaveSearchString.getLocal();
-        enableInfinityBooster =
-                config.getBoolean("enableInfinityBooster", Configuration.CATEGORY_GENERAL, true, boosterDesc);
+        enableInfinityBooster = config
+                .getBoolean("enableInfinityBooster", Configuration.CATEGORY_GENERAL, true, boosterDesc);
         enableEasyMode = config.getBoolean("enableEasyMode", Configuration.CATEGORY_GENERAL, false, easyModeDesc);
-        boosterDropsEnabled =
-                config.getBoolean("boosterDropsEnabled", Configuration.CATEGORY_GENERAL, true, boosterDropEnabledDesc);
-        mineTweakerOverride = config.getBoolean(
-                "mineTweakerOverride", Configuration.CATEGORY_GENERAL, false, mineTweakerOverrideDesc);
+        boosterDropsEnabled = config
+                .getBoolean("boosterDropsEnabled", Configuration.CATEGORY_GENERAL, true, boosterDropEnabledDesc);
+        mineTweakerOverride = config
+                .getBoolean("mineTweakerOverride", Configuration.CATEGORY_GENERAL, false, mineTweakerOverrideDesc);
         doVersionCheck = config.getBoolean("doVersionCheck", Configuration.CATEGORY_GENERAL, true, doVersionCheckDesc);
         /*
-         * I did the max power cfg loading like this because while using
-         * Configuration#getInt did enforce the min/max values in-game, it
-         * didn't properly update the config file
+         * I did the max power cfg loading like this because while using Configuration#getInt did enforce the min/max
+         * values in-game, it didn't properly update the config file
          */
         Property pwrCfgKey = config.get(Configuration.CATEGORY_GENERAL, "ae2wctMaxPower", Reference.WCT_MAX_POWER);
         pwrCfgKey.comment = pwrDesc;
@@ -84,8 +85,8 @@ public class ConfigHandler {
             doSave = true;
         }
 
-        Property boosterDropKey =
-                config.get(Configuration.CATEGORY_GENERAL, "boosterDropChance", Reference.WCT_BOOSTER_DROPCHANCE);
+        Property boosterDropKey = config
+                .get(Configuration.CATEGORY_GENERAL, "boosterDropChance", Reference.WCT_BOOSTER_DROPCHANCE);
         boosterDropKey.comment = boosterDropDesc;
         boosterDropKey.setDefaultValue(Reference.WCT_BOOSTER_DROPCHANCE);
 

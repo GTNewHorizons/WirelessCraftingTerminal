@@ -1,11 +1,10 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.DecoderException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketConfigSync;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketCraftRequest;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketEmptyTrash;
@@ -18,11 +17,15 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSetMagnet;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwitchGuis;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketValueConfig;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.DecoderException;
+
 public class WCTPacketHandlerBase {
-    private static final Map<Class<? extends WCTPacket>, PacketTypes> REVERSE_LOOKUP =
-            new HashMap<Class<? extends WCTPacket>, WCTPacketHandlerBase.PacketTypes>();
+
+    private static final Map<Class<? extends WCTPacket>, PacketTypes> REVERSE_LOOKUP = new HashMap<Class<? extends WCTPacket>, WCTPacketHandlerBase.PacketTypes>();
 
     public enum PacketTypes {
+
         PACKET_INVENTORY_ACTION(PacketInventoryAction.class),
 
         PACKET_ME_INVENTORY_UPDATE(PacketMEInventoryUpdate.class),
@@ -54,10 +57,7 @@ public class WCTPacketHandlerBase {
             Constructor<? extends WCTPacket> x = null;
             try {
                 x = this.packetClass.getConstructor(ByteBuf.class);
-            } catch (final NoSuchMethodException ignored) {
-            } catch (final SecurityException ignored) {
-            } catch (final DecoderException ignored) {
-            }
+            } catch (final NoSuchMethodException ignored) {} catch (final SecurityException ignored) {} catch (final DecoderException ignored) {}
 
             this.packetConstructor = x;
             REVERSE_LOOKUP.put(this.packetClass, this);
@@ -76,9 +76,8 @@ public class WCTPacketHandlerBase {
             return REVERSE_LOOKUP.get(c);
         }
 
-        public WCTPacket parsePacket(final ByteBuf in)
-                throws InstantiationException, IllegalAccessException, IllegalArgumentException,
-                        InvocationTargetException {
+        public WCTPacket parsePacket(final ByteBuf in) throws InstantiationException, IllegalAccessException,
+                IllegalArgumentException, InvocationTargetException {
             return this.packetConstructor.newInstance(in);
         }
     }

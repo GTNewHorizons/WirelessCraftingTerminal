@@ -1,5 +1,12 @@
 package net.p455w0rd.wirelesscraftingterminal.helpers;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
+import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTIActionHost;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -27,12 +34,6 @@ import appeng.api.util.DimensionalCoord;
 import appeng.api.util.IConfigManager;
 import appeng.container.interfaces.IInventorySlotAware;
 import appeng.tile.networking.TileWireless;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
-import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTIActionHost;
 
 public class WirelessTerminalGuiObject
         implements IActionHost, IPortableCell, IInventorySlotAware, WCTIActionHost, IGuiItemObject {
@@ -49,14 +50,8 @@ public class WirelessTerminalGuiObject
     private double myRange = Double.MAX_VALUE;
     private final int inventorySlot;
 
-    public WirelessTerminalGuiObject(
-            final IWirelessTermHandler wh,
-            final ItemStack is,
-            final EntityPlayer ep,
-            final World w,
-            final int x,
-            final int y,
-            final int z) {
+    public WirelessTerminalGuiObject(final IWirelessTermHandler wh, final ItemStack is, final EntityPlayer ep,
+            final World w, final int x, final int y, final int z) {
         this.encryptionKey = wh.getEncryptionKey(is);
         this.effectiveItem = is;
         this.myPlayer = ep;
@@ -133,7 +128,7 @@ public class WirelessTerminalGuiObject
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public IItemList<IAEItemStack> getAvailableItems(final IItemList out) {
         if (this.itemStorage != null) {

@@ -17,11 +17,24 @@ public class AchievementHandler {
             new ItemStack(ItemEnum.WIRELESS_CRAFTING_TERMINAL.getItem(), 1),
             (Achievement) null);
     public static final Achievement boosterAch = new Achievement(
-            "achievment.boosterAchievement", "boosterAchievement", 0, 2, ItemEnum.BOOSTER_ICON.getItem(), wctAch);
+            "achievment.boosterAchievement",
+            "boosterAchievement",
+            0,
+            2,
+            ItemEnum.BOOSTER_ICON.getItem(),
+            wctAch);
     public static final Achievement magnetAch = new Achievement(
-            "achievement.magnetAchievement", "magnetAchievement", 2, 0, ItemEnum.MAGNET_CARD.getItem(), wctAch);
-    private static final AchievementPage achPage =
-            new AchievementPage("Wireless Crafting Term", wctAch, boosterAch, magnetAch);
+            "achievement.magnetAchievement",
+            "magnetAchievement",
+            2,
+            0,
+            ItemEnum.MAGNET_CARD.getItem(),
+            wctAch);
+    private static final AchievementPage achPage = new AchievementPage(
+            "Wireless Crafting Term",
+            wctAch,
+            boosterAch,
+            magnetAch);
 
     public static void init() {
         registerAchievements();

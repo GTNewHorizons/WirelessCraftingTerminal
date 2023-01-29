@@ -1,5 +1,13 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
+import java.util.concurrent.Future;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
+import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.crafting.ICraftingGrid;
@@ -8,12 +16,6 @@ import appeng.container.implementations.ContainerCraftAmount;
 import appeng.container.implementations.ContainerCraftConfirm;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import java.util.concurrent.Future;
-import net.minecraft.entity.player.EntityPlayer;
-import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
-import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 public class PacketCraftRequest extends WCTPacket {
 
@@ -55,7 +57,11 @@ public class PacketCraftRequest extends WCTPacket {
                 try {
                     final ICraftingGrid cg = g.getCache(ICraftingGrid.class);
                     futureJob = cg.beginCraftingJob(
-                            cca.getWorld(), cca.getGrid(), cca.getActionSrc(), cca.getItemToCraft(), null);
+                            cca.getWorld(),
+                            cca.getGrid(),
+                            cca.getActionSrc(),
+                            cca.getItemToCraft(),
+                            null);
 
                     int x = (int) player.posX;
                     int y = (int) player.posY;

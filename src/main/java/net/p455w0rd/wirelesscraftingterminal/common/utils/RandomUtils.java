@@ -1,8 +1,5 @@
 package net.p455w0rd.wirelesscraftingterminal.common.utils;
 
-import baubles.api.BaublesApi;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,6 +8,10 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumChatFormatting;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemMagnet;
+
+import baubles.api.BaublesApi;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class RandomUtils {
 
@@ -80,8 +81,7 @@ public class RandomUtils {
 
     public static ItemStack getMagnet(InventoryPlayer playerInv) {
         // Is player holding a Magnet Card?
-        if (playerInv.player.getHeldItem() != null
-                && playerInv.player.getHeldItem().getItem() instanceof ItemMagnet) {
+        if (playerInv.player.getHeldItem() != null && playerInv.player.getHeldItem().getItem() instanceof ItemMagnet) {
             return playerInv.player.getHeldItem();
         }
         // if not true, try to return first magnet card from first
@@ -129,9 +129,7 @@ public class RandomUtils {
     }
 
     public static boolean isMagnetInstalled(InventoryPlayer ip) {
-        NBTTagCompound magnetNBTForm = RandomUtils.getWirelessTerm(ip)
-                .getTagCompound()
-                .getTagList("MagnetSlot", 10)
+        NBTTagCompound magnetNBTForm = RandomUtils.getWirelessTerm(ip).getTagCompound().getTagList("MagnetSlot", 10)
                 .getCompoundTagAt(0);
         if (magnetNBTForm != null) {
             ItemStack magnetItem = ItemStack.loadItemStackFromNBT(magnetNBTForm);

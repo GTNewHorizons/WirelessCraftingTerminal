@@ -1,5 +1,20 @@
 package net.p455w0rd.wirelesscraftingterminal.integration.modules.NEIHelpers;
 
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiCrafting;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
+import net.p455w0rd.wirelesscraftingterminal.api.exceptions.MissingIngredientError;
+import net.p455w0rd.wirelesscraftingterminal.api.exceptions.RegistrationError;
+import net.p455w0rd.wirelesscraftingterminal.api.recipes.IIngredient;
+import net.p455w0rd.wirelesscraftingterminal.api.recipes.game.ShapedRecipe;
+
 import appeng.core.AEConfig;
 import appeng.util.Platform;
 import codechicken.nei.NEIClientUtils;
@@ -11,19 +26,6 @@ import codechicken.nei.api.IRecipeOverlayRenderer;
 import codechicken.nei.api.IStackPositioner;
 import codechicken.nei.recipe.RecipeInfo;
 import codechicken.nei.recipe.TemplateRecipeHandler;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiCrafting;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.p455w0rd.wirelesscraftingterminal.api.exceptions.MissingIngredientError;
-import net.p455w0rd.wirelesscraftingterminal.api.exceptions.RegistrationError;
-import net.p455w0rd.wirelesscraftingterminal.api.recipes.IIngredient;
-import net.p455w0rd.wirelesscraftingterminal.api.recipes.game.ShapedRecipe;
 
 public class NEIAEShapedRecipeHandler extends TemplateRecipeHandler {
 
@@ -66,30 +68,16 @@ public class NEIAEShapedRecipeHandler extends TemplateRecipeHandler {
             }
         }
     }
-    /*
-    	@Override
-    	public void loadUsageRecipes( final ItemStack ingredient )
-    	{
-    		final List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-    		for( final IRecipe recipe : recipes )
-    		{
-    			if( ( recipe instanceof ShapedRecipe ) )
-    			{
-    				final CachedShapedRecipe cachedRecipe = new CachedShapedRecipe( (ShapedRecipe) recipe );
 
-    				if( ( (ShapedRecipe) recipe ).isEnabled() && cachedRecipe.contains( cachedRecipe.ingredients, ingredient.getItem() ) )
-    				{
-    					cachedRecipe.computeVisuals();
-    					if( cachedRecipe.contains( cachedRecipe.ingredients, ingredient ) )
-    					{
-    						cachedRecipe.setIngredientPermutation( cachedRecipe.ingredients, ingredient );
-    						this.arecipes.add( cachedRecipe );
-    					}
-    				}
-    			}
-    		}
-    	}
-    */
+    /*
+     * @Override public void loadUsageRecipes( final ItemStack ingredient ) { final List<IRecipe> recipes =
+     * CraftingManager.getInstance().getRecipeList(); for( final IRecipe recipe : recipes ) { if( ( recipe instanceof
+     * ShapedRecipe ) ) { final CachedShapedRecipe cachedRecipe = new CachedShapedRecipe( (ShapedRecipe) recipe ); if( (
+     * (ShapedRecipe) recipe ).isEnabled() && cachedRecipe.contains( cachedRecipe.ingredients, ingredient.getItem() ) )
+     * { cachedRecipe.computeVisuals(); if( cachedRecipe.contains( cachedRecipe.ingredients, ingredient ) ) {
+     * cachedRecipe.setIngredientPermutation( cachedRecipe.ingredients, ingredient ); this.arecipes.add( cachedRecipe );
+     * } } } } }
+     */
     @Override
     public String getGuiTexture() {
         return "textures/gui/container/crafting_table.png";
@@ -171,7 +159,10 @@ public class NEIAEShapedRecipeHandler extends TemplateRecipeHandler {
                         try {
                             final ItemStack[] is = ing.getItemStackSet();
                             final PositionedStack stack = new PositionedStack(
-                                    useSingleItems ? Platform.findPreferred(is) : is, 25 + x * 18, 6 + y * 18, false);
+                                    useSingleItems ? Platform.findPreferred(is) : is,
+                                    25 + x * 18,
+                                    6 + y * 18,
+                                    false);
                             stack.setMaxSize(1);
                             this.ingredients.add(stack);
                         } catch (final RegistrationError ignored) {

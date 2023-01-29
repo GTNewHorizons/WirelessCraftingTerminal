@@ -5,6 +5,7 @@ import net.p455w0rd.wirelesscraftingterminal.integration.IIntegrationModule;
 import net.p455w0rd.wirelesscraftingterminal.integration.IntegrationHelper;
 
 public class RFItem implements IIntegrationModule {
+
     @Reflected
     public static RFItem instance;
 

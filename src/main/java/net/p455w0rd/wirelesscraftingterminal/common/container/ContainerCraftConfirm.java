@@ -1,11 +1,13 @@
 package net.p455w0rd.wirelesscraftingterminal.common.container;
 
-import appeng.api.implementations.guiobjects.IPortableCell;
 import net.minecraft.entity.player.EntityPlayer;
 import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
+import appeng.api.implementations.guiobjects.IPortableCell;
+
 public class ContainerCraftConfirm extends appeng.container.implementations.ContainerCraftConfirm {
+
     private final EntityPlayer player;
 
     public ContainerCraftConfirm(EntityPlayer player, IPortableCell terminal) {

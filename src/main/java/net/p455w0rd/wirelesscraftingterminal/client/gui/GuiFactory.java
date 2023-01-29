@@ -1,9 +1,11 @@
 package net.p455w0rd.wirelesscraftingterminal.client.gui;
 
-import cpw.mods.fml.client.IModGuiFactory;
 import java.util.Set;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+
+import cpw.mods.fml.client.IModGuiFactory;
 
 public class GuiFactory implements IModGuiFactory {
 

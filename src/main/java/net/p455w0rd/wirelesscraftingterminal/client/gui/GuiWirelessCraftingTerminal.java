@@ -1,5 +1,36 @@
 package net.p455w0rd.wirelesscraftingterminal.client.gui;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.p455w0rd.wirelesscraftingterminal.client.gui.widgets.GuiTrashButton;
+import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
+import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotTrash;
+import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketEmptyTrash;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketInventoryAction;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwitchGuis;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketValueConfig;
+import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
+import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import yalter.mousetweaks.api.IMTModGuiContainer;
 import appeng.api.config.ActionItems;
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
@@ -33,34 +64,6 @@ import codechicken.nei.TextField;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.p455w0rd.wirelesscraftingterminal.client.gui.widgets.GuiTrashButton;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
-import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotTrash;
-import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketEmptyTrash;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketInventoryAction;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketSwitchGuis;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketValueConfig;
-import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
-import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import yalter.mousetweaks.api.IMTModGuiContainer;
 
 @Optional.Interface(modid = "MouseTweaks", iface = "yalter.mousetweaks.api.IMTModGuiContainer")
 public class GuiWirelessCraftingTerminal extends AEBaseGui
@@ -68,24 +71,10 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
 
     private float xSize_lo;
     private float ySize_lo;
-    public static int tick = 0,
-            GUI_HEIGHT = 240,
-            GUI_WIDTH = 230,
-            AE_ROW_HEIGHT = 18,
-            AE_NUM_ROWS = 0,
-            GUI_UPPER_HEIGHT = 35,
-            GUI_SEARCH_ROW = 35,
-            SEARCH_X = 80,
-            SEARCH_Y = 4,
-            SEARCH_WIDTH = 88,
-            SEARCH_HEIGHT = 12,
-            SEARCH_MAXCHARS = 15,
-            GUI_LOWER_HEIGHT,
-            AE_TOTAL_ROWS_HEIGHT,
-            BUTTON_SEARCH_MODE_POS_X = -18,
-            BUTTON_SEARCH_MODE_POS_Y = 68,
-            BUTTON_SIZE = 16,
-            NEI_EXTRA_SPACE = 30,
+    public static int tick = 0, GUI_HEIGHT = 240, GUI_WIDTH = 230, AE_ROW_HEIGHT = 18, AE_NUM_ROWS = 0,
+            GUI_UPPER_HEIGHT = 35, GUI_SEARCH_ROW = 35, SEARCH_X = 80, SEARCH_Y = 4, SEARCH_WIDTH = 88,
+            SEARCH_HEIGHT = 12, SEARCH_MAXCHARS = 15, GUI_LOWER_HEIGHT, AE_TOTAL_ROWS_HEIGHT,
+            BUTTON_SEARCH_MODE_POS_X = -18, BUTTON_SEARCH_MODE_POS_Y = 68, BUTTON_SIZE = 16, NEI_EXTRA_SPACE = 30,
             slotYOffset;
     protected static final int BUTTON_SEARCH_MODE_ID = 5;
     protected static final long TOOLTIP_UPDATE_INTERVAL = 3000L;
@@ -152,9 +141,10 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
 
     private void setScrollBar() {
         this.getScrollBar().setTop(18).setLeft(174).setHeight(this.rows * 18 - 2);
-        this.getScrollBar()
-                .setRange(
-                        0, (this.repo.size() + this.perRow - 1) / this.perRow - this.rows, Math.max(1, this.rows / 6));
+        this.getScrollBar().setRange(
+                0,
+                (this.repo.size() + this.perRow - 1) / this.perRow - this.rows,
+                Math.max(1, this.rows / 6));
     }
 
     @SuppressWarnings("rawtypes")
@@ -170,8 +160,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
             final GuiImgButton iBtn = (GuiImgButton) btn;
             if (iBtn.getSetting() != Settings.ACTIONS) {
                 final Enum cv = iBtn.getCurrentValue();
-                final Enum next =
-                        Platform.rotateEnum(cv, backwards, iBtn.getSetting().getPossibleValues());
+                final Enum next = Platform.rotateEnum(cv, backwards, iBtn.getSetting().getPossibleValues());
 
                 if (btn == this.terminalStyleBox) {
                     AEConfig.instance.settings.putSetting(iBtn.getSetting(), next);
@@ -182,8 +171,8 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
                     AEConfig.instance.preserveSearchBar = next == YesNo.YES;
                 } else {
                     try {
-                        NetworkHandler.instance.sendToServer(
-                                new PacketValueConfig(iBtn.getSetting().name(), next.name()));
+                        NetworkHandler.instance
+                                .sendToServer(new PacketValueConfig(iBtn.getSetting().name(), next.name()));
                     } catch (final IOException e) {
                         WCTLog.debug(e.getMessage());
                     }
@@ -205,8 +194,10 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
                 }
 
                 if (s != null) {
-                    final PacketInventoryAction p =
-                            new PacketInventoryAction(InventoryAction.MOVE_REGION, s.slotNumber, 0);
+                    final PacketInventoryAction p = new PacketInventoryAction(
+                            InventoryAction.MOVE_REGION,
+                            s.slotNumber,
+                            0);
                     NetworkHandler.instance.sendToServer(p);
                 }
             }
@@ -245,8 +236,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
                     action = ctrlDown == 1 ? InventoryAction.SPLIT_OR_PLACE_SINGLE : InventoryAction.PICKUP_OR_SET_DOWN;
                     stack = ((SlotME) slot).getAEStack();
 
-                    if (stack != null
-                            && action == InventoryAction.PICKUP_OR_SET_DOWN
+                    if (stack != null && action == InventoryAction.PICKUP_OR_SET_DOWN
                             && stack.getStackSize() == 0
                             && player.inventory.getItemStack() == null) {
                         action = InventoryAction.AUTO_CRAFT;
@@ -263,8 +253,10 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
             }
             if (action == InventoryAction.AUTO_CRAFT) {
                 ((AEBaseContainer) this.inventorySlots).setTargetStack(stack);
-                final PacketInventoryAction p =
-                        new PacketInventoryAction(action, this.inventorySlots.inventorySlots.size(), 0);
+                final PacketInventoryAction p = new PacketInventoryAction(
+                        action,
+                        this.inventorySlots.inventorySlots.size(),
+                        0);
                 NetworkHandler.instance.sendToServer(p);
                 return;
             }
@@ -296,15 +288,14 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
     /**
      * Initializes the GUI
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void initGui() {
         super.initGui();
 
         Keyboard.enableRepeatEvents(true);
         this.maxRows = this.getMaxRows();
-        this.perRow = AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) != TerminalStyle.FULL
-                ? 9
+        this.perRow = AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) != TerminalStyle.FULL ? 9
                 : 9 + ((this.width - this.standardSize) / 18);
         this.isNEIEnabled = Loader.isModLoaded("NotEnoughItems");
         int top = isNEIEnabled ? 22 : 0;
@@ -346,19 +337,28 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
         this.buttonList.clear();
         this.buttonList.add(
                 this.clearBtn = new GuiImgButton(
-                        this.guiLeft + 134, this.guiTop + this.ySize - 160, Settings.ACTIONS, ActionItems.STASH));
+                        this.guiLeft + 134,
+                        this.guiTop + this.ySize - 160,
+                        Settings.ACTIONS,
+                        ActionItems.STASH));
         this.buttonList.add(this.trashBtn = new GuiTrashButton(this.guiLeft + 98, this.guiTop + this.ySize - 104));
         this.clearBtn.setHalfSize(true);
         if (this.customSortOrder) {
             this.buttonList.add(
                     this.SortByBox = new GuiImgButton(
-                            this.guiLeft - 18, offset, Settings.SORT_BY, this.configSrc.getSetting(Settings.SORT_BY)));
+                            this.guiLeft - 18,
+                            offset,
+                            Settings.SORT_BY,
+                            this.configSrc.getSetting(Settings.SORT_BY)));
             offset += 20;
         }
 
         this.buttonList.add(
                 this.ViewBox = new GuiImgButton(
-                        this.guiLeft - 18, offset, Settings.VIEW_MODE, this.configSrc.getSetting(Settings.VIEW_MODE)));
+                        this.guiLeft - 18,
+                        offset,
+                        Settings.VIEW_MODE,
+                        this.configSrc.getSetting(Settings.VIEW_MODE)));
         offset += 20;
 
         this.buttonList.add(
@@ -440,8 +440,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
     }
 
     int getMaxRows() {
-        return AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) == TerminalStyle.SMALL
-                ? 6
+        return AEConfig.instance.getConfigManager().getSetting(Settings.TERMINAL_STYLE) == TerminalStyle.SMALL ? 6
                 : Integer.MAX_VALUE;
     }
 
@@ -450,11 +449,10 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
     }
 
     /**
-     * Called every tick. It is used in this instance to detect screen size
-     * changes to automatically update the gui height.
+     * Called every tick. It is used in this instance to detect screen size changes to automatically update the gui
+     * height.
      * <p>
-     * reInit variable is used to call initGui() on the next tick. It has to be
-     * called this way to update correctly.
+     * reInit variable is used to call initGui() on the next tick. It has to be called this way to update correctly.
      *
      * @author p455w0rd
      */
@@ -508,8 +506,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
      * @author p455w0rd
      */
     private boolean hasScreenResChanged() {
-        if ((this.currScreenWidth != this.mc.displayWidth)
-                || (this.currScreenHeight != this.mc.displayHeight)
+        if ((this.currScreenWidth != this.mc.displayWidth) || (this.currScreenHeight != this.mc.displayHeight)
                 || (this.isFullScreen != this.mc.isFullScreen())) {
             this.currScreenWidth = this.mc.displayWidth;
             this.currScreenHeight = this.mc.displayHeight;
@@ -640,8 +637,8 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
                 return;
             }
 
-            final boolean mouseInGui =
-                    this.isPointInRegion(0, 0, this.xSize, this.ySize, this.currentMouseX, this.currentMouseY);
+            final boolean mouseInGui = this
+                    .isPointInRegion(0, 0, this.xSize, this.ySize, this.currentMouseX, this.currentMouseY);
             if (this.isAutoFocus && !this.searchField.isFocused() && mouseInGui) {
                 this.searchField.setFocused(true);
             }
@@ -665,8 +662,8 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
         this.mc.getTextureManager().bindTexture(loc);
     }
 
-    public List<String> handleItemTooltip(
-            final ItemStack stack, final int mouseX, final int mouseY, final List<String> currentToolTip) {
+    public List<String> handleItemTooltip(final ItemStack stack, final int mouseX, final int mouseY,
+            final List<String> currentToolTip) {
         if (stack != null) {
             final Slot s = this.getSlot(mouseX, mouseY);
             if (s instanceof SlotME) {
@@ -677,14 +674,13 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
                 try {
                     final SlotME theSlotField = (SlotME) s;
                     myStack = theSlotField.getAEStack();
-                } catch (final Throwable ignore) {
-                }
+                } catch (final Throwable ignore) {}
 
                 if (myStack != null) {
                     if (myStack.getStackSize() > BigNumber || (myStack.getStackSize() > 1 && stack.isItemDamaged())) {
                         final String local = ButtonToolTips.ItemsStored.getLocal();
-                        final String formattedAmount =
-                                NumberFormat.getNumberInstance(Locale.US).format(myStack.getStackSize());
+                        final String formattedAmount = NumberFormat.getNumberInstance(Locale.US)
+                                .format(myStack.getStackSize());
                         final String format = String.format(local, formattedAmount);
 
                         currentToolTip.add("\u00a77" + format);
@@ -692,16 +688,15 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
 
                     if (myStack.getCountRequestable() > 0) {
                         final String local = ButtonToolTips.ItemsRequestable.getLocal();
-                        final String formattedAmount =
-                                NumberFormat.getNumberInstance(Locale.US).format(myStack.getCountRequestable());
+                        final String formattedAmount = NumberFormat.getNumberInstance(Locale.US)
+                                .format(myStack.getCountRequestable());
                         final String format = String.format(local, formattedAmount);
 
                         currentToolTip.add("\u00a77" + format);
                     }
                 } else if (stack.stackSize > BigNumber || (stack.stackSize > 1 && stack.isItemDamaged())) {
                     final String local = ButtonToolTips.ItemsStored.getLocal();
-                    final String formattedAmount =
-                            NumberFormat.getNumberInstance(Locale.US).format(stack.stackSize);
+                    final String formattedAmount = NumberFormat.getNumberInstance(Locale.US).format(stack.stackSize);
                     final String format = String.format(local, formattedAmount);
 
                     currentToolTip.add("\u00a77" + format);
@@ -711,7 +706,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
         return currentToolTip;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     protected void renderToolTip(final ItemStack stack, final int x, final int y) {
         final Slot s = this.getSlot(x, y);
@@ -723,28 +718,28 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
             try {
                 final SlotME theSlotField = (SlotME) s;
                 myStack = theSlotField.getAEStack();
-            } catch (final Throwable ignore) {
-            }
+            } catch (final Throwable ignore) {}
 
             if (myStack != null) {
-                final List<String> currentToolTip =
-                        stack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
+                final List<String> currentToolTip = stack
+                        .getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
 
                 if (myStack.getStackSize() > BigNumber || (myStack.getStackSize() > 1 && stack.isItemDamaged())) {
-                    currentToolTip.add("Items Stored: "
-                            + NumberFormat.getNumberInstance(Locale.US).format(myStack.getStackSize()));
+                    currentToolTip.add(
+                            "Items Stored: "
+                                    + NumberFormat.getNumberInstance(Locale.US).format(myStack.getStackSize()));
                 }
 
                 if (myStack.getCountRequestable() > 0) {
-                    currentToolTip.add("Items Requestable: "
-                            + NumberFormat.getNumberInstance(Locale.US).format(myStack.getCountRequestable()));
+                    currentToolTip.add(
+                            "Items Requestable: "
+                                    + NumberFormat.getNumberInstance(Locale.US).format(myStack.getCountRequestable()));
                 }
 
                 this.drawTooltip(x, y, 0, join(currentToolTip, "\n"));
             } else if (stack.stackSize > BigNumber) {
                 final List var4 = stack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
-                var4.add("Items Stored: "
-                        + NumberFormat.getNumberInstance(Locale.US).format(stack.stackSize));
+                var4.add("Items Stored: " + NumberFormat.getNumberInstance(Locale.US).format(stack.stackSize));
                 this.drawTooltip(x, y, 0, join(var4, "\n"));
                 return;
             }
@@ -815,8 +810,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
         int j = this.guiTop;
         pointX -= i;
         pointY -= j;
-        return pointX >= rectX - 1
-                && pointX < rectX + rectWidth + 1
+        return pointX >= rectX - 1 && pointX < rectX + rectWidth + 1
                 && pointY >= rectY - 1
                 && pointY < rectY + rectHeight + 1;
     }
@@ -826,8 +820,8 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
             return false;
         }
         try {
-            final Class<? super Object> c =
-                    ReflectionHelper.getClass(this.getClass().getClassLoader(), "codechicken.nei.LayoutManager");
+            final Class<? super Object> c = ReflectionHelper
+                    .getClass(this.getClass().getClassLoader(), "codechicken.nei.LayoutManager");
             final Field fldSearchField = c.getField("searchField");
             final TextField searchField = (TextField) fldSearchField.get(c);
             return searchField.focused();

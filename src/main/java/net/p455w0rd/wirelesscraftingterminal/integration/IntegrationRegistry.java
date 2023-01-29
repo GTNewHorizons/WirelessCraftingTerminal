@@ -1,12 +1,15 @@
 package net.p455w0rd.wirelesscraftingterminal.integration;
 
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
-import cpw.mods.fml.relauncher.Side;
 import java.util.Collection;
 import java.util.LinkedList;
+
 import javax.annotation.Nonnull;
 
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import cpw.mods.fml.relauncher.Side;
+
 public enum IntegrationRegistry {
+
     INSTANCE;
 
     private static final String PACKAGE_PREFIX = "net.p455w0rd.wirelesscraftingterminal.integration.modules.";
@@ -53,8 +56,8 @@ public enum IntegrationRegistry {
                 builder.append(", ");
             }
 
-            final String integrationState =
-                    node.getShortName() + ":" + (node.getState() == IntegrationStage.FAILED ? "OFF" : "ON");
+            final String integrationState = node.getShortName() + ":"
+                    + (node.getState() == IntegrationStage.FAILED ? "OFF" : "ON");
             builder.append(integrationState);
         }
 

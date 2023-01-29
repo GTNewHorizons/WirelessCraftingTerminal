@@ -1,10 +1,12 @@
 package net.p455w0rd.wirelesscraftingterminal.common.utils;
 
 import javax.annotation.Nonnull;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class WCTLog {
+
     public static final Logger log = LogManager.getLogger("Wireless Crafting Terminal");
 
     /**
@@ -29,9 +31,11 @@ public class WCTLog {
      * Displays the section footer.
      */
     public static void endSection(final String section, final long sectionStartTime) {
-        log.info(String.format(
-                "-=-=-=-=-=-=-=[FINISH] %s in %dms=-=-=-=-=-=-=-",
-                section, (System.currentTimeMillis() - sectionStartTime)));
+        log.info(
+                String.format(
+                        "-=-=-=-=-=-=-=[FINISH] %s in %dms=-=-=-=-=-=-=-",
+                        section,
+                        (System.currentTimeMillis() - sectionStartTime)));
     }
 
     /**

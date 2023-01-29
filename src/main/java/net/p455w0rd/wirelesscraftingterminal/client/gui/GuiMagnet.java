@@ -12,6 +12,7 @@ import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerMagnet;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketMagnetFilter;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
+
 import org.lwjgl.opengl.GL11;
 
 public class GuiMagnet extends GuiContainer {
@@ -58,13 +59,28 @@ public class GuiMagnet extends GuiContainer {
                 this.modeBtn = new WCTGuiButton(0, this.guiLeft + 104, this.guiTop + 4, 64, 14, getLabel(this.mode)));
         this.buttonList.add(
                 this.ignoreNBTBox = new WCTGuiCheckBox(
-                        1, this.guiLeft + 61, this.guiTop + 20, "Ignore NBT Data", this.ignoreNBT, 107));
+                        1,
+                        this.guiLeft + 61,
+                        this.guiTop + 20,
+                        "Ignore NBT Data",
+                        this.ignoreNBT,
+                        107));
         this.buttonList.add(
                 this.ignoreMetaBox = new WCTGuiCheckBox(
-                        2, this.guiLeft + 61, this.guiTop + 32, "Ignore Meta Data", this.ignoreMeta, 107));
+                        2,
+                        this.guiLeft + 61,
+                        this.guiTop + 32,
+                        "Ignore Meta Data",
+                        this.ignoreMeta,
+                        107));
         this.buttonList.add(
                 this.useOreDictBox = new WCTGuiCheckBox(
-                        3, this.guiLeft + 61, this.guiTop + 44, "Use Ore Dictionary", this.useOreDict, 107));
+                        3,
+                        this.guiLeft + 61,
+                        this.guiTop + 44,
+                        "Use Ore Dictionary",
+                        this.useOreDict,
+                        107));
     }
 
     String getLabel(boolean filterMode) {

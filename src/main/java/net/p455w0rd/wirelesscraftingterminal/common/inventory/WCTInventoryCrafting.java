@@ -1,17 +1,18 @@
 package net.p455w0rd.wirelesscraftingterminal.common.inventory;
 
-import appeng.api.storage.IMEInventory;
-import appeng.me.storage.MEIInventoryWrapper;
-import appeng.tile.inventory.AppEngInternalInventory;
-import appeng.tile.inventory.IAEAppEngInventory;
-import appeng.tile.inventory.InvOperation;
-import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
+
+import appeng.api.storage.IMEInventory;
+import appeng.me.storage.MEIInventoryWrapper;
+import appeng.tile.inventory.AppEngInternalInventory;
+import appeng.tile.inventory.IAEAppEngInventory;
+import appeng.tile.inventory.InvOperation;
+import appeng.util.Platform;
 
 public class WCTInventoryCrafting extends AppEngInternalInventory {
 
@@ -133,17 +134,11 @@ public class WCTInventoryCrafting extends AppEngInternalInventory {
     }
 
     /*
-     * @Override public ItemStack decrStackSize(int slot, int amount) { if
-     * (this.stackList[slot] != null) { ItemStack itemstack; if
-     * (this.stackList[slot].stackSize <= amount) { itemstack =
-     * this.stackList[slot]; this.stackList[slot] = null;
-     * this.eventHandler.onCraftMatrixChanged(this); return itemstack; } else {
-     * itemstack = this.stackList[slot].splitStack(amount);
-     *
-     * if (this.stackList[slot].stackSize == 0) { this.stackList[slot] = null; }
-     *
-     * this.eventHandler.onCraftMatrixChanged(this); return itemstack; } } else
-     * { return getStackInSlot(slot); } }
+     * @Override public ItemStack decrStackSize(int slot, int amount) { if (this.stackList[slot] != null) { ItemStack
+     * itemstack; if (this.stackList[slot].stackSize <= amount) { itemstack = this.stackList[slot]; this.stackList[slot]
+     * = null; this.eventHandler.onCraftMatrixChanged(this); return itemstack; } else { itemstack =
+     * this.stackList[slot].splitStack(amount); if (this.stackList[slot].stackSize == 0) { this.stackList[slot] = null;
+     * } this.eventHandler.onCraftMatrixChanged(this); return itemstack; } } else { return getStackInSlot(slot); } }
      */
     public void setInventorySlotContents(int slot, ItemStack stack) {
         this.stackList[slot] = stack;

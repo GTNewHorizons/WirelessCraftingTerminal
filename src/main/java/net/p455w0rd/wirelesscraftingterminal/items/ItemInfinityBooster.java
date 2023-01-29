@@ -1,17 +1,21 @@
 package net.p455w0rd.wirelesscraftingterminal.items;
 
-import com.google.common.base.Splitter;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
 import org.apache.commons.lang3.text.WordUtils;
 import org.lwjgl.input.Keyboard;
+
+import com.google.common.base.Splitter;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemInfinityBooster extends Item {
 
@@ -39,14 +43,13 @@ public class ItemInfinityBooster extends Item {
         return 1;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack is, EntityPlayer player, List list, boolean par4) {
-        String shift = LocaleHandler.PressShift.getLocal()
-                .replace(
-                        "Shift",
-                        color("yellow") + "" + color("bold") + "" + color("italics") + "Shift" + color("gray"));
+        String shift = LocaleHandler.PressShift.getLocal().replace(
+                "Shift",
+                color("yellow") + "" + color("bold") + "" + color("italics") + "Shift" + color("gray"));
         list.add(color("aqua") + "==============================");
         if (isShiftKeyDown()) {
             String info = LocaleHandler.InfinityBoosterDesc.getLocal();

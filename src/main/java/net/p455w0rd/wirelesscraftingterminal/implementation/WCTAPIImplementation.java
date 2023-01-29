@@ -1,11 +1,12 @@
 package net.p455w0rd.wirelesscraftingterminal.implementation;
 
-import cpw.mods.fml.common.LoaderState;
 import net.p455w0rd.wirelesscraftingterminal.api.IWCTInteractionHelper;
 import net.p455w0rd.wirelesscraftingterminal.api.IWCTItems;
 import net.p455w0rd.wirelesscraftingterminal.api.WCTApi;
 import net.p455w0rd.wirelesscraftingterminal.common.WirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
+
+import cpw.mods.fml.common.LoaderState;
 
 public class WCTAPIImplementation extends WCTApi {
 

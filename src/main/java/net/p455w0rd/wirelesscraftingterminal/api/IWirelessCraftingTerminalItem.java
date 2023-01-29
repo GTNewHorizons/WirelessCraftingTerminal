@@ -1,9 +1,10 @@
 package net.p455w0rd.wirelesscraftingterminal.api;
 
+import net.minecraft.item.ItemStack;
+
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.core.features.IAEFeature;
 import cofh.api.energy.IEnergyContainerItem;
-import net.minecraft.item.ItemStack;
 
 public interface IWirelessCraftingTerminalItem
         extends IWirelessCraftingTermHandler, IAEItemPowerStorage, IAEFeature, IEnergyContainerItem {

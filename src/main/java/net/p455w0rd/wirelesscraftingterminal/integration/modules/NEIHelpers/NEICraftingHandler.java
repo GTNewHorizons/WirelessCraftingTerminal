@@ -1,13 +1,8 @@
 package net.p455w0rd.wirelesscraftingterminal.integration.modules.NEIHelpers;
 
-import appeng.container.slot.SlotCraftingMatrix;
-import appeng.container.slot.SlotFakeCraftingMatrix;
-import appeng.util.Platform;
-import codechicken.nei.PositionedStack;
-import codechicken.nei.api.IOverlayHandler;
-import codechicken.nei.recipe.IRecipeHandler;
 import java.util.LinkedList;
 import java.util.List;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -17,20 +12,25 @@ import net.p455w0rd.wirelesscraftingterminal.client.gui.GuiWirelessCraftingTermi
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketNEIRecipe;
 
+import appeng.container.slot.SlotCraftingMatrix;
+import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.util.Platform;
+import codechicken.nei.PositionedStack;
+import codechicken.nei.api.IOverlayHandler;
+import codechicken.nei.recipe.IRecipeHandler;
+
 public class NEICraftingHandler implements IOverlayHandler {
 
     public NEICraftingHandler(final int x, final int y) {}
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public void overlayRecipe(
-            final GuiContainer gui, final IRecipeHandler recipe, final int recipeIndex, final boolean shift) {
+    public void overlayRecipe(final GuiContainer gui, final IRecipeHandler recipe, final int recipeIndex,
+            final boolean shift) {
         try {
             final List ingredients = recipe.getIngredientStacks(recipeIndex);
             this.overlayRecipe(gui, ingredients, shift);
-        } catch (final Exception ignored) {
-        } catch (final Error ignored) {
-        }
+        } catch (final Exception ignored) {} catch (final Error ignored) {}
     }
 
     @SuppressWarnings("unchecked")
@@ -74,8 +74,6 @@ public class NEICraftingHandler implements IOverlayHandler {
 
                 NetworkHandler.instance.sendToServer(new PacketNEIRecipe(recipe));
             }
-        } catch (final Exception ignored) {
-        } catch (final Error ignored) {
-        }
+        } catch (final Exception ignored) {} catch (final Error ignored) {}
     }
 }

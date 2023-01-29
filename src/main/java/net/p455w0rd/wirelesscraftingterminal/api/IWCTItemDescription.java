@@ -1,10 +1,12 @@
 package net.p455w0rd.wirelesscraftingterminal.api;
 
 import javax.annotation.Nonnull;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public interface IWCTItemDescription {
+
     /**
      * Gets the damage, or meta, value of the item.
      *

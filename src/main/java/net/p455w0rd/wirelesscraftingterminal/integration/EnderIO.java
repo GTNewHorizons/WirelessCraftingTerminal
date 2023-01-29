@@ -1,13 +1,15 @@
 package net.p455w0rd.wirelesscraftingterminal.integration;
 
-import cpw.mods.fml.common.Loader;
-import crazypants.enderio.enchantment.EnchantmentSoulBound;
-import crazypants.enderio.enchantment.Enchantments;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Map;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
+
+import cpw.mods.fml.common.Loader;
+import crazypants.enderio.enchantment.EnchantmentSoulBound;
+import crazypants.enderio.enchantment.Enchantments;
 
 /**
  * @author p455w0rd

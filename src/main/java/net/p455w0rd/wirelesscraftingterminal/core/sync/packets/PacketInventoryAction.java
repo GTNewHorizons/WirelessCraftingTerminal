@@ -1,5 +1,17 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
+import java.io.IOException;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
+import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
+import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
+import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
+import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.ClientHelper;
 import appeng.container.AEBaseContainer;
@@ -10,16 +22,6 @@ import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import java.io.IOException;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
-import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
-import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 public class PacketInventoryAction extends WCTPacket {
 
@@ -115,10 +117,8 @@ public class PacketInventoryAction extends WCTPacket {
 
                 if (baseContainer instanceof ContainerWirelessCraftingTerminal) {
                     if (((ContainerWirelessCraftingTerminal) baseContainer).getTargetStack() != null) {
-                        cca.getCraftingItem()
-                                .putStack(((ContainerWirelessCraftingTerminal) baseContainer)
-                                        .getTargetStack()
-                                        .getItemStack());
+                        cca.getCraftingItem().putStack(
+                                ((ContainerWirelessCraftingTerminal) baseContainer).getTargetStack().getItemStack());
                         cca.setItemToCraft(((ContainerWirelessCraftingTerminal) baseContainer).getTargetStack());
                     }
                 }
@@ -126,9 +126,7 @@ public class PacketInventoryAction extends WCTPacket {
                 if (baseContainer instanceof AEBaseContainer) {
                     if (((AEBaseContainer) baseContainer).getTargetStack() != null) {
                         cca.getCraftingItem()
-                                .putStack(((AEBaseContainer) baseContainer)
-                                        .getTargetStack()
-                                        .getItemStack());
+                                .putStack(((AEBaseContainer) baseContainer).getTargetStack().getItemStack());
                         cca.setItemToCraft(((AEBaseContainer) baseContainer).getTargetStack());
                     }
                 }
@@ -140,9 +138,8 @@ public class PacketInventoryAction extends WCTPacket {
             if (baseContainer instanceof ContainerWirelessCraftingTerminal) {
                 if (RandomUtils.getWirelessTerm(player.inventory) == null)
                     ((ContainerWirelessCraftingTerminal) baseContainer).setValidContainer(false);
-                else
-                    ((ContainerWirelessCraftingTerminal) baseContainer)
-                            .doAction(sender, this.action, this.slot, this.id);
+                else((ContainerWirelessCraftingTerminal) baseContainer)
+                        .doAction(sender, this.action, this.slot, this.id);
             }
             if (baseContainer instanceof AEBaseContainer) {
                 ((AEBaseContainer) baseContainer).doAction(sender, this.action, this.slot, this.id);

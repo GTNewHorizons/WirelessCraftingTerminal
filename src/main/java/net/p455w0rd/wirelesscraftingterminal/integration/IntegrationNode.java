@@ -1,10 +1,12 @@
 package net.p455w0rd.wirelesscraftingterminal.integration;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
 import java.lang.reflect.Field;
+
 import net.p455w0rd.wirelesscraftingterminal.api.exceptions.ModNotInstalled;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
+
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModAPIManager;
 
 public final class IntegrationNode {
 
@@ -22,8 +24,8 @@ public final class IntegrationNode {
     private Object instance;
     private IIntegrationModule mod = null;
 
-    public IntegrationNode(
-            final String displayName, final String modID, final IntegrationType shortName, final String name) {
+    public IntegrationNode(final String displayName, final String modID, final IntegrationType shortName,
+            final String name) {
         this.displayName = displayName;
         this.shortName = shortName;
         this.modID = modID;
@@ -53,13 +55,12 @@ public final class IntegrationNode {
                 switch (stage) {
                     case PRE_INIT:
                         final ModAPIManager apiManager = ModAPIManager.INSTANCE;
-                        boolean enabled =
-                                this.modID == null || Loader.isModLoaded(this.modID) || apiManager.hasAPI(this.modID);
+                        boolean enabled = this.modID == null || Loader.isModLoaded(this.modID)
+                                || apiManager.hasAPI(this.modID);
 
                         if (enabled) {
                             this.classValue = this.getClass().getClassLoader().loadClass(this.name);
-                            this.mod = (IIntegrationModule)
-                                    this.classValue.getConstructor().newInstance();
+                            this.mod = (IIntegrationModule) this.classValue.getConstructor().newInstance();
                             final Field f = this.classValue.getField("instance");
                             f.set(this.classValue, this.setInstance(this.mod));
                         } else {

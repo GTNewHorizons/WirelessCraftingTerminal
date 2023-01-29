@@ -1,9 +1,10 @@
 package net.p455w0rd.wirelesscraftingterminal.client.gui.widgets;
 
-import cpw.mods.fml.client.config.GuiCheckBox;
-import cpw.mods.fml.client.config.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+
+import cpw.mods.fml.client.config.GuiCheckBox;
+import cpw.mods.fml.client.config.GuiUtils;
 
 public class WCTGuiCheckBox extends GuiCheckBox {
 
@@ -22,8 +23,7 @@ public class WCTGuiCheckBox extends GuiCheckBox {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
-            this.field_146123_n = mouseX >= this.xPosition
-                    && mouseY >= this.yPosition
+            this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition
                     && mouseX < this.xPosition + this.boxWidth
                     && mouseY < this.yPosition + this.height;
             GuiUtils.drawContinuousTexturedBox(
@@ -49,27 +49,25 @@ public class WCTGuiCheckBox extends GuiCheckBox {
             } else {
                 color = 4210752;
             }
-            if (this.isChecked)
-                this.drawCenteredString(
-                        mc.fontRenderer,
-                        "✔",
-                        this.xPosition + (this.width - this.boxWidth) + this.boxWidth / 2 + 1,
-                        this.yPosition + 1,
-                        0x00FF00);
+            if (this.isChecked) this.drawCenteredString(
+                    mc.fontRenderer,
+                    "✔",
+                    this.xPosition + (this.width - this.boxWidth) + this.boxWidth / 2 + 1,
+                    this.yPosition + 1,
+                    0x00FF00);
 
             this.drawStringNoShadow(mc.fontRenderer, displayString, xPosition, yPosition + 2, color);
         }
     }
 
-    public void drawStringNoShadow(
-            FontRenderer p_73731_1_, String p_73731_2_, int p_73731_3_, int p_73731_4_, int p_73731_5_) {
+    public void drawStringNoShadow(FontRenderer p_73731_1_, String p_73731_2_, int p_73731_3_, int p_73731_4_,
+            int p_73731_5_) {
         p_73731_1_.drawString(p_73731_2_, p_73731_3_, p_73731_4_, p_73731_5_);
     }
 
     @Override
     public boolean mousePressed(Minecraft p_146116_1_, int p_146116_2_, int p_146116_3_) {
-        if (this.enabled
-                && this.visible
+        if (this.enabled && this.visible
                 && p_146116_2_ >= this.xPosition
                 && p_146116_3_ >= this.yPosition
                 && p_146116_2_ < this.xPosition + this.width

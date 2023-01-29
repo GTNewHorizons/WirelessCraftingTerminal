@@ -1,12 +1,14 @@
 package net.p455w0rd.wirelesscraftingterminal.client.gui.widgets;
 
-import appeng.client.gui.widgets.ITooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
+
 import org.lwjgl.opengl.GL11;
+
+import appeng.client.gui.widgets.ITooltip;
 
 public class GuiTrashButton extends GuiButton implements ITooltip {
 
@@ -26,8 +28,7 @@ public class GuiTrashButton extends GuiButton implements ITooltip {
             GL11.glScalef(0.5f, 0.5f, 0.5f);
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             mc.renderEngine.bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
-            this.field_146123_n = par2 >= this.xPosition
-                    && par3 >= this.yPosition
+            this.field_146123_n = par2 >= this.xPosition && par3 >= this.yPosition
                     && par2 < this.xPosition + this.width
                     && par3 < this.yPosition + this.height;
             this.drawTexturedModalRect(0, 0, 256 - 16, 256 - 16, 16, 16);
@@ -39,7 +40,11 @@ public class GuiTrashButton extends GuiButton implements ITooltip {
 
     @Override
     public String getMessage() {
-        return EnumChatFormatting.WHITE + "" + LocaleHandler.EmptyTrash.getLocal() + "\n" + EnumChatFormatting.GRAY + ""
+        return EnumChatFormatting.WHITE + ""
+                + LocaleHandler.EmptyTrash.getLocal()
+                + "\n"
+                + EnumChatFormatting.GRAY
+                + ""
                 + LocaleHandler.EmptyTrashDesc.getLocal();
     }
 

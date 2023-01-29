@@ -1,12 +1,14 @@
 package net.p455w0rd.wirelesscraftingterminal.common.container;
 
-import appeng.api.implementations.guiobjects.IPortableCell;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
+import appeng.api.implementations.guiobjects.IPortableCell;
+
 public class ContainerCraftAmount extends appeng.container.implementations.ContainerCraftAmount {
+
     public ContainerCraftAmount(EntityPlayer player, IPortableCell terminal) {
         super(player.inventory, terminal);
     }

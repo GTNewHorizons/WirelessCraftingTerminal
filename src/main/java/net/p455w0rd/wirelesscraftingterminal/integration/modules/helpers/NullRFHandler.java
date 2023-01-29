@@ -1,7 +1,8 @@
 package net.p455w0rd.wirelesscraftingterminal.integration.modules.helpers;
 
-import cofh.api.energy.IEnergyReceiver;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import cofh.api.energy.IEnergyReceiver;
 
 public class NullRFHandler implements IEnergyReceiver {
 

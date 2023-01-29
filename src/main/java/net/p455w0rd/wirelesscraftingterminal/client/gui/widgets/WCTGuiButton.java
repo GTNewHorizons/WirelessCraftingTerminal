@@ -5,19 +5,21 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
 public class WCTGuiButton extends GuiButton {
 
-    protected static final ResourceLocation buttonTextures =
-            new ResourceLocation("minecraft", "textures/gui/widgets.png");
+    protected static final ResourceLocation buttonTextures = new ResourceLocation(
+            "minecraft",
+            "textures/gui/widgets.png");
 
     public WCTGuiButton(int p_i1020_1_, int p_i1020_2_, int p_i1020_3_, String p_i1020_4_) {
         this(p_i1020_1_, p_i1020_2_, p_i1020_3_, 200, 20, p_i1020_4_);
     }
 
-    public WCTGuiButton(
-            int p_i1021_1_, int p_i1021_2_, int p_i1021_3_, int p_i1021_4_, int p_i1021_5_, String p_i1021_6_) {
+    public WCTGuiButton(int p_i1021_1_, int p_i1021_2_, int p_i1021_3_, int p_i1021_4_, int p_i1021_5_,
+            String p_i1021_6_) {
         super(p_i1021_1_, p_i1021_2_, p_i1021_3_, p_i1021_4_, p_i1021_5_, p_i1021_6_);
         this.width = 200;
         this.height = 20;
@@ -37,8 +39,7 @@ public class WCTGuiButton extends GuiButton {
             FontRenderer fontrenderer = p_146112_1_.fontRenderer;
             p_146112_1_.getTextureManager().bindTexture(buttonTextures);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.field_146123_n = p_146112_2_ >= this.xPosition
-                    && p_146112_3_ >= this.yPosition
+            this.field_146123_n = p_146112_2_ >= this.xPosition && p_146112_3_ >= this.yPosition
                     && p_146112_2_ < this.xPosition + this.width
                     && p_146112_3_ < this.yPosition + this.height;
             int k = this.getHoverState(this.field_146123_n);
@@ -62,7 +63,12 @@ public class WCTGuiButton extends GuiButton {
                     this.width - 2,
                     2);
             this.drawTexturedModalRect(
-                    this.xPosition, this.yPosition + (this.height - 1), 200 - this.width, 65 + k * 20, this.width, 1);
+                    this.xPosition,
+                    this.yPosition + (this.height - 1),
+                    200 - this.width,
+                    65 + k * 20,
+                    this.width,
+                    1);
             this.mouseDragged(p_146112_1_, p_146112_2_, p_146112_3_);
             int l = 14737632;
 

@@ -1,18 +1,8 @@
 package net.p455w0rd.wirelesscraftingterminal.proxy;
 
-import appeng.api.AEApi;
-import appeng.api.config.SecurityPermissions;
-import appeng.api.storage.data.IAEItemStack;
-import baubles.api.BaublesApi;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
 import java.util.List;
 import java.util.Random;
+
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityItem;
@@ -41,6 +31,18 @@ import net.p455w0rd.wirelesscraftingterminal.handlers.ConfigHandler;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemEnum;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemMagnet;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
+import appeng.api.AEApi;
+import appeng.api.config.SecurityPermissions;
+import appeng.api.storage.data.IAEItemStack;
+import baubles.api.BaublesApi;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy {
 
@@ -137,14 +139,11 @@ public class CommonProxy {
                 ConfigHandler.reloadRecipes();
             }
 
-            /* NH fork definitely does not need version checking
-            if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
-            	WCTLog.info("Dev environment detected, skipping version check");
-            }
-            else {
-            	new VersionCheckHandler();
-            }
-            */
+            /*
+             * NH fork definitely does not need version checking if ((Boolean)
+             * Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
+             * WCTLog.info("Dev environment detected, skipping version check"); } else { new VersionCheckHandler(); }
+             */
         } else {
             final PacketConfigSync p = new PacketConfigSync(
                     Reference.WCT_MAX_POWER,
@@ -161,7 +160,11 @@ public class CommonProxy {
         if (!Reference.WCT_EASYMODE_ENABLED && Reference.WCT_BOOSTER_ENABLED && Reference.WCT_BOOSTERDROP_ENABLED) {
             ItemStack stack = new ItemStack(ItemEnum.BOOSTER_CARD.getItem());
             EntityItem drop = new EntityItem(
-                    event.entity.worldObj, event.entity.posX, event.entity.posY, event.entity.posZ, stack);
+                    event.entity.worldObj,
+                    event.entity.posX,
+                    event.entity.posY,
+                    event.entity.posZ,
+                    stack);
             if (event.entity instanceof EntityDragon) {
                 event.drops.add(drop);
             }
@@ -202,7 +205,12 @@ public class CommonProxy {
                         ItemMagnet magnet = (ItemMagnet) magnetStack.getItem();
 
                         magnet.obj = ContainerWirelessCraftingTerminal.getGuiObject(
-                                WCTStack, player, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+                                WCTStack,
+                                player,
+                                world,
+                                (int) player.posX,
+                                (int) player.posY,
+                                (int) player.posZ);
                         magnet.civ = magnet.obj;
                         magnet.powerSrc = magnet.civ;
                         magnet.monitor = magnet.civ.getItemInventory();
@@ -216,8 +224,7 @@ public class CommonProxy {
                                 List<ItemStack> filteredList = magnet.getFilteredItems(magnetStack);
                                 IAEItemStack ais = AEApi.instance().storage().createItemStack(stack);
                                 if (magnet.getMode(magnetStack)) { // whitelisting
-                                    if (filteredList != null
-                                            && magnet.isItemFiltered(stack, filteredList)
+                                    if (filteredList != null && magnet.isItemFiltered(stack, filteredList)
                                             && filteredList.size() > 0) {
                                         if (magnet.doInject(ais, stack.stackSize, player, itemEntity, stack, world)) {
                                             stack = null;
@@ -234,16 +241,14 @@ public class CommonProxy {
                                                         "random.pop",
                                                         0.15F,
                                                         ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.7F
-                                                                        + 1.0F)
-                                                                * 2.0F);
+                                                                + 1.0F) * 2.0F);
                                             }
                                         } else {
                                             magnet.doVanillaPickup(itemEntity, player, stack, world, stack.stackSize);
                                         }
                                     }
                                 } else { // blacklisting
-                                    if (!magnet.isItemFiltered(stack, filteredList)
-                                            || filteredList == null
+                                    if (!magnet.isItemFiltered(stack, filteredList) || filteredList == null
                                             || filteredList.size() <= 0) {
                                         if (magnet.doInject(ais, stack.stackSize, player, itemEntity, stack, world)) {
                                             stack = null;
@@ -261,8 +266,7 @@ public class CommonProxy {
                                                         "random.pop",
                                                         0.15F,
                                                         ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.7F
-                                                                        + 1.0F)
-                                                                * 2.0F);
+                                                                + 1.0F) * 2.0F);
                                             }
                                         } else {
                                             magnet.doVanillaPickup(itemEntity, player, stack, world, stack.stackSize);
@@ -283,8 +287,7 @@ public class CommonProxy {
 
     @SubscribeEvent
     public void onPlayerCraftingEvent(final PlayerEvent.ItemCraftedEvent event) {
-        if (event.player == null
-                || event.player.isDead
+        if (event.player == null || event.player.isDead
                 || event.player instanceof FakePlayer
                 || event.crafting == null) {
             return;
@@ -302,12 +305,9 @@ public class CommonProxy {
         }
 
         /*
-         * if (event.crafting.getItem() ==
-         * ItemEnum.WIRELESS_CRAFTING_TERMINAL.getItem()) {
-         * AchievementHandler.triggerAch(wctAch, event.player); if
-         * (Reference.WCT_BOOSTER_ENABLED) {
-         * AchievementHandler.addAchievementToPage(AchievementHandler.
-         * boosterAch, true, event.player); } }
+         * if (event.crafting.getItem() == ItemEnum.WIRELESS_CRAFTING_TERMINAL.getItem()) {
+         * AchievementHandler.triggerAch(wctAch, event.player); if (Reference.WCT_BOOSTER_ENABLED) {
+         * AchievementHandler.addAchievementToPage(AchievementHandler. boosterAch, true, event.player); } }
          */
         if (Reference.WCT_BOOSTER_ENABLED && Reference.WCT_EASYMODE_ENABLED) {
             if (event.crafting.getItem() == ItemEnum.BOOSTER_CARD.getItem()) {

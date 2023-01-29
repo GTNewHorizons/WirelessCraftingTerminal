@@ -1,5 +1,18 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
+
 import appeng.api.config.Settings;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
@@ -7,17 +20,6 @@ import appeng.container.AEBaseContainer;
 import appeng.helpers.IMouseWheelItem;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
 
 public class PacketValueConfig extends WCTPacket {
 
@@ -53,8 +55,7 @@ public class PacketValueConfig extends WCTPacket {
     public void serverPacketData(final INetworkInfo manager, final WCTPacket packet, final EntityPlayer player) {
         final Container c = player.openContainer;
 
-        if (this.Name.equals("Item")
-                && RandomUtils.getWirelessTerm(player.inventory) != null
+        if (this.Name.equals("Item") && RandomUtils.getWirelessTerm(player.inventory) != null
                 && RandomUtils.getWirelessTerm(player.inventory).getItem() instanceof IMouseWheelItem) {
             final ItemStack is = RandomUtils.getWirelessTerm(player.inventory);
             final IMouseWheelItem si = (IMouseWheelItem) is.getItem();

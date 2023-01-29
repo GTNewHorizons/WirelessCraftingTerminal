@@ -1,5 +1,28 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
+import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
+import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
+import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
+import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.SecurityPermissions;
@@ -20,27 +43,6 @@ import appeng.util.item.AEItemStack;
 import appeng.util.prioitylist.IPartitionList;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.oredict.OreDictionary;
-import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
-import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
-import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
-import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
 
 public class PacketNEIRecipe extends WCTPacket {
 
@@ -80,7 +82,7 @@ public class PacketNEIRecipe extends WCTPacket {
         configureWrite(data);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void serverPacketData(final INetworkInfo manager, final WCTPacket packet, final EntityPlayer player) {
         final EntityPlayerMP pmp = (EntityPlayerMP) player;
@@ -140,15 +142,16 @@ public class PacketNEIRecipe extends WCTPacket {
                                 ItemStack currentItem = craftMatrix.getStackInSlot(x);
                                 if (currentItem != null) {
                                     testInv.setInventorySlotContents(x, currentItem);
-                                    final ItemStack newItemStack =
-                                            r.matches(testInv, pmp.worldObj) ? r.getCraftingResult(testInv) : null;
+                                    final ItemStack newItemStack = r.matches(testInv, pmp.worldObj)
+                                            ? r.getCraftingResult(testInv)
+                                            : null;
                                     testInv.setInventorySlotContents(x, patternItem);
 
                                     if (newItemStack == null || !Platform.isSameItemPrecise(newItemStack, is)) {
                                         final IAEItemStack in = AEItemStack.create(currentItem);
                                         if (in != null) {
-                                            final IAEItemStack out =
-                                                    Platform.poweredInsert(energy, storage, in, cct.getActionSource());
+                                            final IAEItemStack out = Platform
+                                                    .poweredInsert(energy, storage, in, cct.getActionSource());
                                             if (out != null) {
                                                 craftMatrix.setInventorySlotContents(x, out.getItemStack());
                                             } else {
@@ -190,7 +193,10 @@ public class PacketNEIRecipe extends WCTPacket {
                                                 if (filter == null || filter.isListed(request)) {
                                                     request.setStackSize(1);
                                                     final IAEItemStack out = Platform.poweredExtraction(
-                                                            energy, storage, request, cct.getActionSource());
+                                                            energy,
+                                                            storage,
+                                                            request,
+                                                            cct.getActionSource());
                                                     if (out != null) {
                                                         whichItem = out.getItemStack();
                                                         break;
@@ -219,18 +225,17 @@ public class PacketNEIRecipe extends WCTPacket {
     /**
      * Tries to extract an item from the player inventory. Does account for fuzzy items.
      *
-     * @param player the {@link EntityPlayer} to extract from
-     * @param mode the {@link Actionable} to simulate or modulate the operation
+     * @param player      the {@link EntityPlayer} to extract from
+     * @param mode        the {@link Actionable} to simulate or modulate the operation
      * @param patternItem which {@link ItemStack} to extract
      * @return null or a found {@link ItemStack}
      */
-    private ItemStack extractItemFromPlayerInventory(
-            final EntityPlayer player, final Actionable mode, final ItemStack patternItem) {
+    private ItemStack extractItemFromPlayerInventory(final EntityPlayer player, final Actionable mode,
+            final ItemStack patternItem) {
         final InventoryAdaptor ia = InventoryAdaptor.getAdaptor(player, ForgeDirection.UNKNOWN);
         final AEItemStack request = AEItemStack.create(patternItem);
         // final boolean isSimulated = mode == Actionable.SIMULATE;
-        final boolean checkFuzzy = request.isOre()
-                || patternItem.getItemDamage() == OreDictionary.WILDCARD_VALUE
+        final boolean checkFuzzy = request.isOre() || patternItem.getItemDamage() == OreDictionary.WILDCARD_VALUE
                 || patternItem.hasTagCompound()
                 || patternItem.isItemStackDamageable();
 

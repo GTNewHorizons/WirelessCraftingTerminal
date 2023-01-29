@@ -7,9 +7,8 @@ import net.p455w0rd.wirelesscraftingterminal.api.exceptions.RegistrationError;
 public interface IIngredient {
 
     /**
-     * Acquire a single input stack for the current recipe, if more then one
-     * ItemStack is possible a RegistrationError exception will be thrown,
-     * ignore these and let the system handle the error.
+     * Acquire a single input stack for the current recipe, if more then one ItemStack is possible a RegistrationError
+     * exception will be thrown, ignore these and let the system handle the error.
      *
      * @return a single ItemStack for the recipe handler.
      *
@@ -19,8 +18,8 @@ public interface IIngredient {
     ItemStack getItemStack() throws RegistrationError, MissingIngredientError;
 
     /**
-     * Acquire a list of all the input stacks for the current recipe, this is
-     * for handlers that support multiple inputs per slot.
+     * Acquire a list of all the input stacks for the current recipe, this is for handlers that support multiple inputs
+     * per slot.
      *
      * @return an array of ItemStacks for the recipe handler.
      *
@@ -30,16 +29,14 @@ public interface IIngredient {
     ItemStack[] getItemStackSet() throws RegistrationError, MissingIngredientError;
 
     /**
-     * If you wish to support air, you must test before getting the ItemStack,
-     * or ItemStackSet
+     * If you wish to support air, you must test before getting the ItemStack, or ItemStackSet
      *
      * @return true if this slot contains no ItemStack, this is passed as "_"
      */
     boolean isAir();
 
     /**
-     * @return The Name Space of the item. Prefer getItemStack or
-     *         getItemStackSet
+     * @return The Name Space of the item. Prefer getItemStack or getItemStackSet
      */
     String getNameSpace();
 
@@ -49,14 +46,12 @@ public interface IIngredient {
     String getItemName();
 
     /**
-     * @return The Damage Value of the item. Prefer getItemStack or
-     *         getItemStackSet
+     * @return The Damage Value of the item. Prefer getItemStack or getItemStackSet
      */
     int getDamageValue();
 
     /**
-     * @return The Damage Value of the item. Prefer getItemStack or
-     *         getItemStackSet
+     * @return The Damage Value of the item. Prefer getItemStack or getItemStackSet
      */
     int getQty();
 

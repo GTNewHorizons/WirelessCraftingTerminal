@@ -1,8 +1,9 @@
 package net.p455w0rd.wirelesscraftingterminal.api.networking.security;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.PlayerSource;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class WCTPlayerSource extends PlayerSource {
 

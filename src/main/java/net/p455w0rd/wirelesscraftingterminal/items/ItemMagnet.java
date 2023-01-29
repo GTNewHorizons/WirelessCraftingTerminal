@@ -1,22 +1,9 @@
 package net.p455w0rd.wirelesscraftingterminal.items;
 
-import appeng.api.config.SecurityPermissions;
-import appeng.api.implementations.guiobjects.IPortableCell;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.energy.IEnergyGrid;
-import appeng.api.networking.energy.IEnergySource;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.networking.security.ISecurityGrid;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.util.Platform;
-import com.google.common.base.Splitter;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -38,12 +25,29 @@ import net.p455w0rd.wirelesscraftingterminal.handlers.KeybindHandler;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
+
 import org.apache.commons.lang3.text.WordUtils;
 import org.lwjgl.input.Keyboard;
 
+import appeng.api.config.SecurityPermissions;
+import appeng.api.implementations.guiobjects.IPortableCell;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.energy.IEnergyGrid;
+import appeng.api.networking.energy.IEnergySource;
+import appeng.api.networking.security.BaseActionSource;
+import appeng.api.networking.security.ISecurityGrid;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.util.Platform;
+
+import com.google.common.base.Splitter;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 /**
- * Jotato's amazing magnet item from QuantumFlux adapted for use in the Wireless
- * Crafting Terminal
+ * Jotato's amazing magnet item from QuantumFlux adapted for use in the Wireless Crafting Terminal
  *
  * @author p455w0rd, Jotato
  *
@@ -111,22 +115,31 @@ public class ItemMagnet extends Item {
             if (isActivated(itemStack)) {
                 String boundKey = Keyboard.getKeyName(KeybindHandler.openMagnetFilter.getKeyCode());
                 if (!boundKey.equals("NONE")) {
-                    list.add(color("italics") + LocaleHandler.OrPress.getLocal() + " " + color("yellow") + color("bold")
-                            + "[" + boundKey + "]");
+                    list.add(
+                            color("italics") + LocaleHandler.OrPress
+                                    .getLocal() + " " + color("yellow") + color("bold") + "[" + boundKey + "]");
                 }
                 String boundKey2 = Keyboard.getKeyName(KeybindHandler.changeMagnetMode.getKeyCode());
                 if (!boundKey2.equals("NONE")) {
-                    list.add(color("italics") + LocaleHandler.Press.getLocal() + " " + color("yellow") + color("bold")
-                            + "[" + boundKey2 + "] " + color("gray") + color("italics")
-                            + LocaleHandler.ToSwitchMode.getLocal());
+                    list.add(
+                            color("italics") + LocaleHandler.Press.getLocal()
+                                    + " "
+                                    + color("yellow")
+                                    + color("bold")
+                                    + "["
+                                    + boundKey2
+                                    + "] "
+                                    + color("gray")
+                                    + color("italics")
+                                    + LocaleHandler.ToSwitchMode.getLocal());
                 }
             }
 
             list.add("");
-            list.add(LocaleHandler.Status.getLocal() + ": "
-                    + (isActivated(is)
-                            ? color("green") + LocaleHandler.Active.getLocal()
-                            : color("red") + LocaleHandler.Inactive.getLocal()));
+            list.add(
+                    LocaleHandler.Status.getLocal() + ": "
+                            + (isActivated(is) ? color("green") + LocaleHandler.Active.getLocal()
+                                    : color("red") + LocaleHandler.Inactive.getLocal()));
             if (is.getItemDamage() == 1) {
                 list.add(color("white") + "  " + LocaleHandler.MagnetActiveDesc1.getLocal());
             } else if (is.getItemDamage() == 2) {
@@ -229,13 +242,12 @@ public class ItemMagnet extends Item {
         // List<ItemStack> filteredList = getFilteredItems(getItemStack());
         // items
         Iterator<? extends Entity> iterator = getEntitiesInRange(
-                        EntityItem.class,
-                        world,
-                        (int) player.posX,
-                        (int) player.posY,
-                        (int) player.posZ,
-                        distanceFromPlayer)
-                .iterator();
+                EntityItem.class,
+                world,
+                (int) player.posX,
+                (int) player.posY,
+                (int) player.posZ,
+                distanceFromPlayer).iterator();
         while (iterator.hasNext()) {
             EntityItem itemToGet = (EntityItem) iterator.next();
             if (itemToGet.func_145800_j() != null && itemToGet.func_145800_j().equals(player.getCommandSenderName())) {
@@ -262,13 +274,12 @@ public class ItemMagnet extends Item {
 
         // xp
         iterator = getEntitiesInRange(
-                        EntityXPOrb.class,
-                        world,
-                        (int) player.posX,
-                        (int) player.posY,
-                        (int) player.posZ,
-                        distanceFromPlayer)
-                .iterator();
+                EntityXPOrb.class,
+                world,
+                (int) player.posX,
+                (int) player.posY,
+                (int) player.posZ,
+                distanceFromPlayer).iterator();
         while (iterator.hasNext()) {
             EntityXPOrb xpToGet = (EntityXPOrb) iterator.next();
             if (xpToGet.isDead || xpToGet.isInvisible()) {
@@ -288,8 +299,8 @@ public class ItemMagnet extends Item {
         }
     }
 
-    public void doVanillaPickup(
-            EntityItem itemToGet, EntityPlayer player, ItemStack itemStackToGet, World world, int stackSize) {
+    public void doVanillaPickup(EntityItem itemToGet, EntityPlayer player, ItemStack itemStackToGet, World world,
+            int stackSize) {
         if (pickupTimer < 100) {
             pickupTimer++;
             return;
@@ -363,8 +374,7 @@ public class ItemMagnet extends Item {
                 }
                 // ignore nothing/don't use oredict--must be exact match
                 else {
-                    if (isMetaEqual(is, thisStack)
-                            && ItemStack.areItemStackTagsEqual(is, thisStack)
+                    if (isMetaEqual(is, thisStack) && ItemStack.areItemStackTagsEqual(is, thisStack)
                             && is.getItem() == thisStack.getItem()) {
                         return true;
                     }
@@ -378,8 +388,8 @@ public class ItemMagnet extends Item {
         return is1.getItemDamage() == is2.getItemDamage();
     }
 
-    public boolean hasNetworkAccess(
-            final SecurityPermissions perm, final boolean requirePower, EntityPlayer player, ItemStack wirelessTerm) {
+    public boolean hasNetworkAccess(final SecurityPermissions perm, final boolean requirePower, EntityPlayer player,
+            ItemStack wirelessTerm) {
         if (player.capabilities.isCreativeMode) {
             return true;
         }
@@ -423,13 +433,8 @@ public class ItemMagnet extends Item {
         return null;
     }
 
-    public boolean doInject(
-            IAEItemStack ais,
-            int stackSize,
-            EntityPlayer player,
-            EntityItem itemToGet,
-            ItemStack itemStackToGet,
-            World world) {
+    public boolean doInject(IAEItemStack ais, int stackSize, EntityPlayer player, EntityItem itemToGet,
+            ItemStack itemStackToGet, World world) {
         ais = Platform.poweredInsert(powerSrc, cellInv, ais, mySrc);
         if (ais != null) {
             player.onItemPickup(itemToGet, stackSize);
@@ -475,12 +480,17 @@ public class ItemMagnet extends Item {
         return true;
     }
 
-    public static List<? extends Entity> getEntitiesInRange(
-            Class<?> entityType, World world, int x, int y, int z, int distance) {
+    public static List<? extends Entity> getEntitiesInRange(Class<?> entityType, World world, int x, int y, int z,
+            int distance) {
         return world.getEntitiesWithinAABB(
                 entityType,
                 AxisAlignedBB.getBoundingBox(
-                        x - distance, y - distance, z - distance, x + distance, y + distance, z + distance));
+                        x - distance,
+                        y - distance,
+                        z - distance,
+                        x + distance,
+                        y + distance,
+                        z + distance));
     }
 
     public ItemStack getStack() {
