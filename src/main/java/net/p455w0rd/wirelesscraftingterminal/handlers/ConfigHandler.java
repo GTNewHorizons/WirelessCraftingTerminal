@@ -125,7 +125,9 @@ public class ConfigHandler {
     }
 
     public static void reloadRecipes() {
-        RecipeHandler.loadRecipes(mtChanged);
+        if (!Loader.isModLoaded("dreamcraft")) {
+            RecipeHandler.loadRecipes(mtChanged);
+        }
         mtChanged = false;
     }
 

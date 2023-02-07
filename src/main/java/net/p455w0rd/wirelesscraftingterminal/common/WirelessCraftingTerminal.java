@@ -16,12 +16,9 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 import appeng.api.AEApi;
 import appeng.api.features.IWirelessTermHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.LoaderState;
-import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -73,7 +70,9 @@ public class WirelessCraftingTerminal {
         long stopwatch = WCTLog.beginSection("Init");
         IntegrationRegistry.INSTANCE.init();
         WirelessCraftingTerminal.WCTState = LoaderState.INITIALIZATION;
-        RecipeHandler.loadRecipes(!Reference.WCT_MINETWEAKER_OVERRIDE);
+        if (!Loader.isModLoaded("dreamcraft")) {
+            RecipeHandler.loadRecipes(!Reference.WCT_MINETWEAKER_OVERRIDE);
+        }
         AchievementHandler.init();
         WCTLog.endSection("Init", stopwatch);
     }

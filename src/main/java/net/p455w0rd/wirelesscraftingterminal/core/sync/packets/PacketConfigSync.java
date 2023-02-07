@@ -7,6 +7,7 @@ import net.p455w0rd.wirelesscraftingterminal.handlers.ConfigHandler;
 import net.p455w0rd.wirelesscraftingterminal.handlers.RecipeHandler;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
+import cpw.mods.fml.common.Loader;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -58,7 +59,9 @@ public class PacketConfigSync extends WCTPacket {
         Reference.WCT_MINETWEAKER_OVERRIDE = this.mineTweakerOverride;
         ConfigHandler.removeBooster();
         ConfigHandler.removeBoosterIcon();
-        RecipeHandler.loadRecipes(mtChanged);
+        if (!Loader.isModLoaded("dreamcraft")) {
+            RecipeHandler.loadRecipes(mtChanged);
+        }
         mtChanged = false;
     }
 }
