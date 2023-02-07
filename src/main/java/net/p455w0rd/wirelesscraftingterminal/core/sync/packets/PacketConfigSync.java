@@ -1,6 +1,5 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.entity.player.EntityPlayer;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
@@ -8,6 +7,7 @@ import net.p455w0rd.wirelesscraftingterminal.handlers.ConfigHandler;
 import net.p455w0rd.wirelesscraftingterminal.handlers.RecipeHandler;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
+import cpw.mods.fml.common.Loader;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

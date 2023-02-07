@@ -2,7 +2,6 @@ package net.p455w0rd.wirelesscraftingterminal.common;
 
 import java.io.File;
 
-import cpw.mods.fml.common.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.WCTLog;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
@@ -17,6 +16,7 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 import appeng.api.AEApi;
 import appeng.api.features.IWirelessTermHandler;
+import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
