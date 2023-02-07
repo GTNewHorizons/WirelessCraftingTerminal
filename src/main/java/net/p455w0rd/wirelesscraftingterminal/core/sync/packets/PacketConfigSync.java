@@ -1,5 +1,6 @@
 package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
+import cpw.mods.fml.common.Loader;
 import net.minecraft.entity.player.EntityPlayer;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
@@ -58,7 +59,9 @@ public class PacketConfigSync extends WCTPacket {
         Reference.WCT_MINETWEAKER_OVERRIDE = this.mineTweakerOverride;
         ConfigHandler.removeBooster();
         ConfigHandler.removeBoosterIcon();
-        RecipeHandler.loadRecipes(mtChanged);
+        if (!Loader.isModLoaded("dreamcraft")) {
+            RecipeHandler.loadRecipes(mtChanged);
+        }
         mtChanged = false;
     }
 }
