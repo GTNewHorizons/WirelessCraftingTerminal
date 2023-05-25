@@ -459,7 +459,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
     @Override
     public void updateScreen() {
         this.devicePowered = containerWCT.isPowered();
-        this.repo.setPower(devicePowered);
+        this.repo.setPowered(devicePowered);
 
         super.updateScreen();
         if (this.init) {
@@ -708,7 +708,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    protected void renderToolTip(final ItemStack stack, final int x, final int y) {
+    public void renderToolTip(final ItemStack stack, final int x, final int y) {
         final Slot s = this.getSlot(x, y);
         if (s instanceof SlotME && stack != null) {
             final int BigNumber = AEConfig.instance.useTerminalUseLargeFont() ? 999 : 9999;
