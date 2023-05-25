@@ -29,6 +29,8 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 import org.apache.commons.lang3.text.WordUtils;
 import org.lwjgl.input.Keyboard;
 
+import com.google.common.base.Splitter;
+
 import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.guiobjects.IPortableCell;
 import appeng.api.networking.IGrid;
@@ -40,9 +42,6 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.Platform;
-
-import com.google.common.base.Splitter;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

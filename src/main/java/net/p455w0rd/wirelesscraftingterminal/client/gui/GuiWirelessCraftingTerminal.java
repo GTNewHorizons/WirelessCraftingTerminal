@@ -30,7 +30,6 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import yalter.mousetweaks.api.IMTModGuiContainer;
 import appeng.api.config.ActionItems;
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
@@ -64,6 +63,7 @@ import codechicken.nei.TextField;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import yalter.mousetweaks.api.IMTModGuiContainer;
 
 @Optional.Interface(modid = "MouseTweaks", iface = "yalter.mousetweaks.api.IMTModGuiContainer")
 public class GuiWirelessCraftingTerminal extends AEBaseGui

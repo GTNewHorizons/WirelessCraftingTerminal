@@ -22,6 +22,8 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 import org.lwjgl.input.Keyboard;
 
+import com.google.common.base.Optional;
+
 import appeng.api.config.*;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
@@ -31,9 +33,6 @@ import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
-
-import com.google.common.base.Optional;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
