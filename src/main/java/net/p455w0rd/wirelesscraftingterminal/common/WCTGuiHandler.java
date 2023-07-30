@@ -30,70 +30,61 @@ public class WCTGuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int guiId, EntityPlayer player, World world, int x, int y, int z) {
-        final IWirelessCraftingTermHandler wh = (IWirelessCraftingTermHandler) AEApi.instance().registries().wireless()
-                .getWirelessTerminalHandler(RandomUtils.getWirelessTerm(player.inventory));
-        if (wh != null) {
-            final WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(
-                    wh,
-                    RandomUtils.getWirelessTerm(player.inventory),
-                    player,
-                    world,
-                    x,
-                    y,
-                    z);
-            if (obj != null) {
-                final IPortableCell terminal = obj;
-
-                if (guiId == Reference.GUI_WCT) {
-                    return updateGui(
-                            new ContainerWirelessCraftingTerminal(player, player.inventory),
-                            world,
-                            x,
-                            y,
-                            z,
-                            ForgeDirection.UNKNOWN,
-                            obj);
-                }
-
-                if (guiId == Reference.GUI_CRAFTING_STATUS) {
-                    return updateGui(
-                            new ContainerCraftingStatus(player.inventory, terminal),
-                            world,
-                            x,
-                            y,
-                            z,
-                            ForgeDirection.UNKNOWN,
-                            obj);
-                }
-
-                if (guiId == Reference.GUI_CRAFT_AMOUNT) {
-                    return updateGui(
-                            new ContainerCraftAmount(player, terminal),
-                            world,
-                            x,
-                            y,
-                            z,
-                            ForgeDirection.UNKNOWN,
-                            obj);
-                }
-
-                if (guiId == Reference.GUI_CRAFT_CONFIRM) {
-                    return updateGui(
-                            new ContainerCraftConfirm(player, terminal),
-                            world,
-                            x,
-                            y,
-                            z,
-                            ForgeDirection.UNKNOWN,
-                            obj);
-                }
-            }
-        }
         if (guiId == Reference.GUI_MAGNET) {
             return new ContainerMagnet(player, player.inventory);
         }
 
-        return null;
+        final IWirelessCraftingTermHandler wh = (IWirelessCraftingTermHandler) AEApi.instance().registries().wireless()
+                .getWirelessTerminalHandler(RandomUtils.getWirelessTerm(player.inventory));
+        if (wh == null) {
+            return null;
+        }
+
+        final WirelessTerminalGuiObject term = new WirelessTerminalGuiObject(
+                wh,
+                RandomUtils.getWirelessTerm(player.inventory),
+                player,
+                world,
+                x,
+                y,
+                z);
+
+        return switch (guiId) {
+            case Reference.GUI_WCT -> updateGui(
+                    new ContainerWirelessCraftingTerminal(player, player.inventory),
+                    world,
+                    x,
+                    y,
+                    z,
+                    ForgeDirection.UNKNOWN,
+                    term);
+            case Reference.GUI_CRAFTING_STATUS -> updateGui(
+                    new ContainerCraftingStatus(player.inventory, term),
+                    world,
+                    x,
+                    y,
+                    z,
+                    ForgeDirection.UNKNOWN,
+                    term);
+
+            case Reference.GUI_CRAFT_AMOUNT -> updateGui(
+                    new ContainerCraftAmount(player, term),
+                    world,
+                    x,
+                    y,
+                    z,
+                    ForgeDirection.UNKNOWN,
+                    term);
+            case Reference.GUI_CRAFT_CONFIRM -> updateGui(
+                    new ContainerCraftConfirm(player, term),
+                    world,
+                    x,
+                    y,
+                    z,
+                    ForgeDirection.UNKNOWN,
+                    term);
+            default -> null;
+        };
     }
 
     @Override
