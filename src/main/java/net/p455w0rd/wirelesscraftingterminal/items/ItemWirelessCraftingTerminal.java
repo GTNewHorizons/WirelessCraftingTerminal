@@ -219,7 +219,7 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
 
     @Override
     public boolean canHandle(final ItemStack is) {
-        return is.getItem() instanceof IWirelessCraftingTerminalItem;
+        return is != null && is.getItem() instanceof IWirelessCraftingTerminalItem;
     }
 
     @Override
