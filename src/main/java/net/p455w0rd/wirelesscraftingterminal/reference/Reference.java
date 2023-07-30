@@ -22,10 +22,9 @@ public class Reference {
     public static boolean WCT_HASCHECKEDVERSION = false;
 
     // Gui IDs
-    private static int ae2wctGuiIndex = 0;
-    public static final int GUI_WCT = ++ae2wctGuiIndex;
-    public static final int GUI_CRAFTING_STATUS = ++ae2wctGuiIndex;
-    public static final int GUI_CRAFT_AMOUNT = ++ae2wctGuiIndex;
-    public static final int GUI_CRAFT_CONFIRM = ++ae2wctGuiIndex;
-    public static final int GUI_MAGNET = ++ae2wctGuiIndex;
+    public static final int GUI_WCT = 0;
+    public static final int GUI_CRAFTING_STATUS = 1;
+    public static final int GUI_CRAFT_AMOUNT = 2;
+    public static final int GUI_CRAFT_CONFIRM = 3;
+    public static final int GUI_MAGNET = 4;
 }
