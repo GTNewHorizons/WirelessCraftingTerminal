@@ -30,9 +30,9 @@ public class KeybindHandler {
     public static KeyBinding changeMagnetMode;
 
     public static void registerKeybinds() {
-        openTerminal = new KeyBinding("ae2wct.OpenTerminal", Keyboard.CHAR_NONE, "key.categories.ae2wct");
-        openMagnetFilter = new KeyBinding("ae2wct.OpenMagnetFilter", Keyboard.CHAR_NONE, "key.categories.ae2wct");
-        changeMagnetMode = new KeyBinding("ae2wct.SwitchMagnetMode", Keyboard.CHAR_NONE, "key.categories.ae2wct");
+        openTerminal = new KeyBinding("key.OpenTerminal", Keyboard.CHAR_NONE, "key.categories.ae2wct");
+        openMagnetFilter = new KeyBinding("key.OpenMagnetFilter", Keyboard.CHAR_NONE, "key.categories.ae2wct");
+        changeMagnetMode = new KeyBinding("key.SwitchMagnetMode", Keyboard.CHAR_NONE, "key.categories.ae2wct");
         ClientRegistry.registerKeyBinding(openTerminal);
         ClientRegistry.registerKeyBinding(openMagnetFilter);
         ClientRegistry.registerKeyBinding(changeMagnetMode);

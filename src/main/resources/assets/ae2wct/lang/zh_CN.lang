@@ -1,14 +1,10 @@
-//**************************//
-//WIRELESS CRAFTING TEMRINAL//
-//**************************//
-
-//Items
+#Items
 item.wirelessCraftingTerminal.name=无线合成终端
 item.infinityBoosterCard.name=量子增幅器
 item.magnetCard.name=磁场增幅卡
 itemGroup.ae2wct=AE2无线合成终端
 
-//Tooltips
+#Tooltips
 gui.tooltips.ae2wct.PressShift=按住Shift查看详细信息
 gui.tooltips.ae2wct.OnlyWorks=只能安装在无线合成终端中使用！
 gui.tooltips.ae2wct.TitleDesc=介绍
@@ -41,10 +37,10 @@ gui.tooltips.ae2wct.OrPress=或按
 gui.tooltips.ae2wct.Press=按
 gui.tooltips.ae2wct.ToSwitchMode=切换磁场模式
 
-//Labels
+#Labels
 gui.labels.ae2wct.WirelessTermLabel=无线合成终端
 
-//Config Descriptions
+#Config Descriptions
 config.ae2wct.MaxPowerDesc=Maximum Power in AE units the wireless terminal can hold
 config.ae2wct.InfinityBoosterCfgDesc=Enable Infinite Range Booster Upgrade
 config.ae2wct.EasyModeDesc=Enable Easy Mode (Easier Recipes+Infinity Booster Recipe)
@@ -55,7 +51,7 @@ config.ae2wct.DoVersionCheck=Check for updates
 config.ae2wct.NewVersionAvailable=New version of Wireless Crafting Terminal is available!
 config.ae2wct.ClickString=["Click here to go to download page [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to download the latest version","color":"green"}},"clickEvent":{"action":"open_url","value":"http://minecraft.curseforge.com/projects/wireless-crafting-terminal"}},"]"]
 
-//Achievements
+#Achievements
 achievement.wctAchievement=Digital Crafting Over WiFi
 achievement.wctAchievement.desc=Craft a Wireless Crafting Terminal
 achievement.boosterAchievement=Interdimensional Crafting Sack
@@ -63,14 +59,14 @@ achievement.boosterAchievement.desc=Aquire an Infinity Booster Card
 achievement.magnetAchievement=Digital Hoover
 achievement.magnetAchievement.desc=Craft a Magnet Card
 
-//Chat Messages
+#Chat Messages
 chatmessages.ae2wct.NoNetworkPower=网络供能中断!
 chatmessages.ae2wct.MagnetMode1=磁场增幅卡关闭
 chatmessages.ae2wct.MagnetMode2=磁场增幅卡激活 - 未存储于AE网络中的物品将被放置在背包中
 chatmessages.ae2wct.MagnetMode3=磁场增幅卡激活 - 未存储于AE网络中的物品将不会被拾取
 chatmessages.ae2wct.InitializeMagnet=在使用绑定按键前,你必须手持磁场增幅卡先右键!
 
-//Keybindings
+#Keybindings
 key.OpenTerminal=打开无线合成终端
 key.OpenMagnetFilter=打开磁场增幅卡过滤GUI
 key.SwitchMagnetMode=激活/关闭磁场增幅卡

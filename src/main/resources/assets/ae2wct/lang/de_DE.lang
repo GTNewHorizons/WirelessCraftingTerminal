@@ -1,14 +1,10 @@
-//**************************//
-//WIRELESS CRAFTING TEMRINAL//
-//**************************//
-
-//Items
+#Items
 item.wirelessCraftingTerminal.name=Drahtlose Fertigungskonsole
 item.infinityBoosterCard.name=Unendliche Drahtlosverstärkerkarte
 item.magnetCard.name=Magnetkarte
 itemGroup.ae2wct=§9AE2 Wireless Crafting Terminal
 
-//Tooltips
+#Tooltips
 gui.tooltips.ae2wct.PressShift=Infos via Shiftklick
 gui.tooltips.ae2wct.OnlyWorks=Funktioniert nur im Slot der drahtlosen Fertigungskonsole
 gui.tooltips.ae2wct.TitleDesc=Beschreibung
@@ -41,10 +37,10 @@ gui.tooltips.ae2wct.OrPress=or press
 gui.tooltips.ae2wct.Press=Press
 gui.tooltips.ae2wct.ToSwitchMode=to switch magnet mode
 
-//Labels
+#Labels
 gui.labels.ae2wct.WirelessTermLabel=Drahtloskonsole
 
-//Config Descriptions
+#Config Descriptions
 config.ae2wct.MaxPowerDesc=In der Drahtloskonsole maximal speicherbare Energie in AE
 config.ae2wct.InfinityBoosterCfgDesc=Erlaube das unendliche Drahtlosverstärkerupgrade
 config.ae2wct.EasyModeDesc=Aktiviere den "Einfachen Modus" (Einfachere Rezepte + Rezept für unendlichen Drahtlosverstärker)
@@ -55,7 +51,7 @@ config.ae2wct.DoVersionCheck=Check for updates
 config.ae2wct.NewVersionAvailable=New version of Wireless Crafting Terminal is available!
 config.ae2wct.ClickString=["Click here to go to download page [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to download the latest version","color":"green"}},"clickEvent":{"action":"open_url","value":"http://minecraft.curseforge.com/projects/wireless-crafting-terminal"}},"]"]
 
-//Achievements
+#Achievements
 achievement.wctAchievement=Digitales Fertigen über WLAN
 achievement.wctAchievement.desc=Fertige eine drahtlose Fertigungskonsole
 achievement.boosterAchievement=Interdimensionales Fertigen
@@ -63,14 +59,14 @@ achievement.boosterAchievement.desc=Erwerbe eine unendliche Drahtlosverstärkerk
 achievement.magnetAchievement=Digitales Staubsaugen!
 achievement.magnetAchievement.desc=Fertige eine Magnetkarte
 
-//Chat Messages
+#Chat Messages
 chatmessages.ae2wct.NoNetworkPower=Netzwerk hat keine Energie!
 chatmessages.ae2wct.MagnetMode1=Magnetkarte deaktiviert
 chatmessages.ae2wct.MagnetMode2=Magnetkarte aktiviert - Items, die nicht im AE-Netzwerk gespeichert sind, werden im Inventar platziert
 chatmessages.ae2wct.MagnetMode3=Magnetkarte aktiviert - Items, die nicht im AE-Netzwerk gespeichert sind, werden auf dem Boden liegen gelassen
 chatmessages.ae2wct.InitializeMagnet=Vor dem Benutzen des Tastenkürzels muss zuerst mit der Magnetkarte in der Hand ein Rechtsklick ausgeführt werden!
 
-//Keybindings
+#Keybindings
 key.OpenTerminal=Öffne drahtlose Fertigungskonsole
 key.OpenMagnetFilter=Öffne Magnetkartenfilter-GUI
 key.SwitchMagnetMode=Aktiviere/Deaktiviere Magnetkarte
