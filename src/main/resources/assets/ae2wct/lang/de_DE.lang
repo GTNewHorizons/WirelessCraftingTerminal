@@ -67,7 +67,7 @@ chatmessages.ae2wct.MagnetMode3=Magnetkarte aktiviert - Items, die nicht im AE-N
 chatmessages.ae2wct.InitializeMagnet=Vor dem Benutzen des Tastenkürzels muss zuerst mit der Magnetkarte in der Hand ein Rechtsklick ausgeführt werden!
 
 #Keybindings
-key.OpenTerminal=Öffne drahtlose Fertigungskonsole
-key.OpenMagnetFilter=Öffne Magnetkartenfilter-GUI
-key.SwitchMagnetMode=Aktiviere/Deaktiviere Magnetkarte
+ae2wct.OpenTerminal=Öffne drahtlose Fertigungskonsole
+ae2wct.OpenMagnetFilter=Öffne Magnetkartenfilter-GUI
+ae2wct.SwitchMagnetMode=Aktiviere/Deaktiviere Magnetkarte
 key.categories.ae2wct=Wireless Crafting Terminal

@@ -67,7 +67,7 @@ chatmessages.ae2wct.MagnetMode3=磁场增幅卡激活 - 未存储于AE网络中�
 chatmessages.ae2wct.InitializeMagnet=在使用绑定按键前,你必须手持磁场增幅卡先右键!
 
 #Keybindings
-key.OpenTerminal=打开无线合成终端
-key.OpenMagnetFilter=打开磁场增幅卡过滤GUI
-key.SwitchMagnetMode=激活/关闭磁场增幅卡
+ae2wct.OpenTerminal=打开无线合成终端
+ae2wct.OpenMagnetFilter=打开磁场增幅卡过滤GUI
+ae2wct.SwitchMagnetMode=激活/关闭磁场增幅卡
 key.categories.ae2wct=无线合成终端
