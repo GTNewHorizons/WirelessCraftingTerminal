@@ -68,7 +68,7 @@ chatmessages.ae2wct.MagnetMode3=Magnet Card Activated - Items not stored in AE n
 chatmessages.ae2wct.InitializeMagnet=You must first right-click with the Magnet Card in hand before using the keybind!
 
 #Keybindings
-key.OpenTerminal=Open Wireless Crafting Terminal
-key.OpenMagnetFilter=Open Magnet Card Filter GUI
-key.SwitchMagnetMode=Activate/Deactivate Magnet Card
+ae2wct.OpenTerminal=Open Wireless Crafting Terminal
+ae2wct.OpenMagnetFilter=Open Magnet Card Filter GUI
+ae2wct.SwitchMagnetMode=Activate/Deactivate Magnet Card
 key.categories.ae2wct=Wireless Crafting Terminal
