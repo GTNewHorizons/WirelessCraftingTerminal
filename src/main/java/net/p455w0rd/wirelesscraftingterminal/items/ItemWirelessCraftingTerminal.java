@@ -29,6 +29,7 @@ import appeng.api.config.PowerMultiplier;
 import appeng.api.config.PowerUnits;
 import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
+import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
