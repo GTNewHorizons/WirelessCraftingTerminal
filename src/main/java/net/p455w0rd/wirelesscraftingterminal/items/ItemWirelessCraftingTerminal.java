@@ -24,7 +24,12 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Optional;
 
-import appeng.api.config.*;
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.PowerMultiplier;
+import appeng.api.config.PowerUnits;
+import appeng.api.config.Settings;
+import appeng.api.config.SortDir;
+import appeng.api.config.ViewItems;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
 import appeng.items.tools.powered.powersink.AERootPoweredItem;
