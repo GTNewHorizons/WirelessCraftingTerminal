@@ -33,6 +33,7 @@ import org.lwjgl.input.Mouse;
 import appeng.api.config.ActionItems;
 import appeng.api.config.SearchBoxMode;
 import appeng.api.config.Settings;
+import appeng.api.config.TerminalFontSize;
 import appeng.api.config.TerminalStyle;
 import appeng.api.config.YesNo;
 import appeng.api.storage.data.IAEItemStack;
@@ -667,7 +668,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
         if (stack != null) {
             final Slot s = this.getSlot(mouseX, mouseY);
             if (s instanceof SlotME) {
-                final int BigNumber = AEConfig.instance.useTerminalUseLargeFont() ? 999 : 9999;
+                final int BigNumber = AEConfig.instance.getTerminalFontSize() == TerminalFontSize.SMALL ? 9999 : 999;
 
                 IAEItemStack myStack = null;
 
@@ -711,7 +712,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
     public void renderToolTip(final ItemStack stack, final int x, final int y) {
         final Slot s = this.getSlot(x, y);
         if (s instanceof SlotME && stack != null) {
-            final int BigNumber = AEConfig.instance.useTerminalUseLargeFont() ? 999 : 9999;
+            final int BigNumber = AEConfig.instance.getTerminalFontSize() == TerminalFontSize.SMALL ? 9999 : 999;
 
             IAEItemStack myStack = null;
 
