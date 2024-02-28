@@ -43,7 +43,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
                 + '.' // revisionVersion
                 + net.minecraftforge.common.ForgeVersion.buildVersion
                 + ",);"
-                + "required-after:appliedenergistics2@[rv3-beta-1,);after:NotEnoughItems;")
+                + "required-after:appliedenergistics2@[rv3-beta-328,);after:NotEnoughItems;")
 public class WirelessCraftingTerminal {
 
     private static LoaderState WCTState = LoaderState.NOINIT;
