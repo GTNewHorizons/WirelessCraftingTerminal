@@ -192,13 +192,13 @@ public class ItemMagnet extends Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer player) {
-        if (!world.isRemote) {
-            if (player.isSneaking()) {
-                switchMagnetMode(item, player);
-            } else {
-                if (!RandomUtils.isMagnetInitialized(item)) {
-                    NetworkHandler.instance.sendToServer(new PacketMagnetFilter(0, true));
-                }
+        if (player.isSneaking() && !world.isRemote) {
+            switchMagnetMode(item, player);
+        } else {
+            if (!RandomUtils.isMagnetInitialized(item) && world.isRemote) {
+                NetworkHandler.instance.sendToServer(new PacketMagnetFilter(0, true));
+            }
+            if (!world.isRemote) {
                 int x = (int) player.posX;
                 int y = (int) player.posY;
                 int z = (int) player.posZ;
