@@ -71,6 +71,7 @@ public class PacketCraftRequest extends WCTPacket {
 
                     if (player.openContainer instanceof ContainerCraftConfirm) {
                         final ContainerCraftConfirm ccc = (ContainerCraftConfirm) player.openContainer;
+                        ccc.setItemToCraft(cca.getItemToCraft());
                         ccc.setAutoStart(this.heldShift);
                         ccc.setJob(futureJob);
                         cca.detectAndSendChanges();
