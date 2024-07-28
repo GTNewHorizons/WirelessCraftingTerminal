@@ -19,5 +19,6 @@ public class ContainerCraftAmount extends appeng.container.implementations.Conta
         int y = (int) player.posY;
         int z = (int) player.posZ;
         WCTGuiHandler.launchGui(Reference.GUI_CRAFT_CONFIRM, player, player.worldObj, x, y, z);
+        setupConfirmationGUI(player);
     }
 }
