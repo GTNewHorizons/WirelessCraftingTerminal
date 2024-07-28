@@ -130,9 +130,9 @@ public class WirelessTerminalGuiObject
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public IItemList<IAEItemStack> getAvailableItems(final IItemList out) {
+    public IItemList<IAEItemStack> getAvailableItems(final IItemList out, int iteration) {
         if (this.itemStorage != null) {
-            return this.itemStorage.getAvailableItems(out);
+            return this.itemStorage.getAvailableItems(out, iteration);
         }
         return out;
     }
