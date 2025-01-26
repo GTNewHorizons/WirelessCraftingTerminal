@@ -37,6 +37,7 @@ import appeng.api.config.TerminalFontSize;
 import appeng.api.config.TerminalStyle;
 import appeng.api.config.YesNo;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IDisplayRepo;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
 import appeng.client.ActionKey;
@@ -88,7 +89,7 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
     public static int craftingGridOffsetX = 80;
     public static int craftingGridOffsetY;
     private static String memoryText = "";
-    private final ItemRepo repo;
+    private final IDisplayRepo repo;
     private final int offsetX = 8;
     private final IConfigManager configSrc;
     private GuiTabButton craftingStatusBtn;
@@ -652,6 +653,18 @@ public class GuiWirelessCraftingTerminal extends AEBaseGui
                 super.keyTyped(character, key);
             }
         }
+    }
+
+    @Override
+    public void handleKeyboardInput() {
+        super.handleKeyboardInput();
+
+        // Pause the terminal when holding shift
+        this.repo.setPaused(hasShiftDown());
+    }
+
+    private boolean hasShiftDown() {
+        return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
     }
 
     protected boolean isPowered() {
