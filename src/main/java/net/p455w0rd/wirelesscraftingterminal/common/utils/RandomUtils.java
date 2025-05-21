@@ -10,10 +10,13 @@ import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemMagnet;
 
 import baubles.api.BaublesApi;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class RandomUtils {
+
+    public static boolean isBaublesLoaded = Loader.isModLoaded("Baubles");
 
     @SideOnly(Side.CLIENT)
     public static String color(String color) {
@@ -62,20 +65,24 @@ public class RandomUtils {
                 break;
             }
         }
-        IInventory handler = BaublesApi.getBaubles(playerInv.player);
-        if (handler != null) {
-            invSize = handler.getSizeInventory();
-            for (int i = 0; i < invSize; ++i) {
-                ItemStack item = handler.getStackInSlot(i);
-                if (item == null) {
-                    continue;
-                }
-                if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
-                    wirelessTerm = item;
-                    break;
+
+        if (isBaublesLoaded) {
+            IInventory handler = BaublesApi.getBaubles(playerInv.player);
+            if (handler != null) {
+                invSize = handler.getSizeInventory();
+                for (int i = 0; i < invSize; ++i) {
+                    ItemStack item = handler.getStackInSlot(i);
+                    if (item == null) {
+                        continue;
+                    }
+                    if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
+                        wirelessTerm = item;
+                        break;
+                    }
                 }
             }
         }
+
         return wirelessTerm;
     }
 
