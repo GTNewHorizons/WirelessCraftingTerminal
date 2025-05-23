@@ -1,5 +1,7 @@
 package net.p455w0rd.wirelesscraftingterminal.proxy;
 
+import static net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils.isBaublesLoaded;
+
 import java.util.List;
 import java.util.Random;
 
@@ -74,19 +76,23 @@ public class CommonProxy {
         } else {
             playerInv = player.inventory;
         }
-        IInventory handler = BaublesApi.getBaubles(player);
-        if (handler != null) {
-            for (int i = 0; i < handler.getSizeInventory(); ++i) {
-                ItemStack item = handler.getStackInSlot(i);
-                if (item == null) {
-                    continue;
-                }
-                if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
-                    wirelessTerm = item;
-                    break;
+
+        if (isBaublesLoaded) {
+            IInventory handler = BaublesApi.getBaubles(player);
+            if (handler != null) {
+                for (int i = 0; i < handler.getSizeInventory(); ++i) {
+                    ItemStack item = handler.getStackInSlot(i);
+                    if (item == null) {
+                        continue;
+                    }
+                    if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
+                        wirelessTerm = item;
+                        break;
+                    }
                 }
             }
         }
+
         if (wirelessTerm == null) {
             int invSize = playerInv.getSizeInventory();
             if (invSize <= 0) {
