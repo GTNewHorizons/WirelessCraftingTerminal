@@ -40,10 +40,11 @@ import appeng.util.Platform;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@cpw.mods.fml.common.Optional.Interface(iface = "baubles.api.IBauble", modid = "Baubles")
+@Interface(iface = "baubles.api.IBauble", modid = "Baubles")
 public class ItemWirelessCraftingTerminal extends AERootPoweredItem
         implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBauble {
 
