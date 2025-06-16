@@ -44,9 +44,8 @@ import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Interface(iface = "baubles.api.IBauble", modid = "Baubles")
 public class ItemWirelessCraftingTerminal extends AERootPoweredItem
-        implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBauble {
+        implements IWirelessCraftingTerminalItem, IWirelessTermHandler {
 
     public static final String LINK_KEY_STRING = "key";
     public static double GLOBAL_POWER_MULTIPLIER = PowerMultiplier.CONFIG.multiplier;
