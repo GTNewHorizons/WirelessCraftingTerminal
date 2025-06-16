@@ -46,7 +46,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @Interface(iface = "baubles.api.IBauble", modid = "Baubles")
 public class ItemWirelessCraftingTerminal extends AERootPoweredItem
-        implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBauble {
+        implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBaubleE {
 
     public static final String LINK_KEY_STRING = "key";
     public static double GLOBAL_POWER_MULTIPLIER = PowerMultiplier.CONFIG.multiplier;
@@ -89,65 +89,6 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
             }
         }
         return false;
-    }
-
-    /**
-     * This method return the type of bauble this is. Type is used to determine the slots it can go into.
-     *
-     * @param itemstack
-     */
-    @Override
-    public BaubleType getBaubleType(ItemStack itemstack) {
-        return BaubleType.RING;
-    }
-
-    /**
-     * This method is called once per tick if the bauble is being worn by a player
-     *
-     * @param itemstack
-     * @param player
-     */
-    @Override
-    public void onWornTick(ItemStack itemstack, EntityLivingBase player) {}
-
-    /**
-     * This method is called when the bauble is equipped by a player
-     *
-     * @param itemstack
-     * @param player
-     */
-    @Override
-    public void onEquipped(ItemStack itemstack, EntityLivingBase player) {}
-
-    /**
-     * This method is called when the bauble is unequipped by a player
-     *
-     * @param itemstack
-     * @param player
-     */
-    @Override
-    public void onUnequipped(ItemStack itemstack, EntityLivingBase player) {}
-
-    /**
-     * can this bauble be placed in a bauble slot
-     *
-     * @param itemstack
-     * @param player
-     */
-    @Override
-    public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
-        return true;
-    }
-
-    /**
-     * Can this bauble be removed from a bauble slot
-     *
-     * @param itemstack
-     * @param player
-     */
-    @Override
-    public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
-        return true;
     }
 
     private boolean isMagnetInstalled(final ItemStack wirelessTerminal) {
