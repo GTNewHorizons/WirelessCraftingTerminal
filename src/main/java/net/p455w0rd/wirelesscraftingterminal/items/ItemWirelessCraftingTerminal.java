@@ -2,8 +2,11 @@ package net.p455w0rd.wirelesscraftingterminal.items;
 
 import java.util.List;
 
+import baubles.api.BaubleType;
+import baubles.api.expanded.IBaubleExpanded;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
@@ -23,6 +26,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Optional;
 
+import appeng.core.AppEng;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.config.PowerUnits;
@@ -40,8 +44,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+@cpw.mods.fml.common.Optional.Interface(iface = "baubles.api.expanded.IBaubleExpanded", modid = "Baubles|Expanded")
 public class ItemWirelessCraftingTerminal extends AERootPoweredItem
-        implements IWirelessCraftingTerminalItem, IWirelessTermHandler {
+        implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBaubleExpanded {
 
     public static final String LINK_KEY_STRING = "key";
     public static double GLOBAL_POWER_MULTIPLIER = PowerMultiplier.CONFIG.multiplier;
@@ -84,6 +89,41 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
             }
         }
         return false;
+    }
+
+    @Override
+    public String[] getBaubleTypes(ItemStack itemstack) {
+        return new String[] { AppEng.BAUBLESLOT };
+    }
+
+    @Override
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public BaubleType getBaubleType(ItemStack itemStack) {
+        return BaubleType.RING;
+    }
+
+    @Override
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public void onWornTick(ItemStack itemstack, EntityLivingBase player) { /**/ }
+
+    @Override
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public void onEquipped(ItemStack itemstack, EntityLivingBase player) { /**/ }
+
+    @Override
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public void onUnequipped(ItemStack itemstack, EntityLivingBase player) { /**/ }
+
+    @Override
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
+        return true;
+    }
+
+    @Override
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
+        return true;
     }
 
     private boolean isMagnetInstalled(final ItemStack wirelessTerminal) {
