@@ -2,8 +2,6 @@ package net.p455w0rd.wirelesscraftingterminal.items;
 
 import java.util.List;
 
-import baubles.api.BaubleType;
-import baubles.api.expanded.IBaubleExpanded;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,7 +24,6 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Optional;
 
-import appeng.core.AppEng;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.config.PowerUnits;
@@ -36,10 +33,13 @@ import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
+import appeng.core.AppEng;
 import appeng.items.tools.powered.powersink.AERootPoweredItem;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
+import baubles.api.BaubleType;
+import baubles.api.expanded.IBaubleExpanded;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
