@@ -33,20 +33,20 @@ import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
+import appeng.core.AppEng;
 import appeng.items.tools.powered.powersink.AERootPoweredItem;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import baubles.api.BaubleType;
-import baubles.api.IBauble;
+import baubles.api.expanded.IBaubleExpanded;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Interface(iface = "baubles.api.IBauble", modid = "Baubles")
+@cpw.mods.fml.common.Optional.Interface(iface = "baubles.api.expanded.IBaubleExpanded", modid = "Baubles|Expanded")
 public class ItemWirelessCraftingTerminal extends AERootPoweredItem
-        implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBauble {
+        implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBaubleExpanded {
 
     public static final String LINK_KEY_STRING = "key";
     public static double GLOBAL_POWER_MULTIPLIER = PowerMultiplier.CONFIG.multiplier;
@@ -91,61 +91,37 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
         return false;
     }
 
-    /**
-     * This method return the type of bauble this is. Type is used to determine the slots it can go into.
-     *
-     * @param itemstack
-     */
     @Override
-    public BaubleType getBaubleType(ItemStack itemstack) {
+    public String[] getBaubleTypes(ItemStack itemstack) {
+        return new String[] { AppEng.BAUBLESLOT };
+    }
+
+    @Override
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public BaubleType getBaubleType(ItemStack itemStack) {
         return BaubleType.RING;
     }
 
-    /**
-     * This method is called once per tick if the bauble is being worn by a player
-     *
-     * @param itemstack
-     * @param player
-     */
     @Override
-    public void onWornTick(ItemStack itemstack, EntityLivingBase player) {}
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public void onWornTick(ItemStack itemstack, EntityLivingBase player) { /**/ }
 
-    /**
-     * This method is called when the bauble is equipped by a player
-     *
-     * @param itemstack
-     * @param player
-     */
     @Override
-    public void onEquipped(ItemStack itemstack, EntityLivingBase player) {}
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public void onEquipped(ItemStack itemstack, EntityLivingBase player) { /**/ }
 
-    /**
-     * This method is called when the bauble is unequipped by a player
-     *
-     * @param itemstack
-     * @param player
-     */
     @Override
-    public void onUnequipped(ItemStack itemstack, EntityLivingBase player) {}
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
+    public void onUnequipped(ItemStack itemstack, EntityLivingBase player) { /**/ }
 
-    /**
-     * can this bauble be placed in a bauble slot
-     *
-     * @param itemstack
-     * @param player
-     */
     @Override
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
     public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
         return true;
     }
 
-    /**
-     * Can this bauble be removed from a bauble slot
-     *
-     * @param itemstack
-     * @param player
-     */
     @Override
+    @cpw.mods.fml.common.Optional.Method(modid = "Baubles")
     public boolean canUnequip(ItemStack itemstack, EntityLivingBase player) {
         return true;
     }
