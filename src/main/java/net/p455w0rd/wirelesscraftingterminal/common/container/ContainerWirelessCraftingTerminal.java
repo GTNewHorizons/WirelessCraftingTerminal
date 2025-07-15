@@ -809,7 +809,7 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
         if (!isInRange()) {
             if (!isBoosterInstalled() || !Reference.WCT_BOOSTER_ENABLED) {
                 if (this.isValidContainer()) {
-                    this.getPlayerInv().player.addChatMessage(PlayerMessages.OutOfRange.get());
+                    this.getPlayerInv().player.addChatMessage(PlayerMessages.OutOfRange.toChat());
                 }
                 this.setValidContainer(false);
             }
@@ -823,7 +823,7 @@ public class ContainerWirelessCraftingTerminal extends AEBaseContainer
         } else if (!hasAccess(SecurityPermissions.CRAFT, true) || !hasAccess(SecurityPermissions.EXTRACT, true)
                 || !hasAccess(SecurityPermissions.INJECT, true)) {
                     if (this.isValidContainer()) {
-                        this.getPlayerInv().player.addChatMessage(PlayerMessages.CommunicationError.get());
+                        this.getPlayerInv().player.addChatMessage(PlayerMessages.CommunicationError.toChat());
                     }
                     this.setValidContainer(false);
                 } else {
