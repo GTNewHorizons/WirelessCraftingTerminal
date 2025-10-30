@@ -145,6 +145,11 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMT
         }
     }
 
+    @Override
+    protected int getPinButtonY() {
+        return super.getPinButtonY() + 31;
+    }
+
     /**
      * Draws the screen and tooltips.
      */
