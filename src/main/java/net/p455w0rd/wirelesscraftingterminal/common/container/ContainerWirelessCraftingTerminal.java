@@ -21,7 +21,6 @@ import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotArmor;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotBooster;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotMagnet;
 import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotTrash;
-import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotViewCell;
 import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryBooster;
 import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryCrafting;
 import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryMagnet;
@@ -78,7 +77,6 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
     private final SlotArmor[] armorSlot;
     private final SlotCraftingMatrix[] craftMatrixSlot;
     private final SlotCraftingTerm craftingSlot;
-    private final SlotViewCell[] viewCellSlot;
     public SlotTrash trashSlot;
 
     private final ICraftingTerminal ct;
@@ -113,7 +111,6 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
         inventorySlot = new Slot[27];
         armorSlot = new SlotArmor[4];
         craftMatrixSlot = new SlotCraftingMatrix[9];
-        viewCellSlot = new SlotViewCell[5];
 
         // Dummy slot at index 0 to work around ME slots all having their slot number set to 0.
         this.addSlotToContainer(new SlotInaccessible(new AppEngInternalInventory(null, 1), 0, -1000, -1000));
@@ -186,12 +183,6 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
         // Add crafting result slot
         this.addSlotToContainer(craftingSlot);
 
-        // Add view cell slots
-        for (int i = 0; i < 5; i++) {
-            viewCellSlot[i] = new SlotViewCell(getViewCellStorage(), i, 207, (i * 18) + 8, inventoryPlayer);
-            addSlotToContainer(viewCellSlot[i]);
-        }
-
         magnetSlot = new SlotMagnet(this.magnetInventory, 152, -20);
         this.addSlotToContainer(magnetSlot);
 
@@ -202,6 +193,11 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
         updateCraftingMatrix();
 
         this.onCraftMatrixChanged(this.craftingGrid);
+
+        for (var slot : this.getCellViewSlots()) {
+            slot.xDisplayPosition += 1;
+        }
+
         thisItem.checkForBooster(containerstack);
     }
 
@@ -293,21 +289,6 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
     @Override
     public IInventory getViewCellStorage() {
         return viewCellInventory;
-    }
-
-    @Override
-    public ItemStack[] getViewCells() {
-        final ItemStack[] list = new ItemStack[viewCellSlot.length];
-
-        for (int x = 0; x < viewCellSlot.length; x++) {
-            list[x] = viewCellSlot[x].getStack();
-        }
-
-        return list;
-    }
-
-    public SlotViewCell getCellViewSlot(final int index) {
-        return viewCellSlot[index];
     }
 
     public static WTCGuiObject getGuiObject(final ItemStack it, final EntityPlayer player, final World w, final int x,
