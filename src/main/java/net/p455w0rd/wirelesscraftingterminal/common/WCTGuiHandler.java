@@ -14,7 +14,7 @@ import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerCraftConf
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerMagnet;
 import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessCraftingTerminal;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
-import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
+import net.p455w0rd.wirelesscraftingterminal.helpers.WTCGuiObject;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 import appeng.api.AEApi;
@@ -40,7 +40,7 @@ public class WCTGuiHandler implements IGuiHandler {
             return null;
         }
 
-        final WirelessTerminalGuiObject term = new WirelessTerminalGuiObject(
+        final WTCGuiObject term = new WTCGuiObject(
                 wh,
                 RandomUtils.getWirelessTerm(player.inventory),
                 player,
@@ -51,7 +51,7 @@ public class WCTGuiHandler implements IGuiHandler {
 
         return switch (guiId) {
             case Reference.GUI_WCT -> updateGui(
-                    new ContainerWirelessCraftingTerminal(player, player.inventory),
+                    new ContainerWirelessCraftingTerminal(player.inventory, term),
                     world,
                     x,
                     y,
@@ -92,7 +92,7 @@ public class WCTGuiHandler implements IGuiHandler {
         final IWirelessCraftingTermHandler wh = (IWirelessCraftingTermHandler) AEApi.instance().registries().wireless()
                 .getWirelessTerminalHandler(RandomUtils.getWirelessTerm(player.inventory));
         if (wh != null) {
-            final WirelessTerminalGuiObject obj = new WirelessTerminalGuiObject(
+            final WTCGuiObject obj = new WTCGuiObject(
                     wh,
                     RandomUtils.getWirelessTerm(player.inventory),
                     player,
@@ -104,8 +104,7 @@ public class WCTGuiHandler implements IGuiHandler {
                 final IPortableCell terminal = obj;
 
                 if (guiId == Reference.GUI_WCT) {
-                    return new GuiWirelessCraftingTerminal(
-                            new ContainerWirelessCraftingTerminal(player, player.inventory));
+                    return new GuiWirelessCraftingTerminal(player.inventory, obj);
                 }
 
                 if (guiId == Reference.GUI_CRAFTING_STATUS) {

@@ -15,7 +15,6 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.client.ClientHelper;
 import appeng.container.AEBaseContainer;
-import appeng.container.ContainerOpenContext;
 import appeng.container.implementations.ContainerCraftAmount;
 import appeng.helpers.InventoryAction;
 import appeng.util.Platform;
@@ -96,16 +95,8 @@ public class PacketInventoryAction extends WCTPacket {
     public void serverPacketData(final INetworkInfo manager, final WCTPacket packet, final EntityPlayer player) {
         final EntityPlayerMP sender = (EntityPlayerMP) player;
         Container baseContainer = sender.openContainer;
-        ContainerOpenContext context = null;
-        if (baseContainer instanceof AEBaseContainer) {
-            context = ((AEBaseContainer) baseContainer).getOpenContext();
-        }
 
         if (this.action == InventoryAction.AUTO_CRAFT) {
-            // if( context != null )
-            // {
-            // final TileEntity te = context.getTile();
-
             int x = (int) player.posX;
             int y = (int) player.posY;
             int z = (int) player.posZ;
@@ -115,25 +106,20 @@ public class PacketInventoryAction extends WCTPacket {
             if (sender.openContainer instanceof ContainerCraftAmount) {
                 final ContainerCraftAmount cca = (ContainerCraftAmount) sender.openContainer;
 
-                if (baseContainer instanceof ContainerWirelessCraftingTerminal) {
-                    if (((ContainerWirelessCraftingTerminal) baseContainer).getTargetStack() != null) {
-                        cca.getCraftingItem().putStack(
-                                ((ContainerWirelessCraftingTerminal) baseContainer).getTargetStack().getItemStack());
-                        cca.setItemToCraft(((ContainerWirelessCraftingTerminal) baseContainer).getTargetStack());
+                if (baseContainer instanceof ContainerWirelessCraftingTerminal container) {
+                    if (container.getTargetStack() != null) {
+                        cca.setItemToCraft(container.getTargetStack());
                     }
                 }
 
-                if (baseContainer instanceof AEBaseContainer) {
-                    if (((AEBaseContainer) baseContainer).getTargetStack() != null) {
-                        cca.getCraftingItem()
-                                .putStack(((AEBaseContainer) baseContainer).getTargetStack().getItemStack());
-                        cca.setItemToCraft(((AEBaseContainer) baseContainer).getTargetStack());
+                if (baseContainer instanceof AEBaseContainer container) {
+                    if (container.getTargetStack() != null) {
+                        cca.setItemToCraft(container.getTargetStack());
                     }
                 }
 
                 cca.detectAndSendChanges();
             }
-            // }
         } else {
             if (baseContainer instanceof ContainerWirelessCraftingTerminal) {
                 if (RandomUtils.getWirelessTerm(player.inventory) == null)

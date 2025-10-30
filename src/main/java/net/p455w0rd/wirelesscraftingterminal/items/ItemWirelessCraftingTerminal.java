@@ -217,6 +217,16 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
     }
 
     @Override
+    public boolean hasInfinityPower(ItemStack is) {
+        return false;
+    }
+
+    @Override
+    public boolean hasInfinityRange(ItemStack is) {
+        return this.checkForBooster(is);
+    }
+
+    @Override
     public IConfigManager getConfigManager(final ItemStack target) {
         final ConfigManager out = new ConfigManager(new IConfigManagerHost() {
 

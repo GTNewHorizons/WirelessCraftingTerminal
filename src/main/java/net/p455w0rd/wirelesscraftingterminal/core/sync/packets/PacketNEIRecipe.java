@@ -21,7 +21,7 @@ import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessC
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
-import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
+import net.p455w0rd.wirelesscraftingterminal.helpers.WTCGuiObject;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
@@ -93,7 +93,7 @@ public class PacketNEIRecipe extends WCTPacket {
             IGridNode node = cct.getNetworkNode();
 
             if (node == null) {
-                WirelessTerminalGuiObject obj = ContainerWirelessCraftingTerminal.getGuiObject(
+                WTCGuiObject obj = ContainerWirelessCraftingTerminal.getGuiObject(
                         RandomUtils.getWirelessTerm(player.inventory),
                         player,
                         player.worldObj,

@@ -225,7 +225,7 @@ public class CommonProxy {
 
                         boolean ignoreRange = (magnet.isBoosterInstalled(WCTStack) && Reference.WCT_BOOSTER_ENABLED);
                         boolean hasAxxess = magnet.hasNetworkAccess(SecurityPermissions.INJECT, true, player, WCTStack);
-                        if ((ignoreRange && hasAxxess) || (magnet.obj.rangeCheck(false) && hasAxxess)) {
+                        if ((ignoreRange && hasAxxess) || (magnet.obj.rangeCheck() && hasAxxess)) {
                             if (magnet.isActivated(magnetStack)) {
                                 List<ItemStack> filteredList = magnet.getFilteredItems(magnetStack);
                                 IAEItemStack ais = AEApi.instance().storage().createItemStack(stack);
