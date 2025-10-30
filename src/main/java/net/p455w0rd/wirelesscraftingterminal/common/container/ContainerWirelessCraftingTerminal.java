@@ -7,7 +7,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -322,32 +321,6 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
         }
 
         return null;
-    }
-
-    public boolean isBoosterInstalled() {
-        Slot slot = getSlotFromInventory(this.boosterInventory, 0);
-        if (slot == null) {
-            return false;
-        }
-        boolean hasStack = getSlotFromInventory(this.boosterInventory, 0).getHasStack();
-        if (hasStack) {
-            Item boosterSlotContents = getSlotFromInventory(this.boosterInventory, 0).getStack().getItem();
-            return boosterSlotContents instanceof ItemInfinityBooster;
-        }
-        return false;
-    }
-
-    public boolean isMagnetInstalled() {
-        Slot slot = getSlotFromInventory(this.magnetInventory, MAGNET_INDEX);
-        if (slot == null) {
-            return false;
-        }
-        boolean hasStack = getSlotFromInventory(this.magnetInventory, MAGNET_INDEX).getHasStack();
-        if (hasStack) {
-            Item magnetSlotContents = getSlotFromInventory(this.magnetInventory, MAGNET_INDEX).getStack().getItem();
-            return magnetSlotContents instanceof ItemMagnet;
-        }
-        return false;
     }
 
     public boolean isPowered() {

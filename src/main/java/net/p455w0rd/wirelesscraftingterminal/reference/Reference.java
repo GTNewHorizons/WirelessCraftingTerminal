@@ -23,8 +23,5 @@ public class Reference {
 
     // Gui IDs
     public static final int GUI_WCT = 0;
-    public static final int GUI_CRAFTING_STATUS = 1;
-    public static final int GUI_CRAFT_AMOUNT = 2;
-    public static final int GUI_CRAFT_CONFIRM = 3;
     public static final int GUI_MAGNET = 4;
 }
