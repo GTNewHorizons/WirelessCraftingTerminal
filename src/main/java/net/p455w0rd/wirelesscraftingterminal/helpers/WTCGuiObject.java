@@ -7,7 +7,7 @@ import net.p455w0rd.wirelesscraftingterminal.api.networking.security.WCTIActionH
 
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.networking.IGridNode;
-import appeng.helpers.WirelessCraftingTerminalGuiObject;
+import appeng.items.contents.WirelessCraftingTerminalGuiObject;
 
 public class WTCGuiObject extends WirelessCraftingTerminalGuiObject implements WCTIActionHost {
 

@@ -34,6 +34,7 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 import appeng.api.AEApi;
 import appeng.api.implementations.tiles.IViewCellStorage;
+import appeng.api.parts.ICraftingTerminal;
 import appeng.container.ContainerNull;
 import appeng.container.ContainerOpenContext;
 import appeng.container.PrimaryGui;
@@ -46,7 +47,6 @@ import appeng.container.slot.SlotInaccessible;
 import appeng.container.slot.SlotPlayerHotBar;
 import appeng.container.slot.SlotPlayerInv;
 import appeng.helpers.IContainerCraftingPacket;
-import appeng.helpers.ICraftingTerminal;
 import appeng.helpers.IPrimaryGuiIconProvider;
 import appeng.tile.inventory.AppEngInternalInventory;
 import appeng.tile.inventory.IAEAppEngInventory;

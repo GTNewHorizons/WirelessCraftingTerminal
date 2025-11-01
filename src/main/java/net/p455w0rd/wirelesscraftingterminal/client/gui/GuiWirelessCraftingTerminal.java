@@ -18,6 +18,7 @@ import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
+import appeng.api.parts.ICraftingTerminal;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.gui.slots.VirtualMEPinSlot;
 import appeng.client.gui.widgets.GuiImgButton;
@@ -26,7 +27,6 @@ import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotCraftingMatrix;
 import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.core.localization.GuiText;
-import appeng.helpers.ICraftingTerminal;
 import appeng.helpers.InventoryAction;
 import cpw.mods.fml.common.Optional;
 import yalter.mousetweaks.api.IMTModGuiContainer;
