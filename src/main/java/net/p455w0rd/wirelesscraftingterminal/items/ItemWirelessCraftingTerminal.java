@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
-import net.p455w0rd.wirelesscraftingterminal.api.WCTApi;
+import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.integration.EnderIO;
@@ -40,7 +40,6 @@ import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import baubles.api.BaubleType;
 import baubles.api.expanded.IBaubleExpanded;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -167,10 +166,16 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
 
     @Override
     public ItemStack onItemRightClick(final ItemStack itemStack, final World world, final EntityPlayer player) {
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-            // Open the gui
-            WCTApi.instance().interact().openWirelessCraftingTerminalGui(player);
+        if (!world.isRemote) {
+            WCTGuiHandler.launchGui(
+                    Reference.GUI_WCT,
+                    player,
+                    player.worldObj,
+                    (int) player.posX,
+                    (int) player.posY,
+                    (int) player.posZ);
         }
+
         return itemStack;
     }
 
