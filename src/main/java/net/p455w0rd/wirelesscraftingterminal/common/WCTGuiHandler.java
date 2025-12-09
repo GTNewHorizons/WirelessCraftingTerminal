@@ -1,6 +1,7 @@
 package net.p455w0rd.wirelesscraftingterminal.common;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTermHandler;
@@ -16,6 +17,7 @@ import appeng.api.AEApi;
 import appeng.container.AEBaseContainer;
 import appeng.container.ContainerOpenContext;
 import cpw.mods.fml.common.network.IGuiHandler;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 
 public class WCTGuiHandler implements IGuiHandler {
 
@@ -33,14 +35,8 @@ public class WCTGuiHandler implements IGuiHandler {
             return null;
         }
 
-        final WTCGuiObject term = new WTCGuiObject(
-                wh,
-                RandomUtils.getWirelessTerm(player.inventory),
-                player,
-                world,
-                x,
-                y,
-                z);
+        final IntObjectPair<ItemStack> termItem = RandomUtils.getWirelessTermWithSlot(player.inventory);
+        final WTCGuiObject term = new WTCGuiObject(wh, termItem.second(), player, world, x, y, z, termItem.firstInt());
 
         return switch (guiId) {
             case Reference.GUI_WCT -> updateGui(
@@ -60,14 +56,16 @@ public class WCTGuiHandler implements IGuiHandler {
         final IWirelessCraftingTermHandler wh = (IWirelessCraftingTermHandler) AEApi.instance().registries().wireless()
                 .getWirelessTerminalHandler(RandomUtils.getWirelessTerm(player.inventory));
         if (wh != null && guiId == Reference.GUI_WCT) {
+            final IntObjectPair<ItemStack> termItem = RandomUtils.getWirelessTermWithSlot(player.inventory);
             final WTCGuiObject obj = new WTCGuiObject(
                     wh,
-                    RandomUtils.getWirelessTerm(player.inventory),
+                    termItem.second(),
                     player,
                     world,
                     x,
                     y,
-                    z);
+                    z,
+                    termItem.firstInt());
             return new GuiWirelessCraftingTerminal(player.inventory, obj);
         }
         if (guiId == Reference.GUI_MAGNET) {

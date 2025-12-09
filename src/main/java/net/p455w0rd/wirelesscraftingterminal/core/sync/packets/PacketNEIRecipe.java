@@ -43,6 +43,7 @@ import appeng.util.item.AEItemStack;
 import appeng.util.prioitylist.IPartitionList;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 
 public class PacketNEIRecipe extends WCTPacket {
 
@@ -93,13 +94,15 @@ public class PacketNEIRecipe extends WCTPacket {
             IGridNode node = cct.getNetworkNode();
 
             if (node == null) {
+                IntObjectPair<ItemStack> termItem = RandomUtils.getWirelessTermWithSlot(player.inventory);
                 WTCGuiObject obj = ContainerWirelessCraftingTerminal.getGuiObject(
-                        RandomUtils.getWirelessTerm(player.inventory),
+                        termItem.second(),
                         player,
                         player.worldObj,
                         (int) player.posX,
                         (int) player.posY,
-                        (int) player.posZ);
+                        (int) player.posZ,
+                        termItem.firstInt());
                 node = obj.getActionableNode(true);
             }
             if (node != null) {

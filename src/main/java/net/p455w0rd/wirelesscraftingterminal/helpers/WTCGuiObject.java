@@ -11,8 +11,12 @@ import appeng.items.contents.WirelessCraftingTerminalGuiObject;
 
 public class WTCGuiObject extends WirelessCraftingTerminalGuiObject implements WCTIActionHost {
 
-    public WTCGuiObject(IWirelessTermHandler wh, ItemStack is, EntityPlayer ep, World w, int x, int y, int z) {
+    private final int slotIndex;
+
+    public WTCGuiObject(IWirelessTermHandler wh, ItemStack is, EntityPlayer ep, World w, int x, int y, int z,
+            final int slotIndex) {
         super(wh, is, ep, w, x, y, z);
+        this.slotIndex = slotIndex;
     }
 
     @Override
@@ -23,5 +27,10 @@ public class WTCGuiObject extends WirelessCraftingTerminalGuiObject implements W
             return this.getGrid().getPivot();
         }
         return null;
+    }
+
+    @Override
+    public int getInventorySlot() {
+        return this.slotIndex;
     }
 }

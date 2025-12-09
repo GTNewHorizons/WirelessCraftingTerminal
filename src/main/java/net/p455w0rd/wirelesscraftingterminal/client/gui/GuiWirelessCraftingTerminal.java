@@ -50,7 +50,6 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMT
 
     private int currentMouseX = 0;
     private int currentMouseY = 0;
-    private final int lowerTextureOffset = 0;
 
     public GuiWirelessCraftingTerminal(final InventoryPlayer inventoryPlayer, ICraftingTerminal host) {
         super(inventoryPlayer, host, new ContainerWirelessCraftingTerminal(inventoryPlayer, host));
@@ -185,11 +184,11 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMT
         // draw player inv
         this.drawTexturedModalRect(
                 offsetX,
-                offsetY + 16 + this.rows * 18 + this.lowerTextureOffset,
+                offsetY + 16 + this.rows * 18,
                 0,
                 106 - 18 - 18,
                 x_width,
-                99 + this.getReservedSpace() - this.lowerTextureOffset);
+                99 + this.getReservedSpace());
 
         // draw view cells background
         this.drawTexturedModalRect(offsetX + x_width, offsetY, x_width, 0, 32, 104);
@@ -263,8 +262,7 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMT
     @Override
     @Optional.Method(modid = "MouseTweaks")
     public Object getModSelectedSlot(Object modContainer, int slotCount) {
-        Slot s = getSlot(currentMouseX, currentMouseY);
-        return s;
+        return getSlot(currentMouseX, currentMouseY);
     }
 
     @Override

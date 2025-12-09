@@ -292,12 +292,12 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
     }
 
     public static WTCGuiObject getGuiObject(final ItemStack it, final EntityPlayer player, final World w, final int x,
-            final int y, final int z) {
+            final int y, final int z, final int slotIndex) {
         if (it != null) {
             final IWirelessCraftingTermHandler wh = (IWirelessCraftingTermHandler) AEApi.instance().registries()
                     .wireless().getWirelessTerminalHandler(it);
             if (wh != null) {
-                return new WTCGuiObject(wh, it, player, w, x, y, z);
+                return new WTCGuiObject(wh, it, player, w, x, y, z, slotIndex);
             }
         }
 

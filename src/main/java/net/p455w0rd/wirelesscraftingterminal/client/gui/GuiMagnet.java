@@ -22,7 +22,7 @@ public class GuiMagnet extends GuiContainer {
     public boolean ignoreNBT = false;
     public boolean ignoreMeta = false;
     public boolean useOreDict = false;
-    private ItemStack magnetItem;
+    private final ItemStack magnetItem;
     private WCTGuiCheckBox ignoreNBTBox;
     private WCTGuiCheckBox ignoreMetaBox;
     private WCTGuiCheckBox useOreDictBox;
