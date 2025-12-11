@@ -21,7 +21,6 @@ import net.p455w0rd.wirelesscraftingterminal.integration.IIntegrationModule;
 import net.p455w0rd.wirelesscraftingterminal.integration.IntegrationHelper;
 import net.p455w0rd.wirelesscraftingterminal.integration.abstraction.INEI;
 import net.p455w0rd.wirelesscraftingterminal.integration.modules.NEIHelpers.NEIAEShapedRecipeHandler;
-import net.p455w0rd.wirelesscraftingterminal.integration.modules.NEIHelpers.NEIGUIHandler;
 
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEItemStack;
@@ -72,7 +71,6 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
                 "crafting");
         API.registerRecipeHandler(new NEIAEShapedRecipeHandler());
         API.registerRecipeHandler(new NEIAEShapelessRecipeHandler());
-        API.registerNEIGuiHandler(new NEIGUIHandler());
     }
 
     @Override

@@ -45,6 +45,7 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 
 public class CommonProxy {
 
@@ -204,7 +205,8 @@ public class CommonProxy {
                 }
             }
             if (RandomUtils.getWirelessTerm(playerInv) != null) {
-                ItemStack WCTStack = RandomUtils.getWirelessTerm(playerInv);
+                IntObjectPair<ItemStack> termItemPair = RandomUtils.getWirelessTermWithSlot(playerInv);
+                ItemStack WCTStack = termItemPair.second();
                 if (RandomUtils.isMagnetInstalled(playerInv)) {
                     ItemStack magnetStack = RandomUtils.getMagnet(playerInv);
                     if (magnetStack.getItem() instanceof ItemMagnet) {
@@ -216,7 +218,8 @@ public class CommonProxy {
                                 world,
                                 (int) player.posX,
                                 (int) player.posY,
-                                (int) player.posZ);
+                                (int) player.posZ,
+                                termItemPair.firstInt());
                         magnet.civ = magnet.obj;
                         magnet.powerSrc = magnet.civ;
                         magnet.monitor = magnet.civ.getItemInventory();
@@ -225,7 +228,7 @@ public class CommonProxy {
 
                         boolean ignoreRange = (magnet.isBoosterInstalled(WCTStack) && Reference.WCT_BOOSTER_ENABLED);
                         boolean hasAxxess = magnet.hasNetworkAccess(SecurityPermissions.INJECT, true, player, WCTStack);
-                        if ((ignoreRange && hasAxxess) || (magnet.obj.rangeCheck(false) && hasAxxess)) {
+                        if ((ignoreRange && hasAxxess) || (magnet.obj.rangeCheck() && hasAxxess)) {
                             if (magnet.isActivated(magnetStack)) {
                                 List<ItemStack> filteredList = magnet.getFilteredItems(magnetStack);
                                 IAEItemStack ais = AEApi.instance().storage().createItemStack(stack);

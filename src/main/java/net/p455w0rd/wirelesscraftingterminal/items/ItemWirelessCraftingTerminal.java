@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem;
-import net.p455w0rd.wirelesscraftingterminal.api.WCTApi;
+import net.p455w0rd.wirelesscraftingterminal.common.WCTGuiHandler;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.integration.EnderIO;
@@ -25,7 +25,6 @@ import org.lwjgl.input.Keyboard;
 import com.google.common.base.Optional;
 
 import appeng.api.config.AccessRestriction;
-import appeng.api.config.PowerMultiplier;
 import appeng.api.config.PowerUnits;
 import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
@@ -40,7 +39,6 @@ import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import baubles.api.BaubleType;
 import baubles.api.expanded.IBaubleExpanded;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -49,14 +47,13 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
         implements IWirelessCraftingTerminalItem, IWirelessTermHandler, IBaubleExpanded {
 
     public static final String LINK_KEY_STRING = "key";
-    public static double GLOBAL_POWER_MULTIPLIER = PowerMultiplier.CONFIG.multiplier;
     private static final String POWER_NBT_KEY = "internalCurrentPower";
     private static final String BOOSTER_SLOT_NBT = "BoosterSlot";
     private static final String MAGNET_SLOT_NBT = "MagnetSlot";
     private EntityPlayer entityPlayer;
 
     public ItemWirelessCraftingTerminal() {
-        super(Reference.WCT_MAX_POWER, Optional.<String>absent());
+        super(Reference.WCT_MAX_POWER, Optional.absent());
         setUnlocalizedName("wirelessCraftingTerminal");
         setTextureName(Reference.MODID + ":wirelessCraftingTerminal");
         setMaxStackSize(1);
@@ -149,16 +146,16 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
 
     @Override
     public void onUpdate(final ItemStack is, final World w, final Entity e, int i, boolean f) {
-        if (!(e instanceof EntityPlayer)) {
+        if (!(e instanceof EntityPlayer p)) {
             return;
         }
-        EntityPlayer p = (EntityPlayer) e;
+
         if (entityPlayer == null) {
             entityPlayer = p;
         }
-        ItemStack wirelessTerminal = null;
+
         InventoryPlayer inv = p.inventory;
-        wirelessTerminal = RandomUtils.getWirelessTerm(inv);
+        ItemStack wirelessTerminal = RandomUtils.getWirelessTerm(inv);
         if (wirelessTerminal == null || !(wirelessTerminal.getItem() instanceof IWirelessCraftingTerminalItem)) {
             return;
         }
@@ -167,10 +164,16 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
 
     @Override
     public ItemStack onItemRightClick(final ItemStack itemStack, final World world, final EntityPlayer player) {
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-            // Open the gui
-            WCTApi.instance().interact().openWirelessCraftingTerminalGui(player);
+        if (!world.isRemote) {
+            WCTGuiHandler.launchGui(
+                    Reference.GUI_WCT,
+                    player,
+                    player.worldObj,
+                    (int) player.posX,
+                    (int) player.posY,
+                    (int) player.posZ);
         }
+
         return itemStack;
     }
 
@@ -217,13 +220,16 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
     }
 
     @Override
+    public boolean hasInfinityRange(ItemStack is) {
+        return this.checkForBooster(is);
+    }
+
+    @Override
     public IConfigManager getConfigManager(final ItemStack target) {
         final ConfigManager out = new ConfigManager(new IConfigManagerHost() {
 
             @Override
-            public void updateSetting(final IConfigManager manager,
-                    @SuppressWarnings("rawtypes") final Enum settingName,
-                    @SuppressWarnings("rawtypes") final Enum newValue) {
+            public void updateSetting(final IConfigManager manager, final Enum settingName, final Enum newValue) {
                 final NBTTagCompound data = Platform.openNbtData(target);
                 manager.writeToNBT(data);
             }
@@ -237,44 +243,39 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
         return out;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     @Override
     public void getCheckedSubItems(Item item, CreativeTabs creativeTab, List itemList) {
-        List itemList2 = itemList;
-        itemList2.add(new ItemStack(item));
+        itemList.add(new ItemStack(item));
         ItemStack is = new ItemStack(item);
         injectAEPower(is, Reference.WCT_MAX_POWER);
-        itemList2.add(is);
+        itemList.add(is);
     }
 
     @Override
     public boolean showDurabilityBar(ItemStack is) {
         double aeCurrPower = getAECurrentPower(is);
         double aeMaxPower = getAEMaxPower(is);
-        if ((int) aeCurrPower >= (int) aeMaxPower) {
-            return false;
-        }
-        return true;
+        return (int) aeCurrPower < (int) aeMaxPower;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({ "unchecked" })
     @SideOnly(Side.CLIENT)
     @Override
     public void addCheckedInformation(ItemStack is, EntityPlayer player, List list, boolean displayMore) {
-        String shift = LocaleHandler.PressShift.getLocal().replace(
-                "Shift",
-                color("yellow") + "" + color("bold") + "" + color("italics") + "Shift" + color("gray"));
+        String shift = LocaleHandler.PressShift.getLocal()
+                .replace("Shift", color("yellow") + color("bold") + color("italics") + "Shift" + color("gray"));
         final NBTTagCompound tag = ensureTagCompound(is);
 
         String encKey = tag.getString("key");
-        String pctTxtColor = color("white") + "";
+        String pctTxtColor = color("white");
         double aeCurrPower = getAECurrentPower(is);
         double aeCurrPowerPct = (int) Math.floor(aeCurrPower / Reference.WCT_MAX_POWER * 1e4) / 1e2;
         if ((int) aeCurrPowerPct >= 75) {
-            pctTxtColor = color("green") + "";
+            pctTxtColor = color("green");
         }
         if ((int) aeCurrPowerPct <= 5) {
-            pctTxtColor = color("red") + "";
+            pctTxtColor = color("red");
         }
         list.add(color("aqua") + "==============================");
         list.add(
@@ -290,10 +291,10 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
                 linked = color("blue") + StatCollector.translateToLocal("gui.appliedenergistics2.Linked");
             }
             list.add(LocaleHandler.LinkStatus.getLocal() + ": " + linked);
-            String boosterStatus = (checkForBooster(is) ? color("green") + "" + LocaleHandler.Installed.getLocal()
-                    : color("red") + "" + LocaleHandler.NotInstalled.getLocal());
-            String magnetStatus = (isMagnetInstalled(is) ? color("green") + "" + LocaleHandler.Installed.getLocal()
-                    : color("red") + "" + LocaleHandler.NotInstalled.getLocal());
+            String boosterStatus = (checkForBooster(is) ? color("green") + LocaleHandler.Installed.getLocal()
+                    : color("red") + LocaleHandler.NotInstalled.getLocal());
+            String magnetStatus = (isMagnetInstalled(is) ? color("green") + LocaleHandler.Installed.getLocal()
+                    : color("red") + LocaleHandler.NotInstalled.getLocal());
             if (Reference.WCT_BOOSTER_ENABLED) {
                 list.add(getItemName("infinityBoosterCard") + ": " + boosterStatus);
             }
@@ -355,10 +356,7 @@ public class ItemWirelessCraftingTerminal extends AERootPoweredItem
     }
 
     private NBTTagCompound ensureTagCompound(ItemStack is) {
-        if (!is.hasTagCompound()) {
-            is.setTagCompound(new NBTTagCompound());
-        }
-        return is.getTagCompound();
+        return RandomUtils.getTag(is);
     }
 
     @Override

@@ -21,7 +21,7 @@ import net.p455w0rd.wirelesscraftingterminal.common.container.ContainerWirelessC
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
-import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
+import net.p455w0rd.wirelesscraftingterminal.helpers.WTCGuiObject;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
@@ -43,6 +43,7 @@ import appeng.util.item.AEItemStack;
 import appeng.util.prioitylist.IPartitionList;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 
 public class PacketNEIRecipe extends WCTPacket {
 
@@ -93,13 +94,15 @@ public class PacketNEIRecipe extends WCTPacket {
             IGridNode node = cct.getNetworkNode();
 
             if (node == null) {
-                WirelessTerminalGuiObject obj = ContainerWirelessCraftingTerminal.getGuiObject(
-                        RandomUtils.getWirelessTerm(player.inventory),
+                IntObjectPair<ItemStack> termItem = RandomUtils.getWirelessTermWithSlot(player.inventory);
+                WTCGuiObject obj = ContainerWirelessCraftingTerminal.getGuiObject(
+                        termItem.second(),
                         player,
                         player.worldObj,
                         (int) player.posX,
                         (int) player.posY,
-                        (int) player.posZ);
+                        (int) player.posZ,
+                        termItem.firstInt());
                 node = obj.getActionableNode(true);
             }
             if (node != null) {

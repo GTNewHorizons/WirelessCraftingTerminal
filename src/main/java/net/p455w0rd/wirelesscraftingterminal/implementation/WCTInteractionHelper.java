@@ -3,7 +3,6 @@ package net.p455w0rd.wirelesscraftingterminal.implementation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.FakePlayer;
 import net.p455w0rd.wirelesscraftingterminal.api.IWCTInteractionHelper;
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTermHandler;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
@@ -19,8 +18,7 @@ public class WCTInteractionHelper implements IWCTInteractionHelper {
 
     @Override
     public void openWirelessCraftingTerminalGui(final EntityPlayer player) {
-        if ((player == null) || (player instanceof FakePlayer)
-                || (player instanceof EntityPlayerMP)
+        if (player == null || player instanceof EntityPlayerMP
                 || FMLCommonHandler.instance().getSide() == Side.SERVER) {
             return;
         }
