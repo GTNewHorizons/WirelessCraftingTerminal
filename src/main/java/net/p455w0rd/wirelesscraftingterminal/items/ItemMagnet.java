@@ -23,7 +23,7 @@ import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketMagnetFilter;
 import net.p455w0rd.wirelesscraftingterminal.handlers.KeybindHandler;
 import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
-import net.p455w0rd.wirelesscraftingterminal.helpers.WirelessTerminalGuiObject;
+import net.p455w0rd.wirelesscraftingterminal.helpers.WTCGuiObject;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -54,7 +54,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemMagnet extends Item {
 
     private int distanceFromPlayer;
-    public WirelessTerminalGuiObject obj;
+    public WTCGuiObject obj;
     public IPortableCell civ;
     public IEnergySource powerSrc;
     public IMEMonitor<IAEItemStack> monitor;
@@ -392,7 +392,7 @@ public class ItemMagnet extends Item {
         if (player.capabilities.isCreativeMode) {
             return true;
         }
-        final IGrid g = obj.getTargetGrid();
+        final IGrid g = obj.getGrid();
         if (g != null) {
             if (requirePower) {
                 final IEnergyGrid eg = g.getCache(IEnergyGrid.class);

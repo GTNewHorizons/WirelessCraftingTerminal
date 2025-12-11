@@ -13,6 +13,8 @@ import baubles.api.BaublesApi;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import it.unimi.dsi.fastutil.ints.IntObjectImmutablePair;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 
 public class RandomUtils {
 
@@ -77,6 +79,48 @@ public class RandomUtils {
                     }
                     if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
                         wirelessTerm = item;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return wirelessTerm;
+    }
+
+    public static IntObjectPair<ItemStack> getWirelessTermWithSlot(InventoryPlayer playerInv) {
+        if (playerInv.player.getHeldItem() != null
+                && playerInv.player.getHeldItem().getItem() instanceof IWirelessCraftingTerminalItem) {
+            return new IntObjectImmutablePair<>(playerInv.player.inventory.currentItem, playerInv.player.getHeldItem());
+        }
+        IntObjectPair<ItemStack> wirelessTerm = null;
+
+        int invSize = playerInv.getSizeInventory();
+        if (invSize <= 0) {
+            return null;
+        }
+        for (int i = 0; i < invSize; ++i) {
+            ItemStack item = playerInv.getStackInSlot(i);
+            if (item == null) {
+                continue;
+            }
+            if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
+                wirelessTerm = new IntObjectImmutablePair<>(i, item);
+                break;
+            }
+        }
+
+        if (isBaublesLoaded) {
+            IInventory handler = BaublesApi.getBaubles(playerInv.player);
+            if (handler != null) {
+                invSize = handler.getSizeInventory();
+                for (int i = 0; i < invSize; ++i) {
+                    ItemStack item = handler.getStackInSlot(i);
+                    if (item == null) {
+                        continue;
+                    }
+                    if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
+                        wirelessTerm = new IntObjectImmutablePair<>(i + playerInv.getSizeInventory(), item);
                         break;
                     }
                 }
