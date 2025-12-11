@@ -1,7 +1,7 @@
 // Add your dependencies here
 
 dependencies {
-    api("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:99:dev")
+     api("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-754-GTNH:dev")
 
     implementation("com.github.GTNewHorizons:Baubles-Expanded:2.1.9-GTNH:dev")
     compileOnly("curse.maven:cofh-core-69162:2388751")
