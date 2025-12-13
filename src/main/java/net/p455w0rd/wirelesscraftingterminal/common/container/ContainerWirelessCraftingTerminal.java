@@ -151,7 +151,13 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
 
         // Add armor slots
         for (int i = 0; i < 4; ++i) {
-            armorSlot[i] = new SlotArmor(this.player, this.inventoryPlayer, 39 - i, (int) 8.5, (i * 18) - 76, i);
+            armorSlot[i] = new SlotArmor(
+                    this.player,
+                    this.inventoryPlayer,
+                    this.inventoryPlayer.getSizeInventory() - 1 - i,
+                    (int) 8.5,
+                    (i * 18) - 76,
+                    i);
             this.addSlotToContainer(armorSlot[i]);
         }
         k = 0;
