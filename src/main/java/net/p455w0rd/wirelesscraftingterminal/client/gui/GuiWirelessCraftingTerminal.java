@@ -22,11 +22,9 @@ import appeng.api.parts.ICraftingTerminal;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.gui.slots.VirtualMEPinSlot;
 import appeng.client.gui.widgets.GuiImgButton;
-import appeng.client.gui.widgets.GuiTabButton;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotCraftingMatrix;
 import appeng.container.slot.SlotFakeCraftingMatrix;
-import appeng.core.localization.GuiText;
 import appeng.helpers.InventoryAction;
 import cpw.mods.fml.common.Optional;
 import yalter.mousetweaks.api.IMTModGuiContainer;
@@ -44,7 +42,6 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMT
     public static int craftingGridOffsetX = 80;
     public static int craftingGridOffsetY;
 
-    private GuiTabButton craftingStatusBtn;
     private GuiImgButton clearBtn;
     private GuiTrashButton trashBtn;
 
@@ -62,9 +59,6 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMT
 
     @Override
     protected void actionPerformed(final GuiButton btn) {
-        // if (btn == this.craftingStatusBtn) {
-        // NetworkHandler.instance.sendToServer(new PacketSwitchGuis(Reference.GUI_CRAFTING_STATUS));
-        // } else
         if (this.clearBtn == btn) {
             Slot s = null;
             final Container c = this.inventorySlots;
@@ -114,15 +108,6 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMT
                         ActionItems.STASH));
         this.buttonList.add(this.trashBtn = new GuiTrashButton(this.guiLeft + 98, this.guiTop + this.ySize - 104));
         this.clearBtn.setHalfSize(true);
-
-        this.buttonList.add(
-                this.craftingStatusBtn = new GuiTabButton(
-                        this.guiLeft + 169,
-                        this.guiTop - 4,
-                        2 + 11 * 16,
-                        GuiText.CraftingStatus.getLocal(),
-                        itemRender));
-        this.craftingStatusBtn.setHideEdge(13);
 
         craftingGridOffsetX = Integer.MAX_VALUE;
         craftingGridOffsetY = Integer.MAX_VALUE;
