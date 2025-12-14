@@ -22,8 +22,6 @@ import net.p455w0rd.wirelesscraftingterminal.integration.IntegrationHelper;
 import net.p455w0rd.wirelesscraftingterminal.integration.abstraction.INEI;
 import net.p455w0rd.wirelesscraftingterminal.integration.modules.NEIHelpers.NEIAEShapedRecipeHandler;
 
-import appeng.api.AEApi;
-import appeng.api.storage.data.IAEItemStack;
 import appeng.container.slot.SlotCraftingMatrix;
 import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.integration.modules.NEIHelpers.NEIAEShapelessRecipeHandler;
@@ -114,28 +112,6 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
         }
     }
 
-    @Override
-    public List<String> handleTooltip(final GuiContainer arg0, final int arg1, final int arg2,
-            final List<String> current) {
-        return current;
-    }
-
-    @Override
-    public List<String> handleItemDisplayName(final GuiContainer arg0, final ItemStack arg1,
-            final List<String> current) {
-        return current;
-    }
-
-    @Override
-    public List<String> handleItemTooltip(final GuiContainer guiScreen, final ItemStack stack, final int mouseX,
-            final int mouseY, final List<String> currentToolTip) {
-        if (guiScreen instanceof GuiWirelessCraftingTerminal) {
-            return ((GuiWirelessCraftingTerminal) guiScreen).handleItemTooltip(stack, mouseX, mouseY, currentToolTip);
-        }
-
-        return currentToolTip;
-    }
-
     static final int NEI_REGULAR_SLOT_OFFSET_X = 25;
     static final int NEI_REGULAR_SLOT_OFFSET_Y = 6;
 
@@ -159,42 +135,6 @@ public class NEI implements INEI, IContainerTooltipHandler, IIntegrationModule {
     }
 
     public class WCTOverlayHandler implements IOverlayHandler {
-
-        /**
-         * Reduces regular slot offsets to 0, 1, or 2
-         */
-        private static final int REGULAR_SLOT_INDEX_DIVISOR = 18;
-
-        /**
-         * Adds NEI ingredients to the WCT crafting grid.
-         *
-         * @param ingredient
-         * @param overlayItems
-         * @return
-         */
-        private boolean addCraftingItems(final PositionedStack ingredient, final IAEItemStack[] overlayItems) {
-            // Calculate the slot positions
-            int slotX = (ingredient.relx - NEI.NEI_REGULAR_SLOT_OFFSET_X)
-                    / WCTOverlayHandler.REGULAR_SLOT_INDEX_DIVISOR;
-            int slotY = (ingredient.rely - NEI.NEI_REGULAR_SLOT_OFFSET_Y)
-                    / WCTOverlayHandler.REGULAR_SLOT_INDEX_DIVISOR;
-            // Calculate the slot index
-            int slotIndex = slotX + (slotY * 3);
-            // Add the item to the list
-            overlayItems[slotIndex] = AEApi.instance().storage().createItemStack(ingredient.item);
-            return true;
-        }
-
-        protected boolean addIngredientToItems(final PositionedStack ingredient, final IAEItemStack[] overlayItems) {
-            // Pass to regular handler
-            return this.addCraftingItems(ingredient, overlayItems);
-        }
-
-        protected void addItemsToGUI(final IAEItemStack[] overlayItems) {
-            // Send the list to the server
-            // Packet_S_WCT.sendSetCrafting_NEI(Minecraft.getMinecraft().thePlayer,
-            // overlayItems);
-        }
 
         @SuppressWarnings({ "rawtypes", "unchecked" })
         @Override
