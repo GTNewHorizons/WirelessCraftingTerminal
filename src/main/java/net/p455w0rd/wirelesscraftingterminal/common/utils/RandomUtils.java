@@ -1,5 +1,7 @@
 package net.p455w0rd.wirelesscraftingterminal.common.utils;
 
+import static appeng.util.Platform.baublesSlotsOffset;
+
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -120,7 +122,7 @@ public class RandomUtils {
                         continue;
                     }
                     if (item.getItem() instanceof IWirelessCraftingTerminalItem) {
-                        wirelessTerm = new IntObjectImmutablePair<>(i + playerInv.getSizeInventory(), item);
+                        wirelessTerm = new IntObjectImmutablePair<>(i + baublesSlotsOffset, item);
                         break;
                     }
                 }
