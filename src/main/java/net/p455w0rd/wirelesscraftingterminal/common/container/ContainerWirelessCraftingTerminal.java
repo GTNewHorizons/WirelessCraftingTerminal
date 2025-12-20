@@ -533,7 +533,7 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
     }
 
     @Override
-    public PrimaryGui getPrimaryGui() {
+    public PrimaryGui createPrimaryGui() {
         ContainerOpenContext context = getOpenContext();
         return new WCTPrimaryGui(
                 Reference.GUI_WCT,
