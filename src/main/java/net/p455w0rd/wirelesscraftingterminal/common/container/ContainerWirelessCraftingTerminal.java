@@ -97,13 +97,15 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
 
         this.setCustomName("WCTContainer");
 
-        this.boosterInventory = new WCTInventoryBooster(RandomUtils.getWirelessTerm(inventoryPlayer));
-        this.magnetInventory = new WCTInventoryMagnet(RandomUtils.getWirelessTerm(inventoryPlayer));
-        this.trashInventory = new WCTInventoryTrash(RandomUtils.getWirelessTerm(inventoryPlayer));
-        this.containerstack = RandomUtils.getWirelessTerm(inventoryPlayer);
+        final ItemStack wirelessTerminal = RandomUtils.getWirelessTerm(inventoryPlayer);
+
+        this.boosterInventory = new WCTInventoryBooster(wirelessTerminal);
+        this.magnetInventory = new WCTInventoryMagnet(wirelessTerminal);
+        this.trashInventory = new WCTInventoryTrash(wirelessTerminal);
+        this.containerstack = wirelessTerminal;
         this.thisItem = (IWirelessCraftingTerminalItem) this.containerstack.getItem();
         this.craftingGrid = new WCTInventoryCrafting(this, 3, 3, containerstack);
-        this.viewCellInventory = new WCTInventoryViewCell(RandomUtils.getWirelessTerm(inventoryPlayer));
+        this.viewCellInventory = new WCTInventoryViewCell(wirelessTerminal);
         this.inventoryPlayer = inventoryPlayer;
         this.player = player;
         craftMatrixInventory = new ItemStack[9];

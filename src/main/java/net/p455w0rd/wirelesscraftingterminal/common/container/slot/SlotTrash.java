@@ -26,6 +26,11 @@ public class SlotTrash extends appeng.container.slot.AppEngSlot {
     }
 
     @Override
+    public ItemStack getDisplayStack() {
+        return this.getStack();
+    }
+
+    @Override
     public boolean getHasStack() {
         return itemStack != null;
     }
