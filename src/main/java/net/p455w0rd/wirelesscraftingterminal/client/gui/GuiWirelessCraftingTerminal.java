@@ -2,7 +2,6 @@ package net.p455w0rd.wirelesscraftingterminal.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -13,14 +12,12 @@ import net.p455w0rd.wirelesscraftingterminal.common.container.slot.SlotTrash;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.NetworkHandler;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketEmptyTrash;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.packets.PacketInventoryAction;
-import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
 import appeng.api.parts.ICraftingTerminal;
 import appeng.client.gui.implementations.GuiMEMonitorable;
-import appeng.client.gui.slots.VirtualMEPinSlot;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotCraftingMatrix;
@@ -144,18 +141,12 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMT
         this.ySize_lo = (float) mouseY;
     }
 
-    public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
-
-        String s = LocaleHandler.WirelessTermLabel.getLocal();
-        this.mc.fontRenderer.drawString(s, 7, 5, 4210752);
-        this.mc.fontRenderer.drawString(I18n.format("container.inventory"), 7, this.ySize - 172 + 3, 4210752);
-
-        VirtualMEPinSlot.drawSlotsBackground(this.pinSlots, this.mc, this.zLevel);
-
-        this.currentMouseX = mouseX;
-        this.currentMouseY = mouseY;
+    @Override
+    protected String getGuiDisplayName(String in) {
+        return in;
     }
 
+    @Override
     public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
         // draw "over inventory area"
         this.mc.getTextureManager().bindTexture(BackgroundTexture);
