@@ -2,11 +2,10 @@ package net.p455w0rd.wirelesscraftingterminal.core.sync.packets;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.WCTPacket;
 import net.p455w0rd.wirelesscraftingterminal.core.sync.network.INetworkInfo;
-import net.p455w0rd.wirelesscraftingterminal.handlers.LocaleHandler;
 import net.p455w0rd.wirelesscraftingterminal.items.ItemMagnet;
 
 import io.netty.buffer.ByteBuf;
@@ -41,14 +40,14 @@ public class PacketSetMagnet extends WCTPacket {
             if (magnetItem.getItemDamage() == 2) {
                 RandomUtils.getWirelessTerm(player.inventory).getTagCompound().getTagList("MagnetSlot", 10)
                         .getCompoundTagAt(0).setShort("Damage", (short) 0);
-                player.addChatMessage(new ChatComponentText(LocaleHandler.MagnetMode1.getLocal()));
+                player.addChatMessage(new ChatComponentTranslation("chatmessages.ae2wct.MagnetMode1"));
             } else {
                 RandomUtils.getWirelessTerm(player.inventory).getTagCompound().getTagList("MagnetSlot", 10)
                         .getCompoundTagAt(0).setShort("Damage", (short) (magnetItem.getItemDamage() + 1));
                 if (magnetItem.getItemDamage() == 0) {
-                    player.addChatMessage(new ChatComponentText(LocaleHandler.MagnetMode2.getLocal()));
+                    player.addChatMessage(new ChatComponentTranslation("chatmessages.ae2wct.MagnetMode2"));
                 } else {
-                    player.addChatMessage(new ChatComponentText(LocaleHandler.MagnetMode3.getLocal()));
+                    player.addChatMessage(new ChatComponentTranslation("chatmessages.ae2wct.MagnetMode3"));
                 }
             }
         }
