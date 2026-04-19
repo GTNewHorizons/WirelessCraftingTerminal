@@ -9,7 +9,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -30,8 +29,6 @@ import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryTrash;
 import net.p455w0rd.wirelesscraftingterminal.common.inventory.WCTInventoryViewCell;
 import net.p455w0rd.wirelesscraftingterminal.common.utils.RandomUtils;
 import net.p455w0rd.wirelesscraftingterminal.helpers.WTCGuiObject;
-import net.p455w0rd.wirelesscraftingterminal.items.ItemInfinityBooster;
-import net.p455w0rd.wirelesscraftingterminal.items.ItemMagnet;
 import net.p455w0rd.wirelesscraftingterminal.reference.Reference;
 
 import appeng.api.AEApi;
@@ -57,6 +54,9 @@ import appeng.tile.inventory.InvOperation;
 public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
         implements IAEAppEngInventory, IContainerCraftingPacket, IViewCellStorage {
 
+    public static final int CRAFTING_SLOT_X_POS = 80;
+    public static final int CRAFTING_SLOT_Y_POS = 83;
+
     private final ItemStack containerstack;
     public final WCTInventoryCrafting craftingGrid;
     public final WCTInventoryViewCell viewCellInventory;
@@ -66,24 +66,13 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
     public final InventoryPlayer inventoryPlayer;
     public ItemStack[] craftMatrixInventory;
     private final EntityPlayer player;
-    public static final int HOTBAR_START = 2, HOTBAR_END = HOTBAR_START + 8, INV_START = HOTBAR_END + 1,
-            INV_END = INV_START + 26, ARMOR_START = INV_END + 1, ARMOR_END = ARMOR_START + 3,
-            CRAFT_GRID_START = ARMOR_END + 1, CRAFT_GRID_END = CRAFT_GRID_START + 8, CRAFT_RESULT = CRAFT_GRID_END + 1,
-            VIEW_CELL_START = CRAFT_RESULT + 1, VIEW_CELL_END = VIEW_CELL_START + 4, BOOSTER_INDEX = 1,
-            MAGNET_INDEX = VIEW_CELL_END + 1;
-    public static int CRAFTING_SLOT_X_POS = 80, CRAFTING_SLOT_Y_POS = 83;
-    private SlotBooster boosterSlot;
-    private final SlotMagnet magnetSlot;
-    private final Slot[] hotbarSlot;
-    private final Slot[] inventorySlot;
-    private final SlotArmor[] armorSlot;
+
     private final SlotCraftingMatrix[] craftMatrixSlot;
     private final SlotCraftingTerm craftingSlot;
     public SlotTrash trashSlot;
 
     private final ICraftingTerminal ct;
 
-    private final AppEngInternalInventory output = new AppEngInternalInventory(this, 1);
     private final IWirelessCraftingTerminalItem thisItem;
     private IRecipe currentRecipe;
 
@@ -111,16 +100,16 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
         this.inventoryPlayer = inventoryPlayer;
         this.player = player;
         craftMatrixInventory = new ItemStack[9];
-        hotbarSlot = new Slot[9];
-        inventorySlot = new Slot[27];
-        armorSlot = new SlotArmor[4];
+        Slot[] hotbarSlot = new Slot[9];
+        Slot[] inventorySlot = new Slot[27];
+        SlotArmor[] armorSlot = new SlotArmor[4];
         craftMatrixSlot = new SlotCraftingMatrix[9];
 
         // Dummy slot at index 0 to work around ME slots all having their slot number set to 0.
         this.addSlotToContainer(new SlotInaccessible(new AppEngInternalInventory(null, 1), 0, -1000, -1000));
 
         if (Reference.WCT_BOOSTER_ENABLED) {
-            boosterSlot = new SlotBooster(this.boosterInventory, 0, 134, -20);
+            SlotBooster boosterSlot = new SlotBooster(this.boosterInventory, 0, 134, -20);
             this.addSlotToContainer(boosterSlot);
         } else {
             this.addSlotToContainer(new SlotInaccessible(new AppEngInternalInventory(null, 1), 0, -1000, -1000));
@@ -179,6 +168,7 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
             }
         }
 
+        AppEngInternalInventory output = new AppEngInternalInventory(this, 1);
         craftingSlot = new SlotCraftingTerm(
                 this.getPlayerInv().player,
                 this.getActionSource(),
@@ -186,14 +176,14 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
                 this.ct,
                 this.craftingGrid,
                 this.craftingGrid,
-                this.output,
+                output,
                 174,
                 -58,
                 this);
         // Add crafting result slot
         this.addSlotToContainer(craftingSlot);
 
-        magnetSlot = new SlotMagnet(this.magnetInventory, 152, -20);
+        SlotMagnet magnetSlot = new SlotMagnet(this.magnetInventory, 152, -20);
         this.addSlotToContainer(magnetSlot);
 
         trashSlot = new SlotTrash(this.trashInventory, 80, -20, player);
@@ -209,23 +199,6 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
         }
 
         thisItem.checkForBooster(containerstack);
-    }
-
-    @Override
-    protected Slot addSlotToContainer(final Slot newSlot) {
-        if (newSlot instanceof AppEngSlot) {
-            final AppEngSlot s = (AppEngSlot) newSlot;
-            s.setContainer(this);
-            return super.addSlotToContainer(newSlot);
-        } else {
-            throw new IllegalArgumentException(
-                    "Invalid Slot [" + newSlot + "] for WCT Container instead of AppEngSlot.");
-        }
-    }
-
-    @Override
-    public boolean canDragIntoSlot(final Slot s) {
-        return ((AppEngSlot) s).isDraggable();
     }
 
     private IRecipe findMatchingRecipe(InventoryCrafting craftMatrix, World worldIn) {
@@ -378,79 +351,6 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
         List<AppEngSlot> list = super.getValidDestinationSlots(isPlayerSideSlot, stackInSlot);
         list.removeIf(slot -> slot instanceof SlotTrash);
         return list;
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(final EntityPlayer p, final int idx) {
-        final AppEngSlot clickSlot = (AppEngSlot) this.inventorySlots.get(idx); // require AE SLots!
-        ItemStack tis = clickSlot.getStack();
-        if (tis == null || tis == containerstack) {
-            return null;
-        }
-        // Try to place armor in armor slot/booster in booster slot first
-        if (isInInventory(idx) || isInHotbar(idx)) {
-            if (tis.getItem() instanceof ItemArmor) {
-                int type = ((ItemArmor) tis.getItem()).armorType;
-                if (this.mergeItemStack(tis, ARMOR_START + type, ARMOR_START + type + 1, false)) {
-                    clickSlot.clearStack();
-                    return null;
-                }
-            } else if (tis.getItem() instanceof ItemInfinityBooster) {
-                if (this.mergeItemStack(tis, BOOSTER_INDEX, BOOSTER_INDEX + 1, false)) {
-                    clickSlot.clearStack();
-                    return null;
-                }
-            } else if (tis.getItem() instanceof ItemMagnet) {
-                if (this.mergeItemStack(tis, MAGNET_INDEX, MAGNET_INDEX + 1, false)) {
-                    clickSlot.clearStack();
-                    return null;
-                }
-            } else if (AEApi.instance().definitions().items().viewCell().isSameAs(tis)) {
-                if (mergeItemStack(tis.copy(), VIEW_CELL_START, VIEW_CELL_END + 1, false)) {
-                    if (tis.stackSize > 1) {
-                        tis.stackSize--;
-                    } else {
-                        clickSlot.clearStack();
-                    }
-                    return null;
-                }
-            }
-        }
-
-        return super.transferStackInSlot(p, idx);
-    }
-
-    private boolean isInHotbar(@Nonnull int index) {
-        return (index >= HOTBAR_START && index <= HOTBAR_END);
-    }
-
-    private boolean isInInventory(@Nonnull int index) {
-        return (index >= INV_START && index <= INV_END);
-    }
-
-    @SuppressWarnings("unused")
-    private boolean isInArmorSlot(@Nonnull int index) {
-        return (index >= ARMOR_START && index <= ARMOR_END);
-    }
-
-    @SuppressWarnings("unused")
-    private boolean isInBoosterSlot(@Nonnull int index) {
-        return (index == BOOSTER_INDEX);
-    }
-
-    @SuppressWarnings("unused")
-    private boolean isCraftResult(@Nonnull int index) {
-        return (index == CRAFT_RESULT);
-    }
-
-    @SuppressWarnings("unused")
-    private boolean isInCraftMatrix(@Nonnull int index) {
-        return (index >= CRAFT_GRID_START && index <= CRAFT_GRID_END);
-    }
-
-    @SuppressWarnings("unused")
-    private boolean notArmorOrBooster(ItemStack is) {
-        return (!(is.getItem() instanceof ItemInfinityBooster)) && (!(is.getItem() instanceof ItemArmor));
     }
 
     @Override
