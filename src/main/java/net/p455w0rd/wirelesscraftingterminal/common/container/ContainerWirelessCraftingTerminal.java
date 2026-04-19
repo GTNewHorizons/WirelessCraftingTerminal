@@ -1,5 +1,7 @@
 package net.p455w0rd.wirelesscraftingterminal.common.container;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -371,6 +373,14 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
     }
 
     @Override
+    @Nonnull
+    public List<AppEngSlot> getValidDestinationSlots(boolean isPlayerSideSlot, @Nonnull ItemStack stackInSlot) {
+        List<AppEngSlot> list = super.getValidDestinationSlots(isPlayerSideSlot, stackInSlot);
+        list.removeIf(slot -> slot instanceof SlotTrash);
+        return list;
+    }
+
+    @Override
     public ItemStack transferStackInSlot(final EntityPlayer p, final int idx) {
         final AppEngSlot clickSlot = (AppEngSlot) this.inventorySlots.get(idx); // require AE SLots!
         ItemStack tis = clickSlot.getStack();
@@ -455,83 +465,6 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
             // When clicking super fast, for some reason, MC tried to access this inv size (max index + 1)
         }
         return null;
-    }
-
-    /**
-     * Handles shift-clicking of items whose maxStackSize is 1
-     */
-    @Override
-    protected boolean mergeItemStack(ItemStack stack, int start, int end, boolean backwards) {
-        boolean flag1 = false;
-        int k = (backwards ? end - 1 : start);
-        Slot slot;
-        ItemStack itemstack1;
-
-        if (stack.isStackable()) {
-            while (stack.stackSize > 0 && (!backwards && k < end || backwards && k >= start)) {
-                slot = (Slot) inventorySlots.get(k);
-                itemstack1 = slot.getStack();
-
-                if (!slot.isItemValid(stack)) {
-                    k += (backwards ? -1 : 1);
-                    continue;
-                }
-
-                if (itemstack1 != null && itemstack1.getItem() == stack.getItem()
-                        && (!stack.getHasSubtypes() || stack.getItemDamage() == itemstack1.getItemDamage())
-                        && ItemStack.areItemStackTagsEqual(stack, itemstack1)) {
-                    int l = itemstack1.stackSize + stack.stackSize;
-
-                    if (l <= stack.getMaxStackSize() && l <= slot.getSlotStackLimit()) {
-                        stack.stackSize = 0;
-                        itemstack1.stackSize = l;
-                        boosterInventory.markDirty();
-                        flag1 = true;
-                    } else if (itemstack1.stackSize < stack.getMaxStackSize() && l < slot.getSlotStackLimit()) {
-                        stack.stackSize -= stack.getMaxStackSize() - itemstack1.stackSize;
-                        itemstack1.stackSize = stack.getMaxStackSize();
-                        boosterInventory.markDirty();
-                        flag1 = true;
-                    }
-                }
-
-                k += (backwards ? -1 : 1);
-            }
-        }
-        if (stack.stackSize > 0) {
-            k = (backwards ? end - 1 : start);
-            while (!backwards && k < end || backwards && k >= start) {
-                slot = (Slot) inventorySlots.get(k);
-                itemstack1 = slot.getStack();
-
-                if (!slot.isItemValid(stack)) {
-                    k += (backwards ? -1 : 1);
-                    continue;
-                }
-
-                if (itemstack1 == null) {
-                    int l = stack.stackSize;
-                    if (l <= slot.getSlotStackLimit()) {
-                        slot.putStack(stack.copy());
-                        stack.stackSize = 0;
-                        boosterInventory.markDirty();
-                        flag1 = true;
-                        break;
-                    } else {
-                        putStackInSlot(
-                                k,
-                                new ItemStack(stack.getItem(), slot.getSlotStackLimit(), stack.getItemDamage()));
-                        stack.stackSize -= slot.getSlotStackLimit();
-                        boosterInventory.markDirty();
-                        flag1 = true;
-                    }
-                }
-
-                k += (backwards ? -1 : 1);
-            }
-        }
-
-        return flag1;
     }
 
     @Override
