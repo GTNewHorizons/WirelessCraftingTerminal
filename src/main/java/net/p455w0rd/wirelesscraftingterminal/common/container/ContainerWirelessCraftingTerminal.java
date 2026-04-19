@@ -99,11 +99,8 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
         this.viewCellInventory = new WCTInventoryViewCell(wirelessTerminal);
         this.inventoryPlayer = inventoryPlayer;
         this.player = player;
-        craftMatrixInventory = new ItemStack[9];
-        Slot[] hotbarSlot = new Slot[9];
-        Slot[] inventorySlot = new Slot[27];
-        SlotArmor[] armorSlot = new SlotArmor[4];
-        craftMatrixSlot = new SlotCraftingMatrix[9];
+        this.craftMatrixInventory = new ItemStack[9];
+        this.craftMatrixSlot = new SlotCraftingMatrix[9];
 
         // Dummy slot at index 0 to work around ME slots all having their slot number set to 0.
         this.addSlotToContainer(new SlotInaccessible(new AppEngInternalInventory(null, 1), 0, -1000, -1000));
@@ -117,54 +114,54 @@ public class ContainerWirelessCraftingTerminal extends ContainerMEMonitorable
 
         // Add hotbar slots
         for (int i = 0; i < 9; ++i) {
-            if (player.inventory.getStackInSlot(i) != null
-                    && player.inventory.getStackInSlot(i).getItem() == this.thisItem) {
-                hotbarSlot[i] = new SlotDisabled(this.inventoryPlayer, i, i * 18 + 8, 58);
+            ItemStack stack = this.player.inventory.getStackInSlot(i);
+            Slot slot;
+            if (stack != null && stack.getItem() == this.thisItem) {
+                slot = new SlotDisabled(this.inventoryPlayer, i, i * 18 + 8, 58);
             } else {
-                hotbarSlot[i] = new SlotPlayerHotBar(this.inventoryPlayer, i, i * 18 + 8, 58);
+                slot = new SlotPlayerHotBar(this.inventoryPlayer, i, i * 18 + 8, 58);
             }
-            this.addSlotToContainer(hotbarSlot[i]);
+            this.addSlotToContainer(slot);
         }
-
-        int k = 0;
 
         // Add player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                if (player.inventory.getStackInSlot(j + i * 9 + 9) != null
-                        && player.inventory.getStackInSlot(j + i * 9 + 9).getItem() == this.thisItem) {
-                    inventorySlot[k] = new SlotDisabled(this.inventoryPlayer, j + i * 9 + 9, j * 18 + 8, i * 18);
+                int slotIndex = j + i * 9 + 9;
+                ItemStack stack = this.player.inventory.getStackInSlot(slotIndex);
+                Slot slot;
+                if (stack != null && stack.getItem() == this.thisItem) {
+                    slot = new SlotDisabled(this.inventoryPlayer, slotIndex, j * 18 + 8, i * 18);
                 } else {
-                    inventorySlot[k] = new SlotPlayerInv(this.inventoryPlayer, j + i * 9 + 9, j * 18 + 8, i * 18);
+                    slot = new SlotPlayerInv(this.inventoryPlayer, slotIndex, j * 18 + 8, i * 18);
                 }
-                this.addSlotToContainer(inventorySlot[k]);
-                k++;
+                this.addSlotToContainer(slot);
             }
         }
 
         // Add armor slots
         for (int i = 0; i < 4; ++i) {
-            armorSlot[i] = new SlotArmor(
-                    this.player,
-                    this.inventoryPlayer,
-                    this.inventoryPlayer.getSizeInventory() - 1 - i,
-                    (int) 8.5,
-                    (i * 18) - 76,
-                    i);
-            this.addSlotToContainer(armorSlot[i]);
+            this.addSlotToContainer(
+                    new SlotArmor(
+                            this.player,
+                            this.inventoryPlayer,
+                            this.inventoryPlayer.getSizeInventory() - 1 - i,
+                            (int) 8.5,
+                            (i * 18) - 76,
+                            i));
         }
-        k = 0;
+        int matrixIndex = 0;
         // Add crafting grid slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
-                craftMatrixSlot[k] = new SlotCraftingMatrix(
+                craftMatrixSlot[matrixIndex] = new SlotCraftingMatrix(
                         this,
                         this.craftingGrid,
                         j + i * 3,
                         80 + j * 18,
                         (i * 18) - 76);
-                this.addSlotToContainer(craftMatrixSlot[k]);
-                k++;
+                this.addSlotToContainer(craftMatrixSlot[matrixIndex]);
+                matrixIndex++;
             }
         }
 
