@@ -23,11 +23,8 @@ import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotCraftingMatrix;
 import appeng.container.slot.SlotFakeCraftingMatrix;
 import appeng.helpers.InventoryAction;
-import cpw.mods.fml.common.Optional;
-import yalter.mousetweaks.api.IMTModGuiContainer;
 
-@Optional.Interface(modid = "MouseTweaks", iface = "yalter.mousetweaks.api.IMTModGuiContainer")
-public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMTModGuiContainer {
+public class GuiWirelessCraftingTerminal extends GuiMEMonitorable {
 
     private float xSize_lo;
     private float ySize_lo;
@@ -184,68 +181,4 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable implements IMT
 
         this.updateViewCells();
     }
-
-    // MouseTweaks compat
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public int getAPIVersion() {
-        return 1;
-    }
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public String getModName() {
-        return Reference.NAME;
-    }
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public boolean isMouseTweaksDisabled() {
-        return true;
-    }
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public boolean isWheelTweakDisabled() {
-        return true;
-    }
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public boolean isCraftingOutputSlot(Object modContainer, Object slot) {
-        return slot == containerWCT.getSlot(ContainerWirelessCraftingTerminal.CRAFT_RESULT);
-    }
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public Object getModContainer() {
-        return containerWCT;
-    }
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public int getModSlotCount(Object modContainer) {
-        return containerWCT.inventorySlots.size();
-    }
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public Object getModSlot(Object modContainer, int slotNumber) {
-        return slotNumber < containerWCT.inventorySlots.size() ? containerWCT.inventorySlots.get(slotNumber) : null;
-    }
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public Object getModSelectedSlot(Object modContainer, int slotCount) {
-        return getSlot(currentMouseX, currentMouseY);
-    }
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public void clickModSlot(Object modContainer, Object slotO, int mouseButton, boolean shiftPressed) {}
-
-    @Override
-    @Optional.Method(modid = "MouseTweaks")
-    public void disableRMBDragIfRequired(Object modContainer, Object firstSlot, boolean shouldClick) {}
 }
