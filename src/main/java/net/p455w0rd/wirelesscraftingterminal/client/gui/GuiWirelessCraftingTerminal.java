@@ -18,10 +18,12 @@ import appeng.api.config.ActionItems;
 import appeng.api.config.Settings;
 import appeng.api.parts.ICraftingTerminal;
 import appeng.client.gui.implementations.GuiMEMonitorable;
+import appeng.client.gui.slots.VirtualMEPinSlot;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotCraftingMatrix;
 import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.core.localization.GuiText;
 import appeng.helpers.InventoryAction;
 
 public class GuiWirelessCraftingTerminal extends GuiMEMonitorable {
@@ -39,11 +41,11 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable {
     private GuiImgButton clearBtn;
     private GuiTrashButton trashBtn;
 
-    private int currentMouseX = 0;
-    private int currentMouseY = 0;
+    private final GuiText hostName;
 
     public GuiWirelessCraftingTerminal(final InventoryPlayer inventoryPlayer, ICraftingTerminal host) {
         super(inventoryPlayer, host, new ContainerWirelessCraftingTerminal(inventoryPlayer, host));
+        this.hostName = host.getHostName();
         this.setReservedSpace(73);
         this.offsetRepoX -= 1;
 
@@ -141,6 +143,19 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable {
     @Override
     protected String getGuiDisplayName(String in) {
         return in;
+    }
+
+    /**
+     * Same as {@link GuiMEMonitorable#drawFG} but without the "Inventory" label, which overlaps the player model.
+     */
+    @Override
+    public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
+        this.fontRendererObj.drawString(this.getGuiDisplayName(this.hostName.getLocal()), 8, 6, 0x404040);
+
+        VirtualMEPinSlot.drawSlotsBackground(this.pinSlots, this.mc, this.zLevel);
+
+        this.currentMouseX = mouseX;
+        this.currentMouseY = mouseY;
     }
 
     @Override
