@@ -23,6 +23,7 @@ import appeng.client.gui.widgets.GuiImgButton;
 import appeng.container.slot.AppEngSlot;
 import appeng.container.slot.SlotCraftingMatrix;
 import appeng.container.slot.SlotFakeCraftingMatrix;
+import appeng.core.localization.ColorUtils;
 import appeng.core.localization.GuiText;
 import appeng.helpers.InventoryAction;
 
@@ -150,7 +151,11 @@ public class GuiWirelessCraftingTerminal extends GuiMEMonitorable {
      */
     @Override
     public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
-        this.fontRendererObj.drawString(this.getGuiDisplayName(this.hostName.getLocal()), 8, 6, 0x404040);
+        this.fontRendererObj.drawString(
+                this.getGuiDisplayName(this.hostName.getLocal()),
+                8,
+                6,
+                ColorUtils.guiTextColorGray.getColor());
 
         VirtualMEPinSlot.drawSlotsBackground(this.pinSlots, this.mc, this.zLevel);
 
